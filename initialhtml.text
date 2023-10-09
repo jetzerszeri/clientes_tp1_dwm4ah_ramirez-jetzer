@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Añadir servicio</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://kit.fontawesome.com/26eb2bb81f.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header class="navegacion">
+        <nav >
+            <div class="navbar">
+                <div>
+                    <a href="/" class="navbarlogo">GbyG PCS</a>
+    
+                    <div class="toggle-button">
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </div>
+                    
+                </div>
+    
+                <div class="navbar-links">
+                    <ul>
+                        <li><a href="/">Inicio</a></li>
+                        <li><a href="/services.html" >Servicios</a></li>
+                        <li><a href="/admin.html">Dashboard</a></li>
+                    </ul>
+                    <div>
+                        <a href="/login.html" class="btn">Iniciar sesión</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+
+
+    </main>
+
+    <footer>
+        <div>
+            <ul>
+                <li><a href="https://www.facebook.com" target="_blank"><i class="fa-brands fa-facebook"></i></a></li>
+                <li><a href="https://twitter.com" target="_blank"><i class="fa-brands fa-x-twitter"></i></i></a></li>
+                <li><a href="https://www.instagram.com" target="_blank"><i class="fa-brands fa-instagram"></i></a></li>
+            </ul>
+            <div>
+                <p>gbygpcs.com</p>
+                <p>© 2023 Copyright</p>
+            </div>
+        </div>
+    </footer>
+
+    
+</body>
+</html>
