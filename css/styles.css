@@ -165,7 +165,7 @@ ul{
     color: var(--color-darkgreen);
     border: 1.5px solid var(--color-darkgreen);
 }
-.btn.secundary-green:hover{
+.btn.secundary-green:hover, .btn.secundary-green.active{
     background-color: var(--color-darkgreen);
     color: var(--color-white);
 }
@@ -450,7 +450,7 @@ footer p{
     padding: 30px 0 15px;
 }
 
-.servicesheader > div:nth-of-type(2) ul{
+.servicesheader > div:nth-of-type(2) ul, .usersOptions{
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -459,6 +459,10 @@ footer p{
     margin: 0 auto;
     width: 100%;
     max-width: 1140px;
+}
+.servicesheader > div:nth-of-type(2) ul, .usersOptions .btn{
+    padding: 5px 15px;
+    font-size: 0.8em;
 }
 
 .servicesheader + section{
@@ -554,7 +558,7 @@ footer p{
 }
 
 .breadcrumb ol{
-    padding: 20px;
+    padding: 20px 20px 0 20px;
     list-style: none;
     color: var(--color-white);
     font-size: 0.8em;
@@ -562,6 +566,7 @@ footer p{
     display: flex;
     flex-wrap: wrap;
     gap: 5px;
+    margin: 0 auto;
 }
 
 .breadcrumb ol li + li:before {
@@ -657,7 +662,7 @@ padding-left: 10px;
 }
 
 
-.servicesection:after {
+.servicesection:after,  .loginmain form:after{
     content: "";
     position: absolute;
     top: 10px;
@@ -669,7 +674,7 @@ padding-left: 10px;
     transition: all 0.3s ease;
 }
 
-.estimateform{
+.estimateform, .loginmain form, .adminmain form{ 
     background-color: var(--color-white);
     margin: 10px;
     padding: 30px;
@@ -684,35 +689,212 @@ padding-left: 10px;
     font-size: 1.3em;
 }
 
-.estimateform label{
+.estimateform label, .loginmain form label, .adminmain form label{
     display: block;
-    margin-bottom: 2px;
+    margin: 20px auto 2px;
     font-size: 0.9em;
     font-weight: 400;
+    color: var(--color-darkgray);
 }
 
-.estimateform input, .estimateform select, .estimateform textarea{
+.estimateform input, .estimateform select, .estimateform textarea, .loginmain form input, .adminmain form input, .loginmain form select, .adminmain form select, .loginmain form textarea, .adminmain form textarea{
     display: block;
     width: 100%;
     padding: 10px;
     font-size: 0.8em;
     border: solid 1px #c7c7c7;
-    margin-bottom: 20px;
 }
 
-.estimateform textarea{
-    height: 100px;
+.estimateform textarea, .adminmain form textarea{
+    height: 150px;
     resize: none;
 }
 
 /* div del button */
-.estimateform > div:last-of-type{
+.estimateform > div:last-of-type, .loginmain form > div:last-of-type, .adminmain form > div:last-of-type{
     display: flex;
     justify-content: center;
+    margin: 30px 0 20px;
 }
 
 
-  
+/* ----- log in ----- */
+.loginmain, .adminmain{
+    color: var(--color-white);
+    padding: 20px;
+    max-width: 1000px;
+    margin: auto;
+}
+
+.loginmain .breadcrumb ol, .adminmain .breadcrumb ol{
+    padding: 0;
+    margin-bottom: 20px;
+    font-size: 0.7em;
+}
+
+.loginmain h1{
+    font-size: 1.8em;
+    font-weight: 600;
+    margin: 0 0 60px 0;
+    color: var(--color-white);
+}
+
+.loginmain form{
+    margin: auto;
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 80px;
+    position: relative;
+}
+
+/* .loginmain form:after{
+    background-color: var(--color-yellow);
+} */
+
+/* ----- dashboard ----- */
+.adminmain h1{
+    font-size: 1em;
+    font-weight: 300;
+    margin-bottom: 0;
+}
+
+.adminmain h1 + p, .adminmain h1 + h2{
+    font-size: 2em;
+    font-weight: 600;
+    margin: 0 0 20px 0;
+    line-height: 1.2em;
+}
+
+.admindoptions{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    gap: 30px;
+    margin: 50px auto;
+    max-width: 760px;
+}
+
+.admindoptions li a{
+    display: flex;
+    flex-direction: column;
+    color: var(--color-white);
+    text-align: center;
+    gap: 10px;
+    font-weight: 300;
+    transition: all 0.3s ease;
+    width: 150px;
+    height: 150px;
+    border: 1px solid var(--color-yellow);
+    justify-content: center;
+    position: relative;
+    background-color: var(--color-darkgreen);
+}
+
+.admindoptions li a i{
+    font-size: 1.5em;
+}
+
+.admindoptions li a:hover{
+    background-color: var(--color-yellow);
+    color: var(--color-darkgreen);
+    /* transform: translate(-5px, -5px); */
+    /* z-index: 1; */
+}
+
+.admindoptions li a::before{
+    content: "";
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right:  0px;
+    bottom:  0px;
+    background-color: var(--color-red);
+    z-index: -1;
+    transition: all 0.3s ease;
+}
+
+.admindoptions li a:hover:before{
+    top: 10px;
+    left: 10px;
+    right: -10px;
+    bottom: -10px;
+}
+
+/* ----users---- */
+
+table{
+    background-color: var(--color-white);
+    color: var(--color-darkgray);
+    width: 100%;
+    margin-top: 10px;
+    /* padding: 10px; */
+    border-collapse: collapse;
+}
+
+/* table th{
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 1px solid var(--color-darkgray);
+    padding: 8px 10px;
+} */
+table th{
+    display: none;
+}
+
+/* table td{
+    padding: 8px 10px;
+} */
+
+table td{
+    padding: 2px;
+    display: block;
+    text-align: center;
+}
+
+table td:nth-of-type(1){
+    padding-top: 20px;
+}
+
+table td:last-of-type{
+    padding: 10px 0 20px 0;
+}
+
+table tr:nth-of-type(2n){
+    background-color: #eae8e88b;
+}
+
+table tr:hover{
+    background-color: #fec85b32;
+}
+
+.tablecontainer{
+    max-width: 1000px;
+    overflow-x: scroll;
+}
+
+.tablecontainer .btn{
+    padding: 5px 10px;
+    font-size: 0.7em;
+    margin: 5px;
+}
+
+/* mensaje de error */
+input + p, select + p, textarea + p{
+    margin: 0;
+    font-size: 0.8em;
+    color: var(--color-red);
+}
+
+.deleteformbtn{
+    display: inline-block;
+    padding: 0 !important;
+    margin: 0 !important;
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+
+}
+
 @media (min-width: 650px){
 
     .homeservices > div > div {
@@ -798,6 +980,32 @@ padding-left: 10px;
     .servicesection > div:nth-of-type(2){
         padding: 35px;
         /* max-width: 400px; */
+    }
+
+    .adminmain{
+        padding: 30px 40px;
+    }
+
+    .usersOptions{
+        justify-content: end;
+    }
+
+    table th{
+        display: table-cell;
+        text-align: left;
+        font-weight: 600;
+        border-bottom: 1px solid var(--color-darkgray);
+        padding: 10px;
+    }
+
+    table td, table td:nth-of-type(1), table td:last-of-type{
+        padding: 10px;
+        display: table-cell;
+        text-align: left;
+    }
+
+    table td:last-of-type{
+        text-align: center;
     }
 
 
