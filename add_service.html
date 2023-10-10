@@ -75,11 +75,13 @@
                     <label for="description">Descripción</label>
                     <textarea name="description" cols="30" rows="10"></textarea>
                 </div>
-            
+                
                 <div>
-                    <label for="img">Imagen</label>
-                    <input type="text" placeholder="Ingresa el url de la imagen" name="img">
+                    <label for="price">Precio por pie cuadrado</label>
+                    <input type="number" step="any" placeholder="Ingresa el precio del servicio por pie" name="price">
+
                 </div>
+
             
                 <div>
                     <button type="submit" class="btn primary-green">Agregar servicio</button>
@@ -128,16 +130,19 @@
         let name = form['name'].value;
         let category = form['category'].value;
         let description = form['description'].value;
-        let img = form['img'].value;
+        let price = form['price'].value;
+        // let img = form['img'].value;
 
         addDoc(collection(db, "services"), {
             name: name,
             category: category,
             description: description,
-            img: img,
+            // img: img,
+            price: price,
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp()
         })
+
 
         container.innerHTML = success;
     }) 
