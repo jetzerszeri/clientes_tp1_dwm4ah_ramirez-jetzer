@@ -5,12 +5,12 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.0/firebas
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-apiKey: "AIzaSyAXetqmfp3CONcNT5NOr8Ol7WpfoGbXDB4",
-authDomain: "gbygpcs.firebaseapp.com",
-projectId: "gbygpcs",
-storageBucket: "gbygpcs.appspot.com",
-messagingSenderId: "89038175259",
-appId: "1:89038175259:web:4a8bb74924cf7a7072ccbe"
+  apiKey: "AIzaSyA6f2jvDSOjjaqoKvVqsFRGT2k3eEi9N-w",
+  authDomain: "tp1-clientes-dwm4ah.firebaseapp.com",
+  projectId: "tp1-clientes-dwm4ah",
+  storageBucket: "tp1-clientes-dwm4ah.appspot.com",
+  messagingSenderId: "204408047429",
+  appId: "1:204408047429:web:fe7e7a541ebd87767de02c"
 };
 
 // Initialize Firebase
