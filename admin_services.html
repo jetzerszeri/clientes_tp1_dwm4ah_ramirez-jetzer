@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Añadir servicio</title>
+    <title>Lista de servicios</title>
     <link rel="stylesheet" href="css/styles.css">
     <script src="https://kit.fontawesome.com/26eb2bb81f.js" crossorigin="anonymous"></script>
 </head>
@@ -54,8 +54,34 @@
             <li><a href="/add_service.html" class="btn">Agregar uno</a></li>
         </ul>
 
-        <div class="container">
-
+        <div class="tablecontainer">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Categoria</th>
+                        <th>Descripción</th>
+                        <th>Imagen</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <!-- @foreach ($services as $service)
+                    <tr>
+                        <td>{{ $service->name}}</td>
+                        <td>{{ $service->categoryRelation->name }}</td>
+                        <td>{{ $service->description}}</td>
+                        <td>{{ $service->img}}</td>
+                        <td>
+                            <a href="/admin/services/{{ $service->id}}/edit" class="btn secundary-green"><i class="fa-solid fa-pen-to-square"></i></a>
+                            <form action="/admin/services/{{ $service->id }}" method="POST" class="deleteformbtn">
+                                <button type="submit" class="btn secundary-green" onclick="return confirm('¿Estás seguro de querer eliminar este servicio?');"><i class="fa-solid fa-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                @endforeach -->
+                </tbody>
+            </table>
         </div>
 
 
@@ -80,10 +106,7 @@
     import  app  from './js/config.js';
     import { getFirestore, collection, addDoc, getDocs, orderBy, query } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js';
 
-    const servicesList = document.querySelector('.servicescontainer section ul');
-    const main = document.querySelector('.servicescontainer');
-    const sectionServices = document.createElement('section');
-    const ulServices = document.createElement('ul');
+    const tableBody = document.querySelector('tbody');
 
     // Initialize Cloud Firestore and get a reference to the service
     const db = getFirestore(app);
@@ -95,29 +118,22 @@
 
     await getDocs(q).then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-            let item = document.createElement('li');
-            let divContainer = document.createElement('div');
-            let divImg = document.createElement('div');
-            let img = document.createElement('img');
-            img.src = doc.data().img;
-            img.alt = doc.data().name;
-            let divInfo = document.createElement('div');
-            divInfo.innerHTML = `
-            <div>
-                <h2>${doc.data().name}</h2>
-                <p>${doc.data().category}</p>
-            </div>
-            <a href="servicio.html?id=${doc.id}" class="btn secundary-green">Ver detalles</a>`;
-            divImg.append(img);
-            divContainer.append(divImg);
-            divContainer.append(divInfo);
-            item.append(divContainer);
-            ulServices.append(item);
+
+            let tableRow = document.createElement('tr');
+            tableRow.innerHTML = `
+                <td>${doc.data().name}</td>
+                <td>${doc.data().category}</td>
+                <td>${doc.data().description}</td>
+                <td>${doc.data().img}</td>
+                <td>
+                    <a href="/admin_services_edit.html?id=${doc.id}" class="btn secundary-green"><i class="fa-solid fa-pen-to-square"></i></a>
+                    <form action="" class="deleteformbtn">
+                        <button type="submit" class="btn secundary-green" onclick="return confirm('¿Estás seguro de querer eliminar este servicio?');"><i class="fa-solid fa-trash"></i></button>
+                    </form>
+                </td>`;
+            tableBody.append(tableRow);
         });
     });
-
-    // sectionServices.append(ulServices);
-    // main.appendChild(sectionServices);
     
 </script>
 </body>
