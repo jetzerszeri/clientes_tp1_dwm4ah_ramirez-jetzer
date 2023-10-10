@@ -61,7 +61,7 @@
                         <th>Nombre</th>
                         <th>Categoria</th>
                         <th>Descripción</th>
-                        <th>Imagen</th>
+                        <th>Precio</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -124,7 +124,7 @@
                 <td>${doc.data().name}</td>
                 <td>${doc.data().category}</td>
                 <td>${doc.data().description}</td>
-                <td>${doc.data().img}</td>
+                <td>$${doc.data().price}/sqft</td>
                 <td>
                     <a href="/admin_services_edit.html?id=${doc.id}" class="btn secundary-green"><i class="fa-solid fa-pen-to-square"></i></a>
                     <form action="" class="deleteformbtn">
