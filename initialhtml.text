@@ -55,6 +55,8 @@
         </div>
     </footer>
 
-    
+<script type="module">
+import  app  from './js/config.js';
+</script>
 </body>
 </html>
