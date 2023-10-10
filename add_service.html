@@ -54,36 +54,39 @@
             <li><a href="" class="btn">Agregar uno</a></li>
         </ul> -->
 
-        <form action="">
-            <div>
-                <label for="name">Nombre del servicio</label>
-                <input type="text" placeholder="Ingresa el nombre del servicio" name="name">
-                <p>mensaje de error</p>
-            </div>
-            <div>
-                <label for="category">Categoría</label>
-                <select name="category">
-                    <option value="1">mudanza</option>
-                    <option value="2">remodelacion</option>
-                    <!-- @foreach($categoriesList as $category)
-                        <option value="{{ $category->id }}" {{ old('category', optional($service)->category) == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
-                    @endforeach -->
-                </select>
-            </div>
-            <div>
-                <label for="description">Descripción</label>
-                <textarea name="description" cols="30" rows="10"></textarea>
-            </div>
-        
-            <div>
-                <label for="img">Imagen</label>
-                <input type="text" placeholder="Ingresa el url de la imagen" name="img">
-            </div>
-        
-            <div>
-                <button type="submit" class="btn primary-green">Agregar servicio</button>
-            </div>
-        </form>
+        <div class="container">
+            <form action="">
+                <div>
+                    <label for="name">Nombre del servicio</label>
+                    <input type="text" placeholder="Ingresa el nombre del servicio" name="name">
+                    <p>mensaje de error</p>
+                </div>
+                <div>
+                    <label for="category">Categoría</label>
+                    <select name="category">
+                        <option value="1">mudanza</option>
+                        <option value="2">remodelacion</option>
+                        <!-- @foreach($categoriesList as $category)
+                            <option value="{{ $category->id }}" {{ old('category', optional($service)->category) == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                        @endforeach -->
+                    </select>
+                </div>
+                <div>
+                    <label for="description">Descripción</label>
+                    <textarea name="description" cols="30" rows="10"></textarea>
+                </div>
+            
+                <div>
+                    <label for="img">Imagen</label>
+                    <input type="text" placeholder="Ingresa el url de la imagen" name="img">
+                </div>
+            
+                <div>
+                    <button type="submit" class="btn primary-green">Agregar servicio</button>
+                </div>
+            </form>
+        </div>
+
 
 
     </main>
@@ -103,7 +106,42 @@
     </footer>
 
 <script type="module">
-    import  app  from './js/config.js';
+    import app from './js/config.js';
+    import { success } from './js/messages.js';
+    import {getFirestore, collection, getDocs, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js';
+
+    const db = getFirestore(app);
+    // const querySnapshot = await getDocs(collection(db, "brands"));
+    const container = document.querySelector('.container');
+
+    // querySnapshot.forEach((doc) => {
+    //     let option = document.createElement('option');
+    //     option.value = doc.data().name;
+    //     option.innerHTML = doc.data().name;
+    //     document.querySelector('#brand').append(option);
+    // })
+
+
+    const form = document.querySelector('form');
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        let name = form['name'].value;
+        let category = form['category'].value;
+        let description = form['description'].value;
+        let img = form['img'].value;
+
+        addDoc(collection(db, "services"), {
+            name: name,
+            category: category,
+            description: description,
+            img: img,
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp()
+        })
+
+        container.innerHTML = success;
+    }) 
+    
 </script>
 </body>
 </html>
