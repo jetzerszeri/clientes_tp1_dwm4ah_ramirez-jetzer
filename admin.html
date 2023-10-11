@@ -74,7 +74,32 @@
     </footer>
 
 <script type="module">
-    import app from './js/config.js';
+        import app from './js/config.js';
+    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
+    import {getDatabase, ref, set} from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-database.js';
+
+    const db = getDatabase(app);
+    const auth = getAuth(app);
+
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            // User is signed in, see docs for a list of available properties
+            // https://firebase.google.com/docs/reference/js/auth.user
+            const uid = user.uid;
+            console.log(uid);
+            console.log('usuario logueado')
+            // ...
+        } else {
+            // User is signed out
+            // ...
+            console.log('usuario No logueado')
+
+            // aqui se redirecciona a la pagina de login
+        }
+    });
+
+    console.log(auth);
+    // console.log(auth.currentUser.uid);
 
 </script>
 </body>

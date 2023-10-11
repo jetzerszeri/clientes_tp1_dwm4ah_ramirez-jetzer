@@ -879,7 +879,7 @@ table tr:hover{
 }
 
 /* mensaje de error */
-input + p, select + p, textarea + p{
+input + p, select + p, textarea + p, .errorForMmsg{
     margin: 0;
     font-size: 0.8em;
     color: var(--color-red);
