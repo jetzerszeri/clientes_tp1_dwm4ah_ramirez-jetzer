@@ -151,7 +151,7 @@
             return setDoc(doc(db, "roles_by_user", user), {
                 "nombre": name.value,
                 "apellido": lastname.value,
-                "role": 'adminNuevo',
+                "role": 'customer',
                 createdAt: serverTimestamp(),
                 updatedAt: serverTimestamp()
             });
