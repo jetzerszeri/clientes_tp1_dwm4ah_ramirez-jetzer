@@ -51,28 +51,22 @@
     
             <form action="">
         
-                <!-- <p>Credenciales inválidas</p> -->
-        
                 <div>
                     <label for="name">Nombre</label>
                     <input type="text" name="name">
-                    <p>error</p>
                 </div>
                 <div>
                     <label for="lastname">Apellido</label>
                     <input type="text" name="lastname">
-                    <p>error</p>
                 </div>
                 <div>
                     <label for="email">E-mail</label>
                     <input type="text" name="email">
-                    <p>error</p>
                 </div>
         
                 <div>
                     <label for="password">Contraseña</label>
                     <input type="password" name="password">
-                    <p>error</p>
                 </div>
         
                 <div>
@@ -118,20 +112,33 @@
     const db = getFirestore(app);
 
     const form = document.querySelector('form');
-    let { name, lastname, email, password } = form;
-    console.log(name.parentElement);
-
+    
     form.addEventListener('submit', (e) => {
         e.preventDefault();
+        let { name, lastname, email, password } = form;
+        console.log(name.parentElement);
 
+        let isValid = true;
+        
         let errorMessages = form.querySelectorAll('p');
-        errorMessages.forEach((p) => {
-            p.remove();
-        })
 
+        if (errorMessages.length > 0){
+            errorMessages.forEach((p) => {
+                p.remove();
+            })
+        }
 
+        if (!name.value.trim()) {
+        name.parentElement.innerHTML += `<p>El nombre no puede estar vacío</p>`;
+        isValid = false; 
+        }
 
+        if (!lastname.value.trim()) {
+            lastname.parentElement.innerHTML += `<p>El apellido no puede estar vacío</p>`;
+            isValid = false; 
+        }
 
+        if (!isValid) return;
 
 
         createUserWithEmailAndPassword(auth, email.value, password.value)
@@ -148,6 +155,8 @@
       
             console.log(user);
             console.log('credenciales: ' + credentials);
+
+            window.location.href = '/admin.html';
             // ...
         })
         .catch((error) => {
@@ -158,16 +167,17 @@
 
             if (error.message.includes('invalid-email')){
                 email.parentElement.innerHTML += `<p>El email ingresado no es válido</p>`;
-                // email.parentElement.querySelector('p').innerHTML = 'El email ingresado no es válido';
+            } else if (error.message.includes('missing-password')){
+                password.parentElement.innerHTML += `<p>La contraseña no puede estar vacía</p>`;
             } else if (error.message.includes('weak-password')){
-                password.parentElement.classList.add('error');
-                password.parentElement.querySelector('p').innerHTML = 'La contraseña debe tener al menos 6 caracteres';
+                password.parentElement.innerHTML += `<p>La contraseña debe tener al menos 6 caracteres</p>`;
             } else if (error.message.includes('email-already-in-use')){
-                email.parentElement.classList.add('error');
-                email.parentElement.querySelector('p').innerHTML = 'El email ingresado ya está en uso';
+                email.parentElement.innerHTML += `<p>Este email ya tiene una cuenta</p>`;
             }
             // ..
         });
+
+        
 
     }) 
 
