@@ -46,11 +46,11 @@
             </div>
 
             <div>
-                <ul>
+                <!-- <ul>
                     <li><a href="" class="btn secundary-green">Remodelación</a></li>
                     <li><a href="" class="btn secundary-green">Mudanza</a></li>
                     <li><a href="" class="btn secundary-green">Real State</a></li>
-                </ul>
+                </ul> -->
             </div>
         </header>
     </main>
@@ -97,10 +97,9 @@
             divInfo.innerHTML = `
             <div>
                 <h2>${doc.data().name}</h2>
-                <p>${doc.data().category}</p>
             </div>
             <p>$${doc.data().price}/sqft</p>
-            <a href="servicio.html?id=${doc.id}" class="btn secundary-green">Ver detalles</a>`;
+            <a href="servicio.html?id=${doc.id}" class="btn secundary-green">Contactar</a>`;
             divImg.append(img);
             divContainer.append(divImg);
             divContainer.append(divInfo);

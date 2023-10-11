@@ -906,6 +906,27 @@ input + p, select + p, textarea + p, .errorForMmsg{
     margin: 5px;
 }
 
+.contactoStep h1{
+    font-size: 1.6em;
+    font-weight: 600;
+    line-height: 1em;
+}
+
+.contactoStep h1 + p{
+    font-size: 1em;
+    font-weight: 400;
+    margin:  16px 0;
+    /* line-height: 1.2em; */
+}
+
+.contactoStep ul{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+    margin: 50px auto;
+}
+
 @media (min-width: 650px){
 
     .homeservices > div > div {
