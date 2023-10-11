@@ -145,19 +145,19 @@
         .then((credentials) => {
             // Signed in 
             const user = credentials.user.uid;
-            setDoc(doc(db, "roles_by_user", user), {
+    
+            console.log(user);
+            console.log('Se creó el usuario');
+            return setDoc(doc(db, "roles_by_user", user), {
                 "nombre": name.value,
                 "apellido": lastname.value,
-                "role": 'admin',
+                "role": 'adminNuevo',
                 createdAt: serverTimestamp(),
                 updatedAt: serverTimestamp()
             });
-      
-            console.log(user);
-            console.log('credenciales: ' + credentials);
-
+        })
+        .then(() => {
             window.location.href = '/admin.html';
-            // ...
         })
         .catch((error) => {
             const errorCode = error.code;
