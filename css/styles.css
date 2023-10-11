@@ -743,7 +743,7 @@ padding-left: 10px;
     margin: auto;
     width: 100%;
     max-width: 400px;
-    margin-bottom: 80px;
+    margin-bottom: 40px;
     position: relative;
 }
 
@@ -893,6 +893,17 @@ input + p, select + p, textarea + p{
     border: none !important;
     box-shadow: none !important;
 
+}
+
+.signupmsg{
+    margin: 0;
+    color: var(--color-white);
+    text-align: center;
+    font-size: 0.9em;
+}
+
+.signupmsg p{
+    margin: 5px;
 }
 
 @media (min-width: 650px){

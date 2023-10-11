@@ -6,6 +6,7 @@
     <title>Añadir servicio</title>
     <link rel="stylesheet" href="css/styles.css">
     <script src="https://kit.fontawesome.com/26eb2bb81f.js" crossorigin="anonymous"></script>
+    <script src="js/main.js" defer></script>
 </head>
 <body>
     <header class="navegacion">
@@ -63,12 +64,7 @@
                 </div>
                 <div>
                     <label for="category">Categoría</label>
-                    <select name="category">
-                        <option value="1">mudanza</option>
-                        <option value="2">remodelacion</option>
-                        <!-- @foreach($categoriesList as $category)
-                            <option value="{{ $category->id }}" {{ old('category', optional($service)->category) == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
-                        @endforeach -->
+                    <select name="category" id="categorySelect">
                     </select>
                 </div>
                 <div>
@@ -109,19 +105,19 @@
 
 <script type="module">
     import app from './js/config.js';
-    import { success } from './js/messages.js';
+    import { success, successMsgAdd } from './js/messages.js';
     import {getFirestore, collection, getDocs, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js';
 
     const db = getFirestore(app);
-    // const querySnapshot = await getDocs(collection(db, "brands"));
+    const querySnapshot = await getDocs(collection(db, "categories"));
     const container = document.querySelector('.container');
 
-    // querySnapshot.forEach((doc) => {
-    //     let option = document.createElement('option');
-    //     option.value = doc.data().name;
-    //     option.innerHTML = doc.data().name;
-    //     document.querySelector('#brand').append(option);
-    // })
+    querySnapshot.forEach((doc) => {
+        let option = document.createElement('option');
+        option.value = doc.id;
+        option.innerHTML = doc.data().name;
+        document.querySelector('#categorySelect').append(option);
+    })
 
 
     const form = document.querySelector('form');
@@ -131,20 +127,18 @@
         let category = form['category'].value;
         let description = form['description'].value;
         let price = form['price'].value;
-        // let img = form['img'].value;
 
         addDoc(collection(db, "services"), {
             name: name,
             category: category,
             description: description,
-            // img: img,
             price: price,
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp()
         })
 
 
-        container.innerHTML = success;
+        container.innerHTML = successMsgAdd('Servicio agregado exitosamente', '/admin_services.html');
     }) 
     
 </script>

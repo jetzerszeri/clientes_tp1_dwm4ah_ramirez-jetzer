@@ -51,7 +51,7 @@
     
         <ul class="usersOptions">
             <!-- <li><a href="" class="btn">Mostrar todos</a></li> -->
-            <li><a href="/add_service.html" class="btn">Agregar nueva</a></li>
+            <li><a href="/add_category.html" class="btn">Agregar nueva</a></li>
         </ul>
 
         <div class="tablecontainer">
@@ -95,7 +95,7 @@
     // Initialize Cloud Firestore and get a reference to the service
     const db = getFirestore(app);
 
-    const servicesRef = collection(db, "services");
+    const servicesRef = collection(db, "categories");
     const q = query(servicesRef, orderBy("name"));
 
 

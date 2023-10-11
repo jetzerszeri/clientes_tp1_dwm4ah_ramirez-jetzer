@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear cuenta</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://kit.fontawesome.com/26eb2bb81f.js" crossorigin="anonymous"></script>
+    <script src="js/main.js" defer></script>
+</head>
+<body>
+    <header class="navegacion">
+        <nav >
+            <div class="navbar">
+                <div>
+                    <a href="/" class="navbarlogo">GbyG PCS</a>
+    
+                    <div class="toggle-button">
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </div>
+                    
+                </div>
+    
+                <div class="navbar-links">
+                    <ul>
+                        <li><a href="/">Inicio</a></li>
+                        <li><a href="/services.html" >Servicios</a></li>
+                        <li><a href="/admin.html">Dashboard</a></li>
+                    </ul>
+                    <div>
+                        <a href="/login.html" class="btn">Iniciar sesión</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="loginmain">
+        <nav class="breadcrumb">
+            <ol>
+                <li><a href="/">Home</a></li>
+                <li aria-current="page">Panel de administrador</li>
+            </ol>
+        </nav>
+    
+        <h1>Crear cuenta</h1>
+
+        <div class="container">
+    
+            <form action="">
+        
+                <!-- <p>Credenciales inválidas</p> -->
+        
+                <div>
+                    <label for="name">Nombre</label>
+                    <input type="text" name="name">
+                    <p>error</p>
+                </div>
+                <div>
+                    <label for="lastname">Apellido</label>
+                    <input type="text" name="lastname">
+                    <p>error</p>
+                </div>
+                <div>
+                    <label for="email">E-mail</label>
+                    <input type="text" name="email">
+                    <p>error</p>
+                </div>
+        
+                <div>
+                    <label for="password">Contraseña</label>
+                    <input type="password" name="password">
+                    <p>error</p>
+                </div>
+        
+                <div>
+                    <button type="submit" class="btn primary-green">Iniciar sesión</button>
+                </div>
+            </form>
+
+            <div class="signupmsg">
+                <p>Ya tienes una cuenta?</p>
+                <a href="/login.html" class="btn">Inicia sesión aquí</a>
+            </div>
+
+
+        </div>
+    
+    
+    </main>
+
+    <footer>
+        <div>
+            <ul>
+                <li><a href="https://www.facebook.com" target="_blank"><i class="fa-brands fa-facebook"></i></a></li>
+                <li><a href="https://twitter.com" target="_blank"><i class="fa-brands fa-x-twitter"></i></i></a></li>
+                <li><a href="https://www.instagram.com" target="_blank"><i class="fa-brands fa-instagram"></i></a></li>
+            </ul>
+            <div>
+                <p>gbygpcs.com</p>
+                <p>© 2023 Copyright</p>
+            </div>
+        </div>
+    </footer>
+
+<script type="module">
+    import app from './js/config.js';
+    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
+    import { getFirestore, collection, addDoc, getDocs, orderBy, query, setDoc, doc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js';
+
+    
+
+
+
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const form = document.querySelector('form');
+    let { name, lastname, email, password } = form;
+    console.log(name.parentElement);
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+
+
+
+
+
+        createUserWithEmailAndPassword(auth, email.value, password.value)
+        .then((credentials) => {
+            // Signed in 
+            const user = credentials.user.uid;
+            setDoc(doc(db, "roles_by_user", user), {
+                "nombre": name.value,
+                "apellido": lastname.value,
+                "role": 'admin',
+                createdAt: serverTimestamp(),
+                updatedAt: serverTimestamp()
+            });
+      
+            console.log(user);
+            console.log('credenciales: ' + credentials);
+            // ...
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log("error code: " + errorCode);
+            console.log("error msg: " + errorMessage);
+
+            if (error.message.includes('invalid-email')){
+                email.parentElement.innerHTML += `<p>El email ingresado no es válido</p>`;
+                // email.parentElement.querySelector('p').innerHTML = 'El email ingresado no es válido';
+            } else if (error.message.includes('weak-password')){
+                password.parentElement.classList.add('error');
+                password.parentElement.querySelector('p').innerHTML = 'La contraseña debe tener al menos 6 caracteres';
+            } else if (error.message.includes('email-already-in-use')){
+                email.parentElement.classList.add('error');
+                email.parentElement.querySelector('p').innerHTML = 'El email ingresado ya está en uso';
+            }
+            // ..
+        });
+
+    }) 
+
+</script>
+</body>
+</html>
