@@ -927,6 +927,10 @@ input + p, select + p, textarea + p, .errorForMmsg{
     margin: 50px auto;
 }
 
+.chatForm textarea{
+    height: 50px !important;
+}
+
 @media (min-width: 650px){
 
     .homeservices > div > div {

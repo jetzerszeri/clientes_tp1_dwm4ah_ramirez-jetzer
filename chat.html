@@ -41,32 +41,35 @@
         <nav class="breadcrumb">
                 <ol>
                     <li><a href="/">Home</a></li>
-                    <li aria-current="page">Dashboard</li>
+                    <li><a href="/admin.html">Dashboard</a></li>
+                    <li aria-current="page">Chat</li>
                 </ol>
         </nav>
     
     
         <h1>Panel de administrador</h1>
-        <p>Bienvenido, Jake</p>
+        <h2>Centro de Contacto</h2>
     
 
         <div>
             <h2>Chat</h2>
+
+            <form action="" class="chatForm">
+                <textarea name="texto" id="textochat"></textarea>
+                <button type="submit" class="btn primary-green">Enviar</button>
+            </form>
+
+            <div class="conversation">
+
+            </div>
+
+
+
+
         </div>
 
 
 
-
-
-
-        
-        <ul class="admindoptions">
-            <!-- <li><a href="/admin_users.html"><i class="fa-solid fa-users"></i><span>Usuarios</span></a></li> -->
-            <li><a href="/admin_services.html"><i class="fa-solid fa-hand-sparkles"></i><span>Servicios</span></a></li>
-            <li><a href="/admin_categories.html"><i class="fa-solid fa-table-list"></i><span>Categorías</span></a></li>
-            <li><a href="/chat.html"><i class="fa-solid fa-comments"></i><span>Chat</span></a></li>
-            <!-- <li><a href="/admin_stateshtml"><i class="fa-solid fa-map-location-dot"></i><span>Estados</span></a></li> -->
-        </ul>
     
     </main>
 
@@ -85,20 +88,58 @@
     </footer>
 
 <script type="module">
-        import app from './js/config.js';
+    import app from './js/config.js';
+    import { success, successMsgAdd } from './js/partials.js';
     import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
-    import {getDatabase, ref, set} from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-database.js';
+    import {getDatabase, ref, set, push} from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-database.js';
 
     const db = getDatabase(app);
     const auth = getAuth(app);
+
 
     onAuthStateChanged(auth, (user) => {
         if (user) {
             // User is signed in, see docs for a list of available properties
             // https://firebase.google.com/docs/reference/js/auth.user
-            const uid = user.uid;
-            console.log(uid);
-            console.log('usuario logueado')
+            // const uid = user.uid;
+            // console.log(uid);
+            // console.log('usuario logueado')
+
+
+            const form = document.querySelector('.chatForm');
+            const {texto} = form;
+            console.log(texto);
+
+            const conversation = document.querySelector('.conversation');
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                console.log('enviando mensaje');
+                console.log(texto.value);
+
+                const chatRef = ref(db, 'chat/' + user.uid);
+                const newChatRef = push(chatRef);
+                set(newChatRef, {
+                    texto: texto.value,
+                    fecha: serverTimestamp(),
+                    uid: uid
+                })
+                .then(() => {
+                    console.log('mensaje enviado');
+                    successMsgAdd('Mensaje enviado');
+                    form.reset();
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+            })
+
+
+
+
+
+
+            
             // ...
         } else {
             // User is signed out

@@ -20,6 +20,21 @@ const successMsgAdd = (text, btnlink) => {
     return mensaje;
 }
 
+const chatView = `
+<div>
+<h2>Chat</h2>
+
+<form action="" class="chatForm">
+    <textarea name="texto" id="textochat"></textarea>
+    <button type="submit" class="btn primary-green">Enviar</button>
+</form>
+
+
+
+
+</div>
+
+`
 
 export {
     success,
