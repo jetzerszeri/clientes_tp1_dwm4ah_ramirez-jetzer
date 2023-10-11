@@ -8,6 +8,7 @@ import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/
 const firebaseConfig = {
   apiKey: "AIzaSyA6f2jvDSOjjaqoKvVqsFRGT2k3eEi9N-w",
   authDomain: "tp1-clientes-dwm4ah.firebaseapp.com",
+  databaseURL: "https://tp1-clientes-dwm4ah-default-rtdb.firebaseio.com",
   projectId: "tp1-clientes-dwm4ah",
   storageBucket: "tp1-clientes-dwm4ah.appspot.com",
   messagingSenderId: "204408047429",
