@@ -96,14 +96,48 @@
     const db = getDatabase(app);
     const auth = getAuth(app);
 
+    const chatRef = ref(db, 'chat');
+    const newChatRef = push(chatRef);
+    set(newChatRef, {
+        texto: 'hola 2',
+        fecha: Date.now(),
+        uid: 'user1'
+    })
+
+
+    // function createChat(participants) {
+    //     const newChatRef = db.ref('chats').push();;
+    //     const chatData = {
+    //         lastMessage: "",
+    //         timestamp: getDatabase(app).serverValue.TIMESTAMP,
+    //         participants: participants
+    //     };
+    //     newChatRef.set(chatData);
+    //     return newChatRef.key;
+    // }
+
+    // createChat(['user1', 'user2']);
+
+
+
 
     onAuthStateChanged(auth, (user) => {
         if (user) {
             // User is signed in, see docs for a list of available properties
             // https://firebase.google.com/docs/reference/js/auth.user
-            // const uid = user.uid;
-            // console.log(uid);
-            // console.log('usuario logueado')
+            const uid = user.uid;
+            console.log("user actual" + uid);
+            console.log('usuario logueado')
+
+
+
+            // createChat([uid, 'LIsaefMu3BYpF2jINUV9RH78EZs2']);
+
+
+
+
+
+
 
 
             const form = document.querySelector('.chatForm');
