@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de categorías</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://kit.fontawesome.com/26eb2bb81f.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header class="navegacion">
+        <nav >
+            <div class="navbar">
+                <div>
+                    <a href="/" class="navbarlogo">GbyG PCS</a>
+    
+                    <div class="toggle-button">
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </div>
+                    
+                </div>
+    
+                <div class="navbar-links">
+                    <ul>
+                        <li><a href="/">Inicio</a></li>
+                        <li><a href="/services.html" >Servicios</a></li>
+                        <li><a href="/admin.html">Dashboard</a></li>
+                    </ul>
+                    <div>
+                        <a href="/login.html" class="btn">Iniciar sesión</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="adminmain">
+
+        <nav class="breadcrumb">
+            <ol>
+                <li><a href="/">Incio</a></li>
+                <li><a href="/admin.html">Dashboard</a></li>
+                <li><a aria-current="page">Servicios</a></li>
+            </ol>
+        </nav>
+    
+        <h1>Panel de administrador</h1>
+        <h2>Lista de categorías</h2>
+    
+        <ul class="usersOptions">
+            <!-- <li><a href="" class="btn">Mostrar todos</a></li> -->
+            <li><a href="/add_service.html" class="btn">Agregar nueva</a></li>
+        </ul>
+
+        <div class="tablecontainer">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Id</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+
+
+
+    </main>
+
+    <footer>
+        <div>
+            <ul>
+                <li><a href="https://www.facebook.com" target="_blank"><i class="fa-brands fa-facebook"></i></a></li>
+                <li><a href="https://twitter.com" target="_blank"><i class="fa-brands fa-x-twitter"></i></i></a></li>
+                <li><a href="https://www.instagram.com" target="_blank"><i class="fa-brands fa-instagram"></i></a></li>
+            </ul>
+            <div>
+                <p>gbygpcs.com</p>
+                <p>© 2023 Copyright</p>
+            </div>
+        </div>
+    </footer>
+
+<script type="module">
+    import  app  from './js/config.js';
+    import { getFirestore, collection, addDoc, getDocs, orderBy, query } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js';
+
+    const tableBody = document.querySelector('tbody');
+
+    // Initialize Cloud Firestore and get a reference to the service
+    const db = getFirestore(app);
+
+    const servicesRef = collection(db, "services");
+    const q = query(servicesRef, orderBy("name"));
+
+
+
+    await getDocs(q).then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+
+            let tableRow = document.createElement('tr');
+            tableRow.innerHTML = `
+                <td>${doc.data().name}</td>
+                <td>${doc.id}</td>
+                <td>
+                    <a href="/admin_categories_edit.html?id=${doc.id}" class="btn secundary-green"><i class="fa-solid fa-pen-to-square"></i></a>
+                    <form action="" class="deleteformbtn">
+                        <button type="submit" class="btn secundary-green" onclick="return confirm('¿Estás seguro de querer eliminar este servicio?');"><i class="fa-solid fa-trash"></i></button>
+                    </form>
+                </td>`;
+            tableBody.append(tableRow);
+        });
+    });
+    
+</script>
+</body>
+</html>
