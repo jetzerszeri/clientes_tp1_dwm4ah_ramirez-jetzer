@@ -70,7 +70,7 @@
                 </div>
         
                 <div>
-                    <button type="submit" class="btn primary-green">Iniciar sesión</button>
+                    <button type="submit" class="btn primary-green">Crear cuenta</button>
                 </div>
             </form>
 
@@ -103,13 +103,12 @@
     import app from './js/config.js';
     import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
     import { getFirestore, collection, addDoc, getDocs, orderBy, query, setDoc, doc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js';
-
-    
-
+    import {getDatabase, ref, set, push} from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-database.js';
 
 
     const auth = getAuth(app);
     const db = getFirestore(app);
+    const db2 = getDatabase(app);
 
     const form = document.querySelector('form');
     
@@ -140,11 +139,12 @@
 
         if (!isValid) return;
 
+        let user;
 
         createUserWithEmailAndPassword(auth, email.value, password.value)
         .then((credentials) => {
             // Signed in 
-            const user = credentials.user.uid;
+            user = credentials.user.uid;
     
             console.log(user);
             console.log('Se creó el usuario');
@@ -155,6 +155,20 @@
                 createdAt: serverTimestamp(),
                 updatedAt: serverTimestamp()
             });
+        })
+        .then(() => {
+            // return 
+            // function createChat(participants) {
+                console.log('entré a createChat')
+                const chatRef = ref(db2, 'chats');
+                const newChatRef = push(chatRef);
+                return set(newChatRef, {
+                    lastMessage: 'último mensaje',
+                    fecha: Date.now(),
+                    participants: [user, 'LIsaefMu3BYpF2jINUV9RH78EZs2']
+                })
+            // };
+            
         })
         .then(() => {
             window.location.href = '/admin.html';
