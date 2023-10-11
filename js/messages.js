@@ -7,7 +7,21 @@ const success = `
 </div>
 `
 
+const successMsgAdd = (text, btnlink) => {
+
+    let mensaje  = `
+    <div class="confirmation">
+    <p>${text}</p>
+    <div>
+        <a href="${btnlink}" class="btn">Ver listado</a>
+    </div>
+    </div>
+    `
+    return mensaje;
+}
+
 
 export {
-    success
+    success,
+    successMsgAdd,
 }
