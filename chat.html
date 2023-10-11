@@ -89,31 +89,32 @@
 
 <script type="module">
     import app from './js/config.js';
-    import { success, successMsgAdd } from './js/partials.js';
+    import { success, successMsgAdd, createChat } from './js/partials.js';
     import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
     import {getDatabase, ref, set, push} from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-database.js';
+    import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js';
 
+    const dbfirestore = getFirestore(app);
     const db = getDatabase(app);
     const auth = getAuth(app);
 
-    const chatRef = ref(db, 'chat');
-    const newChatRef = push(chatRef);
-    set(newChatRef, {
-        texto: 'hola 2',
-        fecha: Date.now(),
-        uid: 'user1'
-    })
+    // const chatRef = ref(db, 'chat');
+    // const newChatRef = push(chatRef);
+    // set(newChatRef, {
+    //     texto: 'hola 2',
+    //     fecha: Date.now(),
+    //     uid: 'user1'
+    // })
 
 
     // function createChat(participants) {
-    //     const newChatRef = db.ref('chats').push();;
-    //     const chatData = {
-    //         lastMessage: "",
-    //         timestamp: getDatabase(app).serverValue.TIMESTAMP,
+    //     const chatRef = ref(db, 'chats');
+    //     const newChatRef = push(chatRef);
+    //     set(newChatRef, {
+    //         lastMessage: 'último mensaje',
+    //         fecha: Date.now(),
     //         participants: participants
-    //     };
-    //     newChatRef.set(chatData);
-    //     return newChatRef.key;
+    //     })
     // }
 
     // createChat(['user1', 'user2']);
@@ -126,8 +127,27 @@
             // User is signed in, see docs for a list of available properties
             // https://firebase.google.com/docs/reference/js/auth.user
             const uid = user.uid;
-            console.log("user actual" + uid);
-            console.log('usuario logueado')
+            // console.log("user actual" + uid);
+            // console.log('usuario logueado')
+
+            async function checkUserRole(uid) {
+                const docRef = doc(dbfirestore, "roles_by_user", uid);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    console.log("Existe:", docSnap.data());
+                    const {role} = docSnap.data();
+                    console.log(role);
+                    if (role != 'admin') {
+                        // window.location.href = '/';
+                        console.log('no es admin');
+                    }
+                } else {
+                    console.log("No existe");
+                }
+            }
+
+            checkUserRole(uid);
 
 
 
