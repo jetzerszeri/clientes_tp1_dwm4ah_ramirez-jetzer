@@ -58,7 +58,8 @@
                     <ul class="chatList">
                     </ul>
                     <div class="chatConversation">
-                        <div class="chatName">Nombre del chat</div>
+
+                        <!-- <div class="chatName">Nombre del chat</div>
                         <div class="chatMessages">
                             <div class="received">
                                 <p>Mensaje</p>
@@ -81,7 +82,7 @@
                         <form action="" class="chatForm">
                             <textarea name="texto" id="textochat"></textarea>
                             <button type="submit" class="btn">Enviar</button>
-                        </form>
+                        </form> -->
                     </div>
                     
                 </div>
@@ -130,6 +131,7 @@
     const currentChats = document.querySelector('.chatList');
     let currentChatId;
     let currentUserId;
+    let chatConversation = document.querySelector('.chatConversation');
 
 
     //funcion para traer el nombre del usuario del chat
@@ -153,12 +155,37 @@
         let li = document.createElement('li');
         li.innerHTML = nombre;
         currentChats.appendChild(li);
-
+        
+        
+        
         li.addEventListener('click', ( ) => {
+            
+            chatConversation.innerHTML = '';
+            let chatName = document.createElement('div');
+            chatName.classList.add('chatName');
+            chatName.innerHTML = nombre;
+            chatConversation.appendChild(chatName);
+    
+            let chatMessages = document.createElement('div');
+            chatMessages.classList.add('chatMessages');
+            chatConversation.appendChild(chatMessages);
+    
+            let chatForm = `
+            <form action="" class="chatForm">
+                <textarea name="texto" id="textochat"></textarea>
+                <button type="submit" class="btn">Enviar</button>
+            </form>
+            `;
+    
+            chatConversation.innerHTML += chatForm;
+            
+
             currentChatId = idDelChat;
             // currentUserId = idUsuario;
             console.log('chat actual' + currentChatId);
             console.log('usuario actual' + currentUserId);
+            getMessagesOfThisChat();
+            sendAMsg();
         })
         // currentChats.innerHTML += `<li>${nombre}</li>`;
     }
@@ -183,6 +210,90 @@
         });
     }
 
+    function getMessagesOfThisChat() {
+        const messagesRef = ref(db, `messages/${currentChatId}`);
+        const messagesQuery = query(messagesRef, orderByChild('timestamp'));
+
+        onValue(messagesQuery, (snapshot) => {
+            if (snapshot.hasChildren()) {
+                let chatMessages = document.querySelector('.chatMessages');
+                chatMessages.innerHTML = '';
+            snapshot.forEach(childSnapshot => {
+                const message = childSnapshot.val();
+
+                const {senderId, text, timestamp} = message;
+                const hora =  timestampToReadableDateAndTime(timestamp)
+                console.log(hora)
+                console.log("mensaje: ", message);
+
+                let divMsg = document.createElement('div');
+                if (senderId == currentUserId) {
+                    divMsg.classList.add('sent');
+                } else {
+                    divMsg.classList.add('received');
+                }
+                divMsg.innerHTML = `
+                
+                <p>${text}</p>
+                <p>${hora}</p>
+                `;
+
+                
+
+                chatMessages.appendChild(divMsg);
+
+                // let thisMessageId = childSnapshot.key; // Aquí obtienes el ID del chat
+
+            });
+            } else {
+                console.log('Snapshot no tiene hijos.');
+            }
+        });
+    }
+
+    function timestampToReadableDateAndTime(timestamp) {
+        const date = new Date(timestamp);
+
+        let day = date.getDate();
+        let month = date.getMonth() + 1; // Los meses en JavaScript van de 0 a 11, por eso añadimos 1
+        let year = date.getFullYear().toString().substr(-2); // Obtener los últimos dos dígitos del año
+
+        let hours = date.getHours();
+        let minutes = date.getMinutes();
+
+        // Asegurarse de que día, mes, horas y minutos sean siempre dos dígitos
+        day = day < 10 ? '0' + day : day;
+        month = month < 10 ? '0' + month : month;
+        hours = hours < 10 ? '0' + hours : hours;
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+
+        const formattedDate = month + '/' + day + '/' + year;
+        const formattedTime = hours + ':' + minutes;
+
+        // return formattedDate + ', ' + formattedTime; 
+        return formattedTime; 
+    }
+
+
+    function sendAMsg(){
+        const form = document.querySelector('.chatForm');
+            const {texto} = form;
+            // console.log(texto);
+
+            const conversation = document.querySelector('.conversation');
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                console.log('enviando mensaje');
+                console.log(texto.value);
+
+                sendMessage(currentChatId, currentUserId, texto.value);
+                // getMessagesOfThisChat();
+
+
+                form.reset();
+            })
+    }
 
     onAuthStateChanged(auth, (user) => {
         if (user) {
@@ -207,7 +318,7 @@
                     const chatsRef = ref(db, 'chats');
                     const userChatsQuery = query(chatsRef, orderByChild(`participants/${uid}`), equalTo(true));
 
-                onValue(userChatsQuery, (snapshot) => {
+                    onValue(userChatsQuery, (snapshot) => {
                     if (snapshot.hasChildren()) {
                         currentChats.innerHTML = '';
                     snapshot.forEach(childSnapshot => {
@@ -242,66 +353,30 @@
             checkUserRole(uid);
 
 
-            // async function sendMessage(chatId, userId, text) {
-            //     const messagesRef = ref(db, `messages/${chatId}`);
-            //     const newMessageRef = push(messagesRef);
-                
-            //     const message = {
-            //         senderId: userId,
-            //         text: text,
-            //         timestamp: Date.now() 
-            //     };
 
-            //     await set(newMessageRef, message);
-
-            //     const chatRef = ref(db, `chats/${chatId}`);
-            //     await update(chatRef, {
-            //         lastMessage: text,
-            //         fecha: Date.now()
-            //     });
-            // }
-
-            // sendMessage('NgWLueYLByt_28Ai9OK', 'LIsaefMu3BYpF2jINUV9RH78EZs2', 'Probando mensaje2');
-
-
-
-            // createChat([uid, 'LIsaefMu3BYpF2jINUV9RH78EZs2']);
+            // getMessagesOfThisChat();
 
 
 
 
 
 
-            const form = document.querySelector('.chatForm');
-            const {texto} = form;
-            // console.log(texto);
+            // const form = document.querySelector('.chatForm');
+            // const {texto} = form;
+            // // console.log(texto);
 
-            const conversation = document.querySelector('.conversation');
+            // const conversation = document.querySelector('.conversation');
 
-            form.addEventListener('submit', (e) => {
-                e.preventDefault();
-                console.log('enviando mensaje');
-                console.log(texto.value);
+            // form.addEventListener('submit', (e) => {
+            //     e.preventDefault();
+            //     console.log('enviando mensaje');
+            //     console.log(texto.value);
 
-                sendMessage(currentChatId, currentUserId, texto.value);
+            //     sendMessage(currentChatId, currentUserId, texto.value);
 
-                // const chatRef = ref(db, 'chat/' + user.uid);
-                // const newChatRef = push(chatRef);
-                // set(newChatRef, {
-                //     texto: texto.value,
-                //     fecha: Date.now(),
-                //     uid: uid
-                // })
-                // .then(() => {
-                //     console.log('mensaje enviado');
-                //     successMsgAdd('Mensaje enviado');
-                //     form.reset();
-                // })
-                // .catch((error) => {
-                //     console.log(error);
-                // })
-                form.reset();
-            })
+
+            //     form.reset();
+            // })
 
 
 
@@ -317,8 +392,6 @@
 
             // aqui se redirecciona a la pagina de login
         }
-        console.log(currentUserId);
-        console.log(currentChatId);
     });
 
 
