@@ -85,25 +85,56 @@
 <script type="module">
     import app from './js/config.js';
     import { success, successMsgAdd } from './js/partials.js';
-    import {getFirestore, collection, getDocs, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js';
+    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
+    import {getFirestore, collection, getDocs, addDoc, serverTimestamp, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js';
 
     const db = getFirestore(app);
+    const auth = getAuth(app);
     const container = document.querySelector('.container');
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            const uid = user.uid;
+            let adminOptions = document.querySelector('.admindoptions');
 
-    const form = document.querySelector('form');
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        let name = form['name'].value;
+            async function checkUserRole(uid) {
+                const docRef = doc(db, "roles_by_user", uid);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const role = docSnap.data().role;
+                    if (role == 'admin') {
+                        const form = document.querySelector('form');
+                            form.addEventListener('submit', (e) => {
+                            e.preventDefault();
+                            let name = form['name'].value;
 
-        addDoc(collection(db, "categories"), {
-            name: name,
-            createdAt: serverTimestamp(),
-            updatedAt: serverTimestamp()
-        })
+                            addDoc(collection(db, "categories"), {
+                                name: name,
+                                createdAt: serverTimestamp(),
+                                updatedAt: serverTimestamp()
+                            })
 
 
-        container.innerHTML = successMsgAdd('Categoría agregada exitosamente', '/admin_categories.html');
-    }) 
+                            container.innerHTML = successMsgAdd('Categoría agregada exitosamente', '/admin_categories.html');
+                            }) 
+
+                    } else {
+                        window.location.href = '/admin.html';
+                    }
+                } 
+            }
+
+            checkUserRole(uid);  // Llama a la función
+
+        } else {
+            window.location.href = '/login.html';
+        }
+    });
+
+
+
+
+
+
     
 </script>
 </body>
