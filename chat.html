@@ -106,6 +106,7 @@
     const auth = getAuth(app);
     const currentChats = document.querySelector('.misChats ul');
 
+    //funcion para traer el nombre del usuario del chat
     async function getTheNameOfTheUser(usuarioId) {
         const docRef = doc(dbfirestore, "roles_by_user", usuarioId);
         const docSnap = await getDoc(docRef);
@@ -120,6 +121,7 @@
         }
     }
 
+    //funcion para agregar el nombre del usuario del chat
     async function appendChatName(arrayUsuarioId) {
         let nombre = await getTheNameOfTheUser(arrayUsuarioId);
         currentChats.innerHTML += `<li>${nombre}</li>`;
@@ -152,23 +154,15 @@
                         currentChats.innerHTML = '';
                     snapshot.forEach(childSnapshot => {
                         const chat = childSnapshot.val();
-                        console.log(chat.participants);
+                        console.log(chat);
+                        const chatId = childSnapshot.key; // Aquí obtienes el ID del chat
+                        console.log("Chat ID:", chatId);
 
                         let participants = Object.keys(chat.participants);
                         let personIdChat = participants.filter((participant) => participant != uid);
                         console.log(personIdChat[0]); //me tira un array con el id del otro usuario
                         console.log(getTheNameOfTheUser(personIdChat[0]));
                         appendChatName(personIdChat[0]);
-                        // let nombre = getTheNameOfTheUser(personIdChat[0]);
-                        // currentChats.innerHTML += `<li><a href="/chat.html?chat=${childSnapshot.key}">Chat ${childSnapshot.key}</a></li>`;
-                        // currentChats.innerHTML += `<li><a href="/chat.html?chat=${childSnapshot.key}">${nombre}</a></li>`;
-                        
-                        
-
-                        // const personRef = ref(db, 'roles_by_user/' + personIdChat);
-                        // onValue(personRef, (snapshot) => {
-                        //     console.log(snapshot.val());
-                        // })
 
                     });
                     } else {
