@@ -98,13 +98,16 @@
     import app from './js/config.js';
     import { success, successMsgAdd, createChat } from './js/partials.js';
     import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
-    import {getDatabase, ref, set, push, query, orderByChild, equalTo, onValue} from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-database.js';
+    import {getDatabase, ref, set, push, query, orderByChild, equalTo, onValue, update} from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-database.js';
     import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js';
 
     const dbfirestore = getFirestore(app);
     const db = getDatabase(app);
     const auth = getAuth(app);
     const currentChats = document.querySelector('.misChats ul');
+    let currentChatId;
+    let currentUserId;
+
 
     //funcion para traer el nombre del usuario del chat
     async function getTheNameOfTheUser(usuarioId) {
@@ -112,9 +115,9 @@
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-            console.log("Existe:", docSnap.data());
+            // console.log("Existe:", docSnap.data());
             const {nombre, apellido} = docSnap.data();
-            console.log(nombre, apellido);
+            // console.log(nombre, apellido);
             return nombre + ' ' + apellido;
         } else {
             console.log("No existe");
@@ -122,9 +125,39 @@
     }
 
     //funcion para agregar el nombre del usuario del chat
-    async function appendChatName(arrayUsuarioId) {
+    async function appendChatName(arrayUsuarioId, idDelChat) {
         let nombre = await getTheNameOfTheUser(arrayUsuarioId);
-        currentChats.innerHTML += `<li>${nombre}</li>`;
+        let li = document.createElement('li');
+        li.innerHTML = nombre;
+        currentChats.appendChild(li);
+
+        li.addEventListener('click', ( ) => {
+            currentChatId = idDelChat;
+            // currentUserId = idUsuario;
+            console.log('chat actual' + currentChatId);
+            console.log('usuario actual' + currentUserId);
+        })
+        // currentChats.innerHTML += `<li>${nombre}</li>`;
+    }
+
+    //funcion para agregar un mensaje al chat
+    async function sendMessage(chatId, userId, text) {
+        const messagesRef = ref(db, `messages/${chatId}`);
+        const newMessageRef = push(messagesRef);
+        
+        const message = {
+            senderId: userId,
+            text: text,
+            timestamp: Date.now() 
+        };
+
+        await set(newMessageRef, message);
+
+        const chatRef = ref(db, `chats/${chatId}`);
+        await update(chatRef, {
+            lastMessage: text,
+            fecha: Date.now()
+        });
     }
 
 
@@ -133,7 +166,9 @@
             // User is signed in, see docs for a list of available properties
             // https://firebase.google.com/docs/reference/js/auth.user
             const uid = user.uid;
-            console.log("user actual" + uid);
+            currentUserId = uid;
+            ;
+            // console.log("user actual" + uid);
             // console.log('usuario logueado')
 
             async function checkUserRole(uid) {
@@ -141,9 +176,9 @@
                 const docSnap = await getDoc(docRef);
 
                 if (docSnap.exists()) {
-                    console.log("Existe:", docSnap.data());
+                    // console.log("Existe:", docSnap.data());
                     const {role} = docSnap.data();
-                    console.log(role);
+                    // console.log(role);
 
 
                     const chatsRef = ref(db, 'chats');
@@ -154,15 +189,17 @@
                         currentChats.innerHTML = '';
                     snapshot.forEach(childSnapshot => {
                         const chat = childSnapshot.val();
-                        console.log(chat);
-                        const chatId = childSnapshot.key; // Aquí obtienes el ID del chat
-                        console.log("Chat ID:", chatId);
+                        // console.log(chat);
+                        let thisChatId = childSnapshot.key; // Aquí obtienes el ID del chat
+                        console.log("Chat ID:", thisChatId);
 
                         let participants = Object.keys(chat.participants);
                         let personIdChat = participants.filter((participant) => participant != uid);
-                        console.log(personIdChat[0]); //me tira un array con el id del otro usuario
-                        console.log(getTheNameOfTheUser(personIdChat[0]));
-                        appendChatName(personIdChat[0]);
+                        // console.log(personIdChat[0]); //me tira un array con el id del otro usuario
+                        // console.log(getTheNameOfTheUser(personIdChat[0]));
+                        appendChatName(personIdChat[0],  thisChatId);
+
+                        // console.log('chatId: ' + currentChatId);
 
                     });
                     } else {
@@ -172,15 +209,36 @@
 
                 if (role != 'admin') {
                     // window.location.href = '/';
-                    console.log('no es admin');
+                    // console.log('no es admin');
                 }
                 } else {
-                    console.log("No existe");
+                    // console.log("No existe");
                 }
             }
 
             checkUserRole(uid);
 
+
+            // async function sendMessage(chatId, userId, text) {
+            //     const messagesRef = ref(db, `messages/${chatId}`);
+            //     const newMessageRef = push(messagesRef);
+                
+            //     const message = {
+            //         senderId: userId,
+            //         text: text,
+            //         timestamp: Date.now() 
+            //     };
+
+            //     await set(newMessageRef, message);
+
+            //     const chatRef = ref(db, `chats/${chatId}`);
+            //     await update(chatRef, {
+            //         lastMessage: text,
+            //         fecha: Date.now()
+            //     });
+            // }
+
+            // sendMessage('NgWLueYLByt_28Ai9OK', 'LIsaefMu3BYpF2jINUV9RH78EZs2', 'Probando mensaje2');
 
 
 
@@ -193,7 +251,7 @@
 
             const form = document.querySelector('.chatForm');
             const {texto} = form;
-            console.log(texto);
+            // console.log(texto);
 
             const conversation = document.querySelector('.conversation');
 
@@ -202,21 +260,24 @@
                 console.log('enviando mensaje');
                 console.log(texto.value);
 
-                const chatRef = ref(db, 'chat/' + user.uid);
-                const newChatRef = push(chatRef);
-                set(newChatRef, {
-                    texto: texto.value,
-                    fecha: Date.now(),
-                    uid: uid
-                })
-                .then(() => {
-                    console.log('mensaje enviado');
-                    successMsgAdd('Mensaje enviado');
-                    form.reset();
-                })
-                .catch((error) => {
-                    console.log(error);
-                })
+                sendMessage(currentChatId, currentUserId, texto.value);
+
+                // const chatRef = ref(db, 'chat/' + user.uid);
+                // const newChatRef = push(chatRef);
+                // set(newChatRef, {
+                //     texto: texto.value,
+                //     fecha: Date.now(),
+                //     uid: uid
+                // })
+                // .then(() => {
+                //     console.log('mensaje enviado');
+                //     successMsgAdd('Mensaje enviado');
+                //     form.reset();
+                // })
+                // .catch((error) => {
+                //     console.log(error);
+                // })
+                form.reset();
             })
 
 
@@ -233,9 +294,12 @@
 
             // aqui se redirecciona a la pagina de login
         }
+        console.log(currentUserId);
+        console.log(currentChatId);
     });
 
-    console.log(auth);
+
+    // console.log(auth);
     // console.log(auth.currentUser.uid);
 
 </script>
