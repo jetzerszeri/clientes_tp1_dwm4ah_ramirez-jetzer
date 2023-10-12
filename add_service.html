@@ -50,17 +50,12 @@
         <h1>Panel de administrador</h1>
         <h2>Agregar servicio</h2>
     
-        <!-- <ul class="usersOptions">
-            <li><a href="" class="btn">Mostrar todos</a></li>
-            <li><a href="" class="btn">Agregar uno</a></li>
-        </ul> -->
 
         <div class="container">
             <form action="">
                 <div>
                     <label for="name">Nombre del servicio</label>
                     <input type="text" placeholder="Ingresa el nombre del servicio" name="name">
-                    <p>mensaje de error</p>
                 </div>
                 <div>
                     <label for="category">Categoría</label>
@@ -106,40 +101,102 @@
 <script type="module">
     import app from './js/config.js';
     import { success, successMsgAdd } from './js/partials.js';
-    import {getFirestore, collection, getDocs, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js';
+    import {getFirestore, collection, getDocs, addDoc, serverTimestamp, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js';
+    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
 
     const db = getFirestore(app);
     const querySnapshot = await getDocs(collection(db, "categories"));
     const container = document.querySelector('.container');
+    const auth = getAuth(app);
 
-    querySnapshot.forEach((doc) => {
-        let option = document.createElement('option');
-        option.value = doc.id;
-        option.innerHTML = doc.data().name;
-        document.querySelector('#categorySelect').append(option);
-    })
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            const uid = user.uid;
+
+            async function checkUserRole(uid) {
+                const docRef = doc(db, "roles_by_user", uid);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const role = docSnap.data().role;
+                    if (role == 'admin') {
+                        
+                        
+                        querySnapshot.forEach((doc) => {
+                            let option = document.createElement('option');
+                            option.value = doc.data().name;
+                            option.innerHTML = doc.data().name;
+                            document.querySelector('#categorySelect').append(option);
+                        })
+                    
+                    
+                        const form = document.querySelector('form');
+                        form.addEventListener('submit', (e) => {
+                            e.preventDefault();
+                    
+                            let { name, category, description, price } = form;
+                    
+                            let isValid = true;
+                            let errorMessages = form.querySelectorAll('p');
+                    
+                            if (errorMessages.length > 0){
+                                errorMessages.forEach((p) => {
+                                    p.remove();
+                                })
+                            }
+                    
+                            if (!name.value.trim()) {
+                            name.parentElement.innerHTML += `<p>El nombre no puede estar vacío</p>`;
+                            isValid = false; 
+                            };
+                    
+                            if (!description.value.trim()) {
+                                description.parentElement.innerHTML += `<p>La descripción es obligatoria</p>`;
+                                isValid = false; 
+                            };
+                            if (!price.value.trim()) {
+                                price.parentElement.innerHTML += `<p>El precio no puede estar vacío</p>`;
+                                isValid = false; 
+                            };
+                    
+                            if (!isValid) return;
+                    
+                    
+                    
+                    
+                            addDoc(collection(db, "services"), {
+                                name: name.value,
+                                category: category.value,
+                                description: description.value,
+                                price: price.value,
+                                createdAt: serverTimestamp(),
+                                updatedAt: serverTimestamp()
+                            });
+                    
+                            container.innerHTML = successMsgAdd('Servicio agregado exitosamente', '/admin_services.html');
+                        }) 
 
 
-    const form = document.querySelector('form');
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        let name = form['name'].value;
-        let category = form['category'].value;
-        let description = form['description'].value;
-        let price = form['price'].value;
 
-        addDoc(collection(db, "services"), {
-            name: name,
-            category: category,
-            description: description,
-            price: price,
-            createdAt: serverTimestamp(),
-            updatedAt: serverTimestamp()
-        })
+                    } else {
+                        window.location.href = '/admin.html';
+                    }
+                } 
+            }
+
+            checkUserRole(uid);  // Llama a la función
+
+        } else {
+            window.location.href = '/login.html';
+        }
+    });
 
 
-        container.innerHTML = successMsgAdd('Servicio agregado exitosamente', '/admin_services.html');
-    }) 
+
+
+
+
+
+
     
 </script>
 </body>
