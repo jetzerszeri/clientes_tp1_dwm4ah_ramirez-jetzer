@@ -52,19 +52,42 @@
     
 
         <div>
-            <h2>Chat</h2>
 
             <div class="misChats">
-                <h3>Mis chats</h3>
-                <ul>
-                </ul>
+                <div class="chatContainer">
+                    <ul class="chatList">
+                    </ul>
+                    <div class="chatConversation">
+                        <div class="chatName">Nombre del chat</div>
+                        <div class="chatMessages">
+                            <div class="received">
+                                <p>Mensaje</p>
+                                <p>10:55</p>
+                            </div>
+                            <div class="sent">
+                                <p>Mensaje Mensaje</p>
+                                <p>10:55</p>
+                            </div>
+                            <div class="received">
+                                <p>Mensaje</p>
+                                <p>10:55</p>
+                            </div>
+                            <div class="sent">
+                                <p>Mensaje Mensaje</p>
+                                <p>10:55</p>
+                            </div>
 
+                        </div>
+                        <form action="" class="chatForm">
+                            <textarea name="texto" id="textochat"></textarea>
+                            <button type="submit" class="btn">Enviar</button>
+                        </form>
+                    </div>
+                    
+                </div>
             </div>
 
-            <form action="" class="chatForm">
-                <textarea name="texto" id="textochat"></textarea>
-                <button type="submit" class="btn primary-green">Enviar</button>
-            </form>
+
 
             <div class="conversation">
 
@@ -104,7 +127,7 @@
     const dbfirestore = getFirestore(app);
     const db = getDatabase(app);
     const auth = getAuth(app);
-    const currentChats = document.querySelector('.misChats ul');
+    const currentChats = document.querySelector('.chatList');
     let currentChatId;
     let currentUserId;
 
