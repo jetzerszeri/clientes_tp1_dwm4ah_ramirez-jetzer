@@ -91,35 +91,12 @@
     import app from './js/config.js';
     import { success, successMsgAdd, createChat } from './js/partials.js';
     import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
-    import {getDatabase, ref, set, push} from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-database.js';
+    import {getDatabase, ref, set, push, query, orderByChild, equalTo, onValue} from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-database.js';
     import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js';
 
     const dbfirestore = getFirestore(app);
     const db = getDatabase(app);
     const auth = getAuth(app);
-
-    // const chatRef = ref(db, 'chat');
-    // const newChatRef = push(chatRef);
-    // set(newChatRef, {
-    //     texto: 'hola 2',
-    //     fecha: Date.now(),
-    //     uid: 'user1'
-    // })
-
-
-    // function createChat(participants) {
-    //     const chatRef = ref(db, 'chats');
-    //     const newChatRef = push(chatRef);
-    //     set(newChatRef, {
-    //         lastMessage: 'último mensaje',
-    //         fecha: Date.now(),
-    //         participants: participants
-    //     })
-    // }
-
-    // createChat(['user1', 'user2']);
-
-
 
 
     onAuthStateChanged(auth, (user) => {
@@ -127,7 +104,7 @@
             // User is signed in, see docs for a list of available properties
             // https://firebase.google.com/docs/reference/js/auth.user
             const uid = user.uid;
-            // console.log("user actual" + uid);
+            console.log("user actual" + uid);
             // console.log('usuario logueado')
 
             async function checkUserRole(uid) {
@@ -138,6 +115,23 @@
                     console.log("Existe:", docSnap.data());
                     const {role} = docSnap.data();
                     console.log(role);
+
+
+                    const chatsRef = ref(db, 'chats');
+                const userChatsQuery = query(chatsRef, orderByChild(`participants/${uid}`), equalTo(true));
+
+                onValue(userChatsQuery, (snapshot) => {
+                if (snapshot.hasChildren()) {
+                    snapshot.forEach(childSnapshot => {
+                        const chat = childSnapshot.val();
+                        console.log(chat);
+                    });
+                } else {
+                    console.log('Snapshot no tiene hijos.');
+                }
+            });
+
+
                     if (role != 'admin') {
                         // window.location.href = '/';
                         console.log('no es admin');
@@ -152,8 +146,6 @@
 
 
             // createChat([uid, 'LIsaefMu3BYpF2jINUV9RH78EZs2']);
-
-
 
 
 
@@ -175,7 +167,7 @@
                 const newChatRef = push(chatRef);
                 set(newChatRef, {
                     texto: texto.value,
-                    fecha: serverTimestamp(),
+                    fecha: Date.now(),
                     uid: uid
                 })
                 .then(() => {
