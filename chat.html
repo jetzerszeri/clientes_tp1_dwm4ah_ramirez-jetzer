@@ -54,6 +54,13 @@
         <div>
             <h2>Chat</h2>
 
+            <div class="misChats">
+                <h3>Mis chats</h3>
+                <ul>
+                </ul>
+
+            </div>
+
             <form action="" class="chatForm">
                 <textarea name="texto" id="textochat"></textarea>
                 <button type="submit" class="btn primary-green">Enviar</button>
@@ -97,6 +104,26 @@
     const dbfirestore = getFirestore(app);
     const db = getDatabase(app);
     const auth = getAuth(app);
+    const currentChats = document.querySelector('.misChats ul');
+
+    async function getTheNameOfTheUser(usuarioId) {
+        const docRef = doc(dbfirestore, "roles_by_user", usuarioId);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            console.log("Existe:", docSnap.data());
+            const {nombre, apellido} = docSnap.data();
+            console.log(nombre, apellido);
+            return nombre + ' ' + apellido;
+        } else {
+            console.log("No existe");
+        }
+    }
+
+    async function appendChatName(arrayUsuarioId) {
+        let nombre = await getTheNameOfTheUser(arrayUsuarioId);
+        currentChats.innerHTML += `<li>${nombre}</li>`;
+    }
 
 
     onAuthStateChanged(auth, (user) => {
@@ -118,30 +145,48 @@
 
 
                     const chatsRef = ref(db, 'chats');
-                const userChatsQuery = query(chatsRef, orderByChild(`participants/${uid}`), equalTo(true));
+                    const userChatsQuery = query(chatsRef, orderByChild(`participants/${uid}`), equalTo(true));
 
                 onValue(userChatsQuery, (snapshot) => {
-                if (snapshot.hasChildren()) {
+                    if (snapshot.hasChildren()) {
+                        currentChats.innerHTML = '';
                     snapshot.forEach(childSnapshot => {
                         const chat = childSnapshot.val();
-                        console.log(chat);
+                        console.log(chat.participants);
+
+                        let participants = Object.keys(chat.participants);
+                        let personIdChat = participants.filter((participant) => participant != uid);
+                        console.log(personIdChat[0]); //me tira un array con el id del otro usuario
+                        console.log(getTheNameOfTheUser(personIdChat[0]));
+                        appendChatName(personIdChat[0]);
+                        // let nombre = getTheNameOfTheUser(personIdChat[0]);
+                        // currentChats.innerHTML += `<li><a href="/chat.html?chat=${childSnapshot.key}">Chat ${childSnapshot.key}</a></li>`;
+                        // currentChats.innerHTML += `<li><a href="/chat.html?chat=${childSnapshot.key}">${nombre}</a></li>`;
+                        
+                        
+
+                        // const personRef = ref(db, 'roles_by_user/' + personIdChat);
+                        // onValue(personRef, (snapshot) => {
+                        //     console.log(snapshot.val());
+                        // })
+
                     });
-                } else {
-                    console.log('Snapshot no tiene hijos.');
-                }
-            });
-
-
-                    if (role != 'admin') {
-                        // window.location.href = '/';
-                        console.log('no es admin');
+                    } else {
+                        console.log('Snapshot no tiene hijos.');
                     }
+                }); 
+
+                if (role != 'admin') {
+                    // window.location.href = '/';
+                    console.log('no es admin');
+                }
                 } else {
                     console.log("No existe");
                 }
             }
 
             checkUserRole(uid);
+
 
 
 
