@@ -47,24 +47,14 @@
     
     
         <h1>Panel de administrador</h1>
-        <p>Bienvenido, Jake</p>
-    
-
-        <div>
-            <h2>Chat</h2>
-        </div>
-
-
-
-
-
+        <p>Bienvenido de nuevo!</p>
 
         
         <ul class="admindoptions">
             <!-- <li><a href="/admin_users.html"><i class="fa-solid fa-users"></i><span>Usuarios</span></a></li> -->
-            <li><a href="/admin_services.html"><i class="fa-solid fa-hand-sparkles"></i><span>Servicios</span></a></li>
+            <!-- <li><a href="/admin_services.html"><i class="fa-solid fa-hand-sparkles"></i><span>Servicios</span></a></li>
             <li><a href="/admin_categories.html"><i class="fa-solid fa-table-list"></i><span>Categorías</span></a></li>
-            <li><a href="/chat.html"><i class="fa-solid fa-comments"></i><span>Chat</span></a></li>
+            <li><a href="/chat.html"><i class="fa-solid fa-comments"></i><span>Chat</span></a></li> -->
             <!-- <li><a href="/admin_stateshtml"><i class="fa-solid fa-map-location-dot"></i><span>Estados</span></a></li> -->
         </ul>
     
@@ -88,29 +78,50 @@
         import app from './js/config.js';
     import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
     import {getDatabase, ref, set} from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-database.js';
+    import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js';
 
     const db = getDatabase(app);
     const auth = getAuth(app);
+    const dbfirestore = getFirestore(app);
 
     onAuthStateChanged(auth, (user) => {
         if (user) {
-            // User is signed in, see docs for a list of available properties
-            // https://firebase.google.com/docs/reference/js/auth.user
             const uid = user.uid;
-            console.log(uid);
-            console.log('usuario logueado')
-            // ...
-        } else {
-            // User is signed out
-            // ...
-            console.log('usuario No logueado')
+            let adminOptions = document.querySelector('.admindoptions');
 
-            // aqui se redirecciona a la pagina de login
+            async function checkUserRole(uid) {
+                const docRef = doc(dbfirestore, "roles_by_user", uid);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const role = docSnap.data().role;
+                    if (role == 'admin') {
+                        // window.location.href = '/';
+                        console.log('SI es admin');
+                        adminOptions.innerHTML +=`
+                        <li><a href="/admin_services.html"><i class="fa-solid fa-hand-sparkles"></i><span>Servicios</span></a></li>
+                        <li><a href="/admin_categories.html"><i class="fa-solid fa-table-list"></i><span>Categorías</span></a></li>
+                        <li><a href="/chat.html"><i class="fa-solid fa-comments"></i><span>Chat</span></a></li>
+                        `;
+
+                    } else {
+                        adminOptions.innerHTML +=`
+                        <li><a href="/chat.html"><i class="fa-solid fa-comments"></i><span>Chat</span></a></li>
+                        `;
+                    }
+                } 
+                // else {
+                //     console.log("No such document!");
+                // }
+            }
+
+            checkUserRole(uid);  // Llama a la función
+
+        } else {
+            window.location.href = '/login.html';
         }
     });
 
-    console.log(auth);
-    // console.log(auth.currentUser.uid);
+
 
 </script>
 </body>
