@@ -279,7 +279,7 @@
         const formattedTime = hours + ':' + minutes;
 
         // return formattedDate + ', ' + formattedTime; 
-        return formattedTime; 
+        return formattedTime; //por ahora solo quiero el tiempo
     }
 
 
@@ -292,8 +292,12 @@
 
             form.addEventListener('submit', (e) => {
                 e.preventDefault();
-                console.log('enviando mensaje');
-                console.log(texto.value);
+                // console.log('enviando mensaje');
+                // console.log(texto.value);
+                if (texto.value.trim() === "") {
+                    console.log('El textarea está vacío. No se enviará el mensaje.');
+                    return;
+                }
 
                 sendMessage(currentChatId, currentUserId, texto.value);
                 // getMessagesOfThisChat();
@@ -305,13 +309,9 @@
 
     onAuthStateChanged(auth, (user) => {
         if (user) {
-            // User is signed in, see docs for a list of available properties
-            // https://firebase.google.com/docs/reference/js/auth.user
+
             const uid = user.uid;
             currentUserId = uid;
-            ;
-            // console.log("user actual" + uid);
-            // console.log('usuario logueado')
 
             async function checkUserRole(uid) {
                 const docRef = doc(dbfirestore, "roles_by_user", uid);
@@ -337,11 +337,7 @@
 
                         let participants = Object.keys(chat.participants);
                         let personIdChat = participants.filter((participant) => participant != uid);
-                        // console.log(personIdChat[0]); //me tira un array con el id del otro usuario
-                        // console.log(getTheNameOfTheUser(personIdChat[0]));
                         appendChatName(personIdChat[0],  thisChatId);
-
-                        // console.log('chatId: ' + currentChatId);
 
                     });
                     } else {
@@ -349,62 +345,17 @@
                     }
                 }); 
 
-                if (role != 'admin') {
-                    // window.location.href = '/';
-                    // console.log('no es admin');
-                }
-                } else {
-                    // console.log("No existe");
                 }
             }
 
             checkUserRole(uid);
 
-
-
-            // getMessagesOfThisChat();
-
-
-
-
-
-
-            // const form = document.querySelector('.chatForm');
-            // const {texto} = form;
-            // // console.log(texto);
-
-            // const conversation = document.querySelector('.conversation');
-
-            // form.addEventListener('submit', (e) => {
-            //     e.preventDefault();
-            //     console.log('enviando mensaje');
-            //     console.log(texto.value);
-
-            //     sendMessage(currentChatId, currentUserId, texto.value);
-
-
-            //     form.reset();
-            // })
-
-
-
-
-
-
             
-            // ...
         } else {
-            // User is signed out
-            // ...
             console.log('usuario No logueado')
-
-            // aqui se redirecciona a la pagina de login
         }
     });
 
-
-    // console.log(auth);
-    // console.log(auth.currentUser.uid);
 
 </script>
 </body>
