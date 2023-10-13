@@ -44,12 +44,12 @@
                 <li><a href="/">Incio</a></li>
                     <li><a href="/admin.html">Dashboard</a></li>
                     <li><a href="/admin_services.html">Servicios</a></li>
-                <li aria-current="page">Agregar</li>
+                <li aria-current="page">Editar</li>
             </ol>
         </nav>
     
         <h1>Panel de administrador</h1>
-        <h2>Agregar servicio</h2>
+        <h2>Editar servicio</h2>
     
 
         <div class="container">
@@ -76,7 +76,7 @@
 
             
                 <div>
-                    <button type="submit" class="btn primary-green">Agregar servicio</button>
+                    <button type="submit" class="btn primary-green">Editar servicio</button>
                 </div>
             </form>
         </div>
@@ -102,7 +102,7 @@
 <script type="module">
     import app from './js/config.js';
     import { success, successMsgAdd } from './js/partials.js';
-    import {getFirestore, collection, getDocs, addDoc, serverTimestamp, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js';
+    import {getFirestore, collection, getDocs, addDoc, serverTimestamp, doc, getDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js';
     import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
 
     const db = getFirestore(app);
@@ -120,60 +120,102 @@
                 if (docSnap.exists()) {
                     const role = docSnap.data().role;
                     if (role == 'admin') {
-                        
-                        
-                        querySnapshot.forEach((doc) => {
-                            let option = document.createElement('option');
-                            option.value = doc.data().name;
-                            option.innerHTML = doc.data().name;
-                            document.querySelector('#categorySelect').append(option);
-                        })
-                    
-                    
+
+                        const url = new URLSearchParams(window.location.search);
+                        const id = url.get('id');
+
+                        if (!id) {
+                            window.location.href = '/admin_services.html';
+                        }
+                        const docServicesRef = doc(db, "services", id);
                         const form = document.querySelector('form');
-                        form.addEventListener('submit', (e) => {
-                            e.preventDefault();
+                        let { name, category, description, price } = form;
+
+                        async function getSeviceData() {
+                            try {
+                                const docSnap = await getDoc(docServicesRef);
+                                if (docSnap.exists()) {
+                                    const data = docSnap.data();
+                                    name.value = data.name;
+                                    // document.querySelector('select[name="category"]').value = data.category;
+                                    let categorySelected = data.category;
+                                    description.value = data.description;
+                                    price.value = data.price;
+
+                                    //traer los servicios desde la base de datos                        
+                                    querySnapshot.forEach((doc) => {
+                                        let option = document.createElement('option');
+                                        option.value = doc.data().name;
+                                        option.innerHTML = doc.data().name;
+
+                                        if(option.value === categorySelected) {
+                                            option.selected = true;
+                                        }
+                                        document.querySelector('#categorySelect').append(option);
+                                    })
+                                    
+                                    console.log('se encontró el servicio');
+
+
+                                } else {
+                                    console.log("el servicio");
+                                }
+                            } catch (error) {
+                                console.log("error al traer el documento",error);
+                            }
+                        }
+                        
+                        getSeviceData();
                     
-                            let { name, category, description, price } = form;
+
+                        form.addEventListener('submit', async function(e) {
+                            e.preventDefault();
                     
                             let isValid = true;
                             let errorMessages = form.querySelectorAll('p');
                     
-                            if (errorMessages.length > 0){
+                            if (errorMessages){
                                 errorMessages.forEach((p) => {
                                     p.remove();
                                 })
                             }
                     
                             if (!name.value.trim()) {
-                            name.parentElement.innerHTML += `<p>El nombre no puede estar vacío</p>`;
-                            isValid = false; 
+                                let errorP = document.createElement('p');
+                                errorP.innerText = "El nombre no puede estar vacío";
+                                name.parentElement.appendChild(errorP);
+                                isValid = false; 
                             };
-                    
                             if (!description.value.trim()) {
-                                description.parentElement.innerHTML += `<p>La descripción es obligatoria</p>`;
+                                let errorP = document.createElement('p');
+                                errorP.innerText = "La descripción no puede estar vacía";
+                                description.parentElement.appendChild(errorP);
                                 isValid = false; 
                             };
                             if (!price.value.trim()) {
-                                price.parentElement.innerHTML += `<p>El precio no puede estar vacío</p>`;
+                                let errorP = document.createElement('p');
+                                errorP.innerText = "El precio no puede estar vacío";
+                                price.parentElement.appendChild(errorP);
                                 isValid = false; 
                             };
+
                     
                             if (!isValid) return;
-                    
-                    
-                    
-                    
-                            addDoc(collection(db, "services"), {
-                                name: name.value,
-                                category: category.value,
-                                description: description.value,
-                                price: price.value,
-                                createdAt: serverTimestamp(),
-                                updatedAt: serverTimestamp()
-                            });
-                    
-                            container.innerHTML = successMsgAdd('Servicio agregado exitosamente', '/admin_services.html');
+                            // getSeviceData();
+                   
+                            try{
+                                await updateDoc(docServicesRef, {
+                                    name: name.value,
+                                    category: category.value,
+                                    description: description.value,
+                                    price: price.value,
+                                    updatedAt: serverTimestamp()
+                                });
+                                container.innerHTML = successMsgAdd('Servicio editado exitosamente', '/admin_services.html');
+                            }catch(error){
+                                console.log("no se pudo editar", error);
+                            }
+
                         }) 
 
 
