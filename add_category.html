@@ -43,7 +43,8 @@
             <ol>
                 <li><a href="/">Incio</a></li>
                     <li><a href="/admin.html">Dashboard</a></li>
-                <li aria-current="page">Agregar categoría</li>
+                    <li><a href="/admin_categories.html">Categorías</a></li>
+                <li aria-current="page">Agregar</li>
             </ol>
         </nav>
     
@@ -103,19 +104,37 @@
                     const role = docSnap.data().role;
                     if (role == 'admin') {
                         const form = document.querySelector('form');
-                            form.addEventListener('submit', (e) => {
+                        let name = form['name'];
+                        form.addEventListener('submit', (e) => {
                             e.preventDefault();
-                            let name = form['name'].value;
+
+                                    let isValid = true;
+                                let errorMessages = form.querySelectorAll('p');
+                        
+                                if (errorMessages){
+                                    errorMessages.forEach((p) => {
+                                        p.remove();
+                                    })
+                                }
+
+                                if (!name.value.trim()) {
+                                    let errorP = document.createElement('p');
+                                    errorP.innerText = "El nombre no puede estar vacío";
+                                    name.parentElement.appendChild(errorP);
+                                    isValid = false; 
+                                };
+
+                                if (!isValid) return;
 
                             addDoc(collection(db, "categories"), {
-                                name: name,
+                                name: name.value,
                                 createdAt: serverTimestamp(),
                                 updatedAt: serverTimestamp()
                             })
 
 
                             container.innerHTML = successMsgAdd('Categoría agregada exitosamente', '/admin_categories.html');
-                            }) 
+                        }) 
 
                     } else {
                         window.location.href = '/admin.html';
