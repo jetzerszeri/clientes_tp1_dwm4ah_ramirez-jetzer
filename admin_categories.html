@@ -25,7 +25,7 @@
                 <div class="navbar-links">
                     <ul>
                         <li><a href="/">Inicio</a></li>
-                        <li><a href="/services.html" >Servicios</a></li>
+                        <li><a href="/categories.html" >Servicios</a></li>
                         <li><a href="/admin.html">Dashboard</a></li>
                     </ul>
                     <div>
@@ -88,35 +88,83 @@
 
 <script type="module">
     import  app  from './js/config.js';
-    import { getFirestore, collection, addDoc, getDocs, orderBy, query } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js';
+    import { getFirestore, collection, addDoc, getDocs, orderBy, query, doc, getDoc, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js';
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
 
     const tableBody = document.querySelector('tbody');
 
-    // Initialize Cloud Firestore and get a reference to the service
+    // Initialize Cloud Firestore and get a reference to the category
     const db = getFirestore(app);
+    const auth = getAuth(app);
 
-    const servicesRef = collection(db, "categories");
-    const q = query(servicesRef, orderBy("name"));
+    const categoriesRef = collection(db, "categories");
+    const q = query(categoriesRef, orderBy("name"));
+
+
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            const uid = user.uid;
+
+            async function checkUserRole(uid) {
+                const docRef = doc(db, "roles_by_user", uid);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const role = docSnap.data().role;
+                    if (role == 'admin') {
+
+                        await getDocs(q).then((querySnapshot) => {
+                            querySnapshot.forEach((doc) => {
+
+                                let tableRow = document.createElement('tr');
+                                tableRow.innerHTML = `
+                                    <td>${doc.data().name}</td>
+                                    <td>${doc.id}</td>
+                                    <td>
+                                        <a href="/admin_categories_edit.html?id=${doc.id}" class="btn secundary-green"><i class="fa-solid fa-pen-to-square"></i></a>
+                                        <button class="btn secundary-green delete-btn" data-id="${doc.id}"><i class="fa-solid fa-trash"></i></button>
+                                    </td>`;
+                                tableBody.append(tableRow);
+                            });
+                            document.querySelectorAll('.delete-btn').forEach(button => {
+                                button.addEventListener('click', function() {
+                                    const categoryId = this.getAttribute('data-id');
+                                    deletecategory(categoryId);
+                                });
+                            });
+                        });
 
 
 
-    await getDocs(q).then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
+                        async function deletecategory(categoryId) {
+                            const userConfirmed = window.confirm("¿Estás seguro de que deseas eliminar esta categoría?");
 
-            let tableRow = document.createElement('tr');
-            tableRow.innerHTML = `
-                <td>${doc.data().name}</td>
-                <td>${doc.id}</td>
-                <td>
-                    <a href="/admin_categories_edit.html?id=${doc.id}" class="btn secundary-green"><i class="fa-solid fa-pen-to-square"></i></a>
-                    <form action="" class="deleteformbtn">
-                        <button type="submit" class="btn secundary-green" onclick="return confirm('¿Estás seguro de querer eliminar este servicio?');"><i class="fa-solid fa-trash"></i></button>
-                    </form>
-                </td>`;
-            tableBody.append(tableRow);
-        });
+                            if (!userConfirmed) {
+                                return;
+                            }
+
+                            try {
+                            await deleteDoc(doc(db, 'categories', categoryId));
+                            console.log('categoría eliminado correctamente');
+                            window.location.reload();
+                            } catch (error) {
+                            console.error('Error al eliminar el categoría:', error);
+                            }
+                        }
+
+                    } else {
+                        window.location.href = '/admin.html';
+                    }
+                } 
+            }
+
+            checkUserRole(uid); 
+
+        } else {
+            window.location.href = '/login.html';
+        }
     });
-    
+
+
 </script>
 </body>
 </html>
