@@ -27,7 +27,7 @@
                     <ul>
                         <li><a href="/">Inicio</a></li>
                         <li><a href="/services.html" >Servicios</a></li>
-                        <li><a href="/admin.html">Dashboard</a></li>
+                        <li><a href="/admin.html"  class="active">Dashboard</a></li>
                     </ul>
                     <div>
                         <a href="/login.html" class="btn">Iniciar sesión</a>
@@ -91,36 +91,91 @@
 
 <script type="module">
     import  app  from './js/config.js';
-    import { getFirestore, collection, addDoc, getDocs, orderBy, query } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js';
+    import { getFirestore, collection, addDoc, getDocs, orderBy, query, doc, getDoc, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js';
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
 
     const tableBody = document.querySelector('tbody');
 
     // Initialize Cloud Firestore and get a reference to the service
     const db = getFirestore(app);
+    const auth = getAuth(app);
 
     const servicesRef = collection(db, "services");
     const q = query(servicesRef, orderBy("name"));
 
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            const uid = user.uid;
+
+            async function checkUserRole(uid) {
+                const docRef = doc(db, "roles_by_user", uid);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const role = docSnap.data().role;
+                    if (role == 'admin') {
+
+                        await getDocs(q).then((querySnapshot) => {
+                            querySnapshot.forEach((doc) => {
+                    
+                                let tableRow = document.createElement('tr');
+                                tableRow.innerHTML = `
+                                    <td>${doc.data().name}</td>
+                                    <td>${doc.data().category}</td>
+                                    <td>${doc.data().description}</td>
+                                    <td>$${doc.data().price}/sqft</td>
+                                    <td>
+                                        <a href="/admin_services_edit.html?id=${doc.id}" class="btn secundary-green"><i class="fa-solid fa-pen-to-square"></i></a>
+                                        <button class="btn secundary-green delete-btn" data-id="${doc.id}"><i class="fa-solid fa-trash"></i></button>
+
+                                    </td>`;
+                                tableBody.append(tableRow);
+                            });
+                            document.querySelectorAll('.delete-btn').forEach(button => {
+                                button.addEventListener('click', function() {
+                                    const serviceId = this.getAttribute('data-id');
+                                    deleteService(serviceId);
+                                });
+                            });
+                        });
 
 
-    await getDocs(q).then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
 
-            let tableRow = document.createElement('tr');
-            tableRow.innerHTML = `
-                <td>${doc.data().name}</td>
-                <td>${doc.data().category}</td>
-                <td>${doc.data().description}</td>
-                <td>$${doc.data().price}/sqft</td>
-                <td>
-                    <a href="/admin_services_edit.html?id=${doc.id}" class="btn secundary-green"><i class="fa-solid fa-pen-to-square"></i></a>
-                    <form action="" class="deleteformbtn">
-                        <button type="submit" class="btn secundary-green" onclick="return confirm('¿Estás seguro de querer eliminar este servicio?');"><i class="fa-solid fa-trash"></i></button>
-                    </form>
-                </td>`;
-            tableBody.append(tableRow);
-        });
+                        async function deleteService(serviceId) {
+                            const userConfirmed = window.confirm("¿Estás seguro de que deseas eliminar este servicio?");
+
+                            if (!userConfirmed) {
+                                return;
+                            }
+
+                            try {
+                            await deleteDoc(doc(db, 'services', serviceId));
+                            console.log('Servicio eliminado correctamente');
+                            window.location.reload();
+                            } catch (error) {
+                            console.error('Error al eliminar el Servicio:', error);
+                            }
+                        }
+
+
+
+
+                    } else {
+                        window.location.href = '/admin.html';
+                    }
+                } 
+            }
+
+            checkUserRole(uid);  // Llama a la función
+
+        } else {
+            window.location.href = '/login.html';
+        }
     });
+
+
+
+
+
     
 </script>
 </body>
