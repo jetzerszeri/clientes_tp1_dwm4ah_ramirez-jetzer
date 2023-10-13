@@ -103,7 +103,7 @@
     import app from './js/config.js';
     import { success, successMsgAdd } from './js/partials.js';
     import {getFirestore, collection, getDocs, addDoc, serverTimestamp, doc, getDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js';
-    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
 
     const db = getFirestore(app);
     const querySnapshot = await getDocs(collection(db, "categories"));

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar categoría</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://kit.fontawesome.com/26eb2bb81f.js" crossorigin="anonymous"></script>
+    <script src="js/main.js" defer></script>
+</head>
+<body>
+    <header class="navegacion">
+        <nav >
+            <div class="navbar">
+                <div>
+                    <a href="/" class="navbarlogo">GbyG PCS</a>
+    
+                    <div class="toggle-button">
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </div>
+                    
+                </div>
+    
+                <div class="navbar-links">
+                    <ul>
+                        <li><a href="/">Inicio</a></li>
+                        <li><a href="/services.html" >Servicios</a></li>
+                        <li><a href="/admin.html">Dashboard</a></li>
+                    </ul>
+                    <div>
+                        <a href="/login.html" class="btn">Iniciar sesión</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="adminmain">
+
+        <nav class="breadcrumb">
+            <ol>
+                <li><a href="/">Incio</a></li>
+                    <li><a href="/admin.html">Dashboard</a></li>
+                    <li><a href="/admin_categories.html">Categorías</a></li>
+                <li aria-current="page">Editar</li>
+            </ol>
+        </nav>
+    
+        <h1>Panel de administrador</h1>
+        <h2>Editar categoría</h2>
+    
+
+        <div class="container">
+            <form action="">
+                <div>
+                    <label for="name">Nombre de la categoría</label>
+                    <input type="text" placeholder="Ingresa el nombre de la categoría" name="name">
+                </div>
+
+                <div>
+                    <button type="submit" class="btn primary-green">Guardar cambios</button>
+                </div>
+            </form>
+        </div>
+
+
+
+    </main>
+
+    <footer>
+        <div>
+            <ul>
+                <li><a href="https://www.facebook.com" target="_blank"><i class="fa-brands fa-facebook"></i></a></li>
+                <li><a href="https://twitter.com" target="_blank"><i class="fa-brands fa-x-twitter"></i></i></a></li>
+                <li><a href="https://www.instagram.com" target="_blank"><i class="fa-brands fa-instagram"></i></a></li>
+            </ul>
+            <div>
+                <p>gbygpcs.com</p>
+                <p>© 2023 Copyright</p>
+            </div>
+        </div>
+    </footer>
+
+<script type="module">
+    import app from './js/config.js';
+    import { success, successMsgAdd } from './js/partials.js';
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
+    import {getFirestore, collection, getDocs, addDoc, serverTimestamp, doc, getDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js';
+
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+    const container = document.querySelector('.container');
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            const uid = user.uid;
+            let adminOptions = document.querySelector('.admindoptions');
+
+            async function checkUserRole(uid) {
+                const docRef = doc(db, "roles_by_user", uid);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const role = docSnap.data().role;
+                    if (role == 'admin') {
+
+                        const url = new URLSearchParams(window.location.search);
+                        const id = url.get('id');
+                        console.log(id);
+
+                        if (!id) {
+                            window.location.href = '/admin_categories.html';
+                        }
+
+                        const docCategoryRef = doc(db, "categories", id);
+                        const form = document.querySelector('form');
+                        let { name } = form;
+
+                        async function getCategoryData() {
+                            try {
+                                const docSnap = await getDoc(docCategoryRef);
+                                if (docSnap.exists()) {
+                                    const data = docSnap.data();
+                                    name.value = data.name;
+                                    console.log('se encontró la categoría');
+
+
+                                } else {
+                                    console.log("el servicio");
+                                }
+                            } catch (error) {
+                                console.log("error al traer el documento",error);
+                            }
+                        }
+
+                        getCategoryData();
+
+
+
+
+
+                        form.addEventListener('submit', async function(e) {
+                        e.preventDefault();
+
+                        let isValid = true;
+                        let errorMessages = form.querySelectorAll('p');
+                
+                        if (errorMessages){
+                            errorMessages.forEach((p) => {
+                                p.remove();
+                            })
+                        }
+
+                        if (!name.value.trim()) {
+                            let errorP = document.createElement('p');
+                            errorP.innerText = "El nombre no puede estar vacío";
+                            name.parentElement.appendChild(errorP);
+                            isValid = false; 
+                        };
+                        if (!isValid) return;
+
+
+                        try{
+                            await updateDoc(docCategoryRef, {
+                                name: name.value,
+                                updatedAt: serverTimestamp()
+                            });
+                            container.innerHTML = successMsgAdd('Categoría editada exitosamente', '/admin_categories.html');
+                        }catch(error){
+                            console.log("no se pudo editar", error);
+                        }
+
+
+                        }) 
+
+                    } else {
+                        window.location.href = '/admin.html';
+                    }
+                } 
+            }
+
+            checkUserRole(uid); 
+
+        } else {
+            window.location.href = '/login.html';
+        }
+    });
+
+
+
+
+
+
+    
+</script>
+</body>
+</html>
