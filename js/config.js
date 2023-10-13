@@ -19,6 +19,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const navbarBtn = document.querySelector('.navbar-links .btn');
+const dashboardBtn = document.querySelector('.navbar-links ul li:last-child');
+// console.log(dashboardBtn);
 // console.log(navbarBtn);
 
 onAuthStateChanged(auth, (user) => {
@@ -28,6 +30,7 @@ onAuthStateChanged(auth, (user) => {
       auth.signOut();
     })
   } else {
+    dashboardBtn.remove();
     navbarBtn.innerHTML = 'Iniciar sesión';
   }
 });
