@@ -71,12 +71,15 @@
     import findByCategory from './js/services.js';
     // console.log(services);
 
+    const ulFilterBtns = document.querySelector(".filterBtns");
     const filterButtons = document.querySelectorAll(".filterBtns .btn");
+
 
     filterButtons.forEach(button => {
         button.addEventListener("click", function(event) {
             event.preventDefault();
             let category = event.target.innerText; 
+            console.log(category);
             updateServicesList(category); 
         });
     });
@@ -89,6 +92,19 @@
 
     //aquí inicialmente 
     function updateServicesList(category){
+        if (category !== 'all') {
+            if (!ulFilterBtns.querySelector('.limpiarfiltro')) {
+                let clearFilterBtn = document.createElement('li');
+                clearFilterBtn.innerHTML = `<a href="" class="btn secundary-green limpiarfiltro">Mostrar todos</a>`;
+                clearFilterBtn.addEventListener('click', function(event){
+                    event.preventDefault();
+                    updateServicesList('all');
+                    event.target.parentElement.remove();
+                });
+                ulFilterBtns.prepend(clearFilterBtn);
+
+            }
+        }
 
         findByCategory(category)
         .then(services => {
