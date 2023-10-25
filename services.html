@@ -68,7 +68,7 @@
     </div>
 </footer>
 <script type="module">
-    import services from './js/services.js';
+    import findByCategory from './js/services.js';
     // console.log(services);
 
     const servicesList = document.querySelector('.servicescontainer section ul');
@@ -76,36 +76,37 @@
     const sectionServices = document.createElement('section');
     const ulServices = document.createElement('ul');
 
-
-
-//   let servicesInfo = services.
-    services.forEach(data => {
+    //aquí inicialmente 
+    findByCategory('all')
+    .then(services => {
+        services.forEach(data => {
         
-        const {name, category, price} = data;
-
-        let item = document.createElement('li');
-        let divContainer = document.createElement('div');
-        let divImg = document.createElement('div');
-        let img = document.createElement('img');
-        img.src = 'img/servicesimg.jpg';
-        img.alt = name;
-        let divInfo = document.createElement('div');
-        divInfo.innerHTML = `
-        <div>
-            <h2>${name}</h2>
-            <p>${category}</p>
-        </div>
-        <p>$${price}/sqft</p>
-        <a href="contact.html" class="btn secundary-green">Contactar</a>`;
-        divImg.append(img);
-        divContainer.append(divImg);
-        divContainer.append(divInfo);
-        item.append(divContainer);
-        ulServices.append(item);
+            const {name, category, price} = data;
+    
+            let item = document.createElement('li');
+            let divContainer = document.createElement('div');
+            let divImg = document.createElement('div');
+            let img = document.createElement('img');
+            img.src = 'img/servicesimg.jpg';
+            img.alt = name;
+            let divInfo = document.createElement('div');
+            divInfo.innerHTML = `
+            <div>
+                <h2>${name}</h2>
+                <p>${category}</p>
+            </div>
+            <p>$${price}/sqft</p>
+            <a href="contact.html" class="btn secundary-green">Contactar</a>`;
+            divImg.append(img);
+            divContainer.append(divImg);
+            divContainer.append(divInfo);
+            item.append(divContainer);
+            ulServices.append(item);
+        })
+    
+        sectionServices.append(ulServices);
+        main.appendChild(sectionServices);
     })
-
-    sectionServices.append(ulServices);
-    main.appendChild(sectionServices);
 
 
 </script>
