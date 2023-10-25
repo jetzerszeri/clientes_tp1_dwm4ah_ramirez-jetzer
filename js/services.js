@@ -1,5 +1,5 @@
 import  app  from './config.js';
-import { getFirestore, collection, addDoc, getDocs, orderBy, query } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js';
+import { getFirestore, collection, addDoc, getDocs, orderBy, query, where } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js';
 
 
 // Initialize Cloud Firestore and get a reference to the service
