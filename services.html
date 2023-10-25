@@ -68,8 +68,7 @@
     </div>
 </footer>
 <script type="module">
-    import findByCategory from './js/services.js';
-    // console.log(services);
+    import app from './js/app.js';
 
     const ulFilterBtns = document.querySelector(".filterBtns");
     const filterButtons = document.querySelectorAll(".filterBtns .btn");
@@ -102,14 +101,13 @@
                     event.target.parentElement.remove();
                 });
                 ulFilterBtns.prepend(clearFilterBtn);
-
             }
         }
 
-        findByCategory(category)
-        .then(services => {
+        app.services.findByCategory(category)
+        .then(servicesData => {
             ulServices.innerHTML = '';
-            services.forEach(data => {
+            servicesData.forEach(data => {
         
             
                 const {name, category, price} = data.data();
