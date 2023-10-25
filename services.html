@@ -45,11 +45,11 @@
             </div>
 
             <div>
-                <!-- <ul>
+                <ul class="filterBtns">
                     <li><a href="" class="btn secundary-green">Remodelación</a></li>
                     <li><a href="" class="btn secundary-green">Mudanza</a></li>
                     <li><a href="" class="btn secundary-green">Real State</a></li>
-                </ul> -->
+                </ul>
             </div>
         </header>
     </main>
@@ -71,45 +71,62 @@
     import findByCategory from './js/services.js';
     // console.log(services);
 
+    const filterButtons = document.querySelectorAll(".filterBtns .btn");
+
+    filterButtons.forEach(button => {
+        button.addEventListener("click", function(event) {
+            event.preventDefault();
+            let category = event.target.innerText; 
+            updateServicesList(category); 
+        });
+    });
+
+
     const servicesList = document.querySelector('.servicescontainer section ul');
     const main = document.querySelector('.servicescontainer');
     const sectionServices = document.createElement('section');
     const ulServices = document.createElement('ul');
 
     //aquí inicialmente 
-    findByCategory('Remodelación')
-    .then(services => {
+    function updateServicesList(category){
 
-        services.forEach(data => {
-    
+        findByCategory(category)
+        .then(services => {
+            ulServices.innerHTML = '';
+            services.forEach(data => {
         
-            const {name, category, price} = data.data();
-    
-            let item = document.createElement('li');
-            let divContainer = document.createElement('div');
-            let divImg = document.createElement('div');
-            let img = document.createElement('img');
-            img.src = 'img/servicesimg.jpg';
-            img.alt = name;
-            let divInfo = document.createElement('div');
-            divInfo.innerHTML = `
-            <div>
-                <h2>${name}</h2>
-                <p>${category}</p>
-            </div>
-            <p>$${price}/sqft</p>
-            <a href="contact.html" class="btn secundary-green">Contactar</a>`;
-            divImg.append(img);
-            divContainer.append(divImg);
-            divContainer.append(divInfo);
-            item.append(divContainer);
-            ulServices.append(item);
+            
+                const {name, category, price} = data.data();
+        
+                let item = document.createElement('li');
+                let divContainer = document.createElement('div');
+                let divImg = document.createElement('div');
+                let img = document.createElement('img');
+                img.src = 'img/servicesimg.jpg';
+                img.alt = name;
+                let divInfo = document.createElement('div');
+                divInfo.innerHTML = `
+                <div>
+                    <h2>${name}</h2>
+                    <p>${category}</p>
+                </div>
+                <p>$${price}/sqft</p>
+                <a href="contact.html" class="btn secundary-green">Contactar</a>`;
+                divImg.append(img);
+                divContainer.append(divImg);
+                divContainer.append(divInfo);
+                item.append(divContainer);
+                ulServices.append(item);
+            })
+        
+            if (!ulServices.parentElement) { // para no agregar multiples veces
+                sectionServices.append(ulServices);
+                main.appendChild(sectionServices);
+            }
         })
-    
-        sectionServices.append(ulServices);
-        main.appendChild(sectionServices);
-    })
+    }
 
+    updateServicesList('all');
 
 </script>
 </body>
