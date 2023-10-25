@@ -79,9 +79,11 @@
     //aquí inicialmente 
     findByCategory('all')
     .then(services => {
+
         services.forEach(data => {
+    
         
-            const {name, category, price} = data;
+            const {name, category, price} = data.data();
     
             let item = document.createElement('li');
             let divContainer = document.createElement('div');
