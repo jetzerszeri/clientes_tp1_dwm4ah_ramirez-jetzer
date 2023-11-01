@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar sesión</title>
+    <title>Clase 12</title>
     <link rel="stylesheet" href="css/styles.css">
     <script src="https://kit.fontawesome.com/26eb2bb81f.js" crossorigin="anonymous"></script>
     <script src="js/main.js" defer></script>
@@ -48,7 +48,8 @@
 
     <main class="mainPreviewClase12">
     
-        <h1>preview</h1>
+        <h1>Clase preview</h1>
+        
 
         <img src="https://firebasestorage.googleapis.com/v0/b/tp1-clientes-dwm4ah.appspot.com/o/perro.png?alt=media&token=b9680c71-aa01-46a6-a762-c6d0da01774c&_gl=1*1jqklo9*_ga*NzgzMTY5MTg2LjE2OTIxOTE3NTU.*_ga_CW55HF8NVT*MTY5ODg0MDIzMS4zNi4xLjE2OTg4NDIwMDUuNDUuMC4w" alt="imagen de prueba">
 
@@ -61,10 +62,18 @@
 
 <script type="module">
     import app from './js/config.js';
-    import {getStorage} from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-storage.js';
+    import {getStorage, ref} from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-storage.js';
 
+    //creamos una instancia del storage, conexion con el servicio de storage de firebase
     const storage = getStorage(app);
-    console.log(storage);
+
+    //creamos una referencia al storage
+    const storageRef = ref(storage, 'avatars'); //avatars es la carpeta que tengo. 
+    //puedo crear una referencia a una carpeta o a un archivo, solo señala indicando hacia a donde se va a hacer la siguiente operación.
+
+
+
+    console.log(storageRef);
 
 
 </script>
