@@ -60,8 +60,18 @@
         <div class="loginmain">
             <form action="" enctype="multipart/form-data" id="uploadForm" method="POST">
                 
-                <input type="file" name="avatar" id="avatar">
-                <input type="submit" value="Enviar">
+                <div>
+                    <label for="">Texto alternativo</label>
+                    <input type="text" name="text_alt">
+                    <!-- <p>El texto es requerido</p> -->
+                </div>
+        
+                <div>
+                    <label for="">Elija un archivo</label>
+                    <input type="file" name="avatar">
+                </div>
+        
+                <button class="btn primary-green">Subir</button>
             </form>
         </div>
     
@@ -77,9 +87,11 @@
     
     //ubicamos el formulario por el id y luego accedemos al input del avatar con el name dentro del form
     let uploadForm = document.querySelector('#uploadForm');
-    const avatarInput = uploadForm.avatar;
+    const {avatar, text_alt} = uploadForm;
+    // const avatarInput = uploadForm.avatar;
     
-    avatarInput.addEventListener('change', function (e){
+    
+    avatar.addEventListener('change', function (e){
         e.preventDefault();
         console.log(e.target.files)
         let folder = 'avatars/';
@@ -89,13 +101,87 @@
         //creamos una referencia al storage
         const storageRef = ref(storage, folder + crypto.randomUUID() + "." + ext); //avatars es la carpeta que tengo. 
         //puedo crear una referencia a una carpeta o a un archivo, solo señala indicando hacia a donde se va a hacer la siguiente operación.
+        
 
-        uploadBytes(storageRef, file).then((snapshot) => {
-            console.log(snapshot);
-            console.log('Se subiö el archivo');
-        });
+
+
+        // uploadBytes(storageRef, file).then((snapshot) => {
+        //     console.log(snapshot);
+        //     console.log('Se subió el archivo');
+
+        
+
+
+
+
+
+
+
+
+        // });
     }); 
 
+    let textoError = document.createElement('p');
+    function agregarTextoError (input, mensajeError){
+        textoError.innerHTML = mensajeError;
+        if (input.nextSibling) {
+            input.nextSibling.remove();
+            input.parentNode.insertBefore(textoError, input.nextSibling);
+        } else {
+            input.parentNode.appendChild(textoError);
+        }
+    }
+
+    uploadForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        console.log('submit');
+        let textoValido = true;
+        let imagenValida = true;
+        if(text_alt.value == ""){
+            agregarTextoError(text_alt, "El texto alternativo es obligatorio*");
+            textoValido = false;
+        } else if (text_alt.value.length > 100){
+            agregarTextoError(text_alt, "El texto alternativo no debe superar los 100 caracteres*");
+            textoValido = false;
+        } else if (text_alt.nextSibling) {
+            text_alt.nextSibling.remove();
+        }
+
+
+        
+        if (avatar.files.length == 0){
+            agregarTextoError(avatar, "Debe seleccionar un archivo*");
+            imagenValida = false;
+        } else if (avatar.files[0].type != "image/png" && avatar.files[0].type != "image/jpg" && avatar.files[0].type != "image/jpeg"){
+            agregarTextoError(avatar, "El archivo debe ser una imagen*");
+            imagenValida = false;
+        } else if (avatar.nextSibling) {
+            avatar.nextSibling.remove();
+        }
+
+
+
+
+        if (textoValido && imagenValida){
+            console.log('texto e imagen validos');
+        } else {
+            console.log('texto e imagen invalidos');
+
+            let folder = 'avatars/'
+            let file = avatar.files[0]
+            let ext = file.type.split('/')[1]
+            const storageRef = ref(storage, folder + "test"+ crypto.randomUUID() + '.' + ext);
+
+            uploadBytes(storageRef, file).then((snapshot) => {
+                console.log(snapshot);
+                console.log('Se subió el archivo');
+            });
+
+
+        }
+
+        
+    })
 
 
     // console.log(avatarInput);

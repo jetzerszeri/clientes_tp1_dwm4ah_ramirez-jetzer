@@ -29,7 +29,7 @@ onAuthStateChanged(auth, (user) => {
     navbarBtn.addEventListener('click', () => {
       auth.signOut();
     })
-  } else {
+  } else if(dashboardBtn){
     dashboardBtn.remove();
     navbarBtn.innerHTML = 'Iniciar sesión';
   }
