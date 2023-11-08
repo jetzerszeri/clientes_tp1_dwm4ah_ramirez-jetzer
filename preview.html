@@ -58,7 +58,7 @@
         <img src="https://firebasestorage.googleapis.com/v0/b/tp1-clientes-dwm4ah.appspot.com/o/perro.png?alt=media&token=b9680c71-aa01-46a6-a762-c6d0da01774c&_gl=1*1jqklo9*_ga*NzgzMTY5MTg2LjE2OTIxOTE3NTU.*_ga_CW55HF8NVT*MTY5ODg0MDIzMS4zNi4xLjE2OTg4NDIwMDUuNDUuMC4w" alt="imagen de prueba">
 
         <div class="loginmain">
-            <form action="" enctype="multipart/form-data" id="uploadForm">
+            <form action="" enctype="multipart/form-data" id="uploadForm" method="POST">
                 
                 <input type="file" name="avatar" id="avatar">
                 <input type="submit" value="Enviar">
@@ -74,19 +74,21 @@
 
     //creamos una instancia del storage, conexion con el servicio de storage de firebase
     const storage = getStorage(app);
-
-    //creamos una referencia al storage
-    const storageRef = ref(storage, 'avatars'); //avatars es la carpeta que tengo. 
-    //puedo crear una referencia a una carpeta o a un archivo, solo señala indicando hacia a donde se va a hacer la siguiente operación.
-
+    
     //ubicamos el formulario por el id y luego accedemos al input del avatar con el name dentro del form
     let uploadForm = document.querySelector('#uploadForm');
     const avatarInput = uploadForm.avatar;
-
+    
     avatarInput.addEventListener('change', function (e){
         e.preventDefault();
         console.log(e.target.files)
+        let folder = 'avatars/';
         let file = e.target.files[0];
+        let ext = file.type.split('/')[1];
+        
+        //creamos una referencia al storage
+        const storageRef = ref(storage, folder + crypto.randomUUID() + "." + ext); //avatars es la carpeta que tengo. 
+        //puedo crear una referencia a una carpeta o a un archivo, solo señala indicando hacia a donde se va a hacer la siguiente operación.
 
         uploadBytes(storageRef, file).then((snapshot) => {
             console.log(snapshot);
