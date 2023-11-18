@@ -3,15 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>GbyG PCS</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://kit.fontawesome.com/26eb2bb81f.js" crossorigin="anonymous"></script>
 </head>
 <body>
+
+    <header class="navegacion">
+        <nav >
+            <div class="navbar">
+                <div>
+                    <div class="navbarlogo">GbyG PCS</div>
+    
+                    <div class="toggle-button">
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </div>
+                    
+                </div>
+    
+                <div class="navbar-links">
+                    <ul>
+                        <li><a href="index.html" class="active">Inicio</a></li>
+                        <li><a href="services.html" class="">Servicios</a></li>
+                        <li><a href="/admin.html" class="">Dashboard</a></li>
+                    </ul>
+                    <div>
+                        <a href="/login.html" class="btn">Iniciar sesión</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
     <div>
         <a class="link" href="#inicio">Inicio</a>
         <a class="link" href="#productos">productos</a>
     </div>
 
     <div id="app"></div>
+
+    <footer>
+        <div>
+            <ul>
+                <li><a href="" target="_blank"><i class="fa-brands fa-facebook"></i></a></li>
+                <li><a href="" target="_blank"><i class="fa-brands fa-x-twitter"></i></i></a></li>
+                <li><a href="" target="_blank"><i class="fa-brands fa-instagram"></i></a></li>
+            </ul>
+            <div>
+                <p>gbygpcs.com</p>
+                <p>© 2023 Copyright</p>
+            </div>
+        </div>
+    </footer>
+
+
+
+
+
+    
 
     <script type="module">
         import home from './js/views/home.js';
@@ -40,7 +91,6 @@
             })
         })
 
-        // console.log(links)
 
 
     </script>
