@@ -25,9 +25,9 @@
     
                 <div class="navbar-links">
                     <ul>
-                        <li><a href="index.html" class="active">Inicio</a></li>
-                        <li><a href="services.html" class="">Servicios</a></li>
-                        <li><a href="/admin.html" class="">Dashboard</a></li>
+                        <li><a href="#home" class="active">Inicio</a></li>
+                        <li><a href="#services" class="">Servicios</a></li>
+                        <li><a href="#admin" class="">Dashboard</a></li>
                     </ul>
                     <div>
                         <a href="/login.html" class="btn">Iniciar sesión</a>
@@ -37,19 +37,19 @@
         </nav>
     </header>
 
-    <div>
+    <!-- <div>
         <a class="link" href="#inicio">Inicio</a>
         <a class="link" href="#productos">productos</a>
-    </div>
+    </div> -->
 
     <div id="app"></div>
 
     <footer>
         <div>
             <ul>
-                <li><a href="" target="_blank"><i class="fa-brands fa-facebook"></i></a></li>
-                <li><a href="" target="_blank"><i class="fa-brands fa-x-twitter"></i></i></a></li>
-                <li><a href="" target="_blank"><i class="fa-brands fa-instagram"></i></a></li>
+                <li><a href="https://www.facebook.com/" target="_blank"><i class="fa-brands fa-facebook"></i></a></li>
+                <li><a href="https://www.twitter.com/" target="_blank"><i class="fa-brands fa-x-twitter"></i></i></a></li>
+                <li><a href="https://www.instagram.com/" target="_blank"><i class="fa-brands fa-instagram"></i></a></li>
             </ul>
             <div>
                 <p>gbygpcs.com</p>
@@ -62,7 +62,7 @@
 
 
 
-    
+
 
     <script type="module">
         import home from './js/views/home.js';
@@ -70,23 +70,20 @@
 
 
 
-        console.log(home)
-        console.log(products)
+        // console.log(home)
+        // console.log(products)
 
 
-        let links = document.querySelectorAll(".link");
+        let links = document.querySelectorAll(".navbar-links a");
         let app = document.getElementById("app");
         let router = {
-            '#inicio': home,
-            '#productos': products,
+            '#home': home,
+            // '#productos': products,
         }
 
         links.forEach(link => {
             link.addEventListener("click", (e) => {
-
-                // app.innerHTML = home;
                 app.innerHTML = router[e.target.hash];
-                // e.preventDefault();
                 // console.log(e.target.hash)
             })
         })
