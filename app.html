@@ -69,16 +69,24 @@
         import products from './js/views/products.js';
 
 
-
         // console.log(home)
         // console.log(products)
-
+        
+        let currentHash = window.location.hash;
 
         let links = document.querySelectorAll(".navbar-links a");
         let app = document.getElementById("app");
         let router = {
             '#home': home,
             // '#productos': products,
+        }
+
+
+        // agrego esto para que se muestre el home o la vista que quiero justo cuando se cargue o refresque la página.
+        if (currentHash == "" ) {
+            app.innerHTML = router['#home'];
+        } else {
+            app.innerHTML = router[currentHash];
         }
 
         links.forEach(link => {
