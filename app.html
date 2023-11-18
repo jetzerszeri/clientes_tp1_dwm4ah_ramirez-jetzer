@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <a class="link" href="#inicio">Inicio</a>
+        <a class="link" href="#productos">productos</a>
+    </div>
+
+    <div id="app"></div>
+
+    <script type="module">
+        import home from './js/views/home.js';
+        import products from './js/views/products.js';
+
+
+
+        console.log(home)
+        console.log(products)
+
+
+        let links = document.querySelectorAll(".link");
+        let app = document.getElementById("app");
+        let router = {
+            '#inicio': home,
+            '#productos': products,
+        }
+
+        links.forEach(link => {
+            link.addEventListener("click", (e) => {
+
+                // app.innerHTML = home;
+                app.innerHTML = router[e.target.hash];
+                // e.preventDefault();
+                // console.log(e.target.hash)
+            })
+        })
+
+        // console.log(links)
+
+
+    </script>
+</body>
+</html>
