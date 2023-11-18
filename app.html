@@ -85,14 +85,15 @@
 
         // agrego esto para que se muestre el home o la vista que quiero justo cuando se cargue o refresque la página.
         if (currentHash == "" ) {
-            app.innerHTML = router['#home'];
+            app.append(router['#home']);
         } else {
-            app.innerHTML = router[currentHash];
+            app.append(router[currentHash]);
         }
 
         links.forEach(link => {
             link.addEventListener("click", (e) => {
-                app.innerHTML = router[e.target.hash];
+                app.innerHTML = "";
+                app.append(router[e.target.hash]);
                 // console.log(e.target.hash)
             })
         })
