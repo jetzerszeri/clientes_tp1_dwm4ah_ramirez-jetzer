@@ -1,5 +1,7 @@
 import { findByCategory, renderServicesBtns, updateServicesList } from './services.js';
 import { element } from './create.js';
+import { displayBreadcrumb } from './main.js';
+
 
 const app = {
     create: {
@@ -9,6 +11,9 @@ const app = {
         findByCategory,
         updateServicesList,
         renderServicesBtns,
+    },
+    main: {
+        displayBreadcrumb,
     }
 }
 
