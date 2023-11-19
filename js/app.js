@@ -1,8 +1,10 @@
-import findByCategory from './services.js';
+import { findByCategory, renderServicesBtns, updateServicesList } from './services.js';
 
 const app = {
     services : {
-        findByCategory
+        findByCategory,
+        updateServicesList,
+        renderServicesBtns,
     }
 }
 

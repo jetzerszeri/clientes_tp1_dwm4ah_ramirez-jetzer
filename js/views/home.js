@@ -1,5 +1,7 @@
-const home = `
-    <main class="homecontainer">
+const home = document.createElement('main');
+home.classList.add('homecontainer');
+home.innerHTML =
+`
         <section class="heroHome">
             <div>           
                 <div>
@@ -46,8 +48,8 @@ const home = `
             </div>
 
         </section>
-
-    </main>
 `;
+
+
 
 export default home;
