@@ -30,7 +30,7 @@
                         <li><a href="#admin" class="">Dashboard</a></li>
                     </ul>
                     <div>
-                        <a href="/login.html" class="btn">Iniciar sesión</a>
+                        <a href="#login" class="btn">Iniciar sesión</a>
                     </div>
                 </div>
             </div>
@@ -68,6 +68,7 @@
         import home from './js/views/home.js';
         import products from './js/views/products.js';
         import servicesView from './js/views/services.js';
+        import login from './js/views/login.js';
 
 
         // console.log(home)
@@ -80,6 +81,7 @@
         let router = {
             '#home': home,
             '#services': servicesView,
+            '#login': login,
         }
 
 
@@ -97,6 +99,10 @@
                 // console.log(e.target.hash)
             })
         })
+
+
+
+
 
 
 
