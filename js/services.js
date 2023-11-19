@@ -14,7 +14,7 @@ async function findByCategory(category) {
 }
 
 
-
+//function to render the categories buttons in the services view
 function renderServicesBtns(labels, container, servicesUlContainer){
     labels.forEach(label => {
         let li = document.createElement('li');
@@ -29,8 +29,7 @@ function renderServicesBtns(labels, container, servicesUlContainer){
 }
 
 
-
-
+//function to filter the services by category
 function filterServices(e, servicesUlContainer) {
     let botones = document.querySelectorAll('.filterBtns .btn')
     botones.forEach(item => {
@@ -39,7 +38,6 @@ function filterServices(e, servicesUlContainer) {
 
     let category = e.target.textContent;
     category = (category === 'Todos') ? 'all' : category;
-    console.log(category, servicesUlContainer);
 
     e.target.classList.add('active');
 
@@ -48,7 +46,6 @@ function filterServices(e, servicesUlContainer) {
 
 
 function updateServicesList(category, container){
-    // console.log('ul desde updateServicesList', container)
 
     findByCategory(category)
     .then(servicesData => {
@@ -70,7 +67,7 @@ function updateServicesList(category, container){
                 <p>${category}</p>
             </div>
             <p>$${price}/sqft</p>
-            <a href="contact.html" class="btn secundary-green">Contactar</a>`;
+            <a href="#contact" class="btn secundary-green">Contactar</a>`;
             divImg.append(img);
             divContainer.append(divImg);
             divContainer.append(divInfo);
@@ -80,12 +77,6 @@ function updateServicesList(category, container){
 
     })
 }
-
-
-
-// function updateServicesList(category){
-//     console.log('estoy en updateServicesList')
-// }
 
 
 export { findByCategory, renderServicesBtns, updateServicesList };
