@@ -2,7 +2,7 @@ import { findByCategory, renderServicesBtns, updateServicesList } from './servic
 import { element } from './create.js';
 
 const app = {
-    crate: {
+    create: {
         element,
     },
     services : {

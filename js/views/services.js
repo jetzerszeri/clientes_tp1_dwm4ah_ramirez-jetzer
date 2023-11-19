@@ -1,15 +1,12 @@
 import app from '../app.js'
 
 
-const sectionServices = document.createElement('section');
-const ulServices = document.createElement('ul');
+const sectionServices = app.create.element('section');
+const ulServices = app.create.element('ul');
 sectionServices.appendChild(ulServices);
-let filterBtns = document.createElement('ul');
-filterBtns.classList.add('filterBtns');
-const servicesView = document.createElement('main');
-servicesView.classList.add('servicescontainer');
-const header = document.createElement('header');
-header.classList.add('servicesheader');
+let filterBtns = app.create.element('ul', ['filterBtns']);
+const servicesView = app.create.element('main', ['servicescontainer']);
+const header = app.create.element('header', ['servicesheader']);
 
 let btnLabels = ['Todos', 'Remodelación', 'Mudanza', 'Real State'];
 
