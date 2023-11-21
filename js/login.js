@@ -1,4 +1,4 @@
-import app from './js/config.js';
+import app from './config.js';
 import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
 
 const auth = getAuth(app);
@@ -14,12 +14,12 @@ function clearErrorMessages(query) {
     });
 }
 
-function displayErrorMessage(message, targetElement) {
+function displayErrorMessage(message, targetElement, formTarget) {
     const p = document.createElement('p');
     p.classList.add('errorForMmsg');
     p.innerText = message;
 
-    if (targetElement == form){
+    if (formTarget){
         targetElement.prepend(p);
     } else {
         targetElement.parentElement.appendChild(p);
