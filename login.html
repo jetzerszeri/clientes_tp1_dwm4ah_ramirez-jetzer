@@ -101,40 +101,45 @@
         return signInWithEmailAndPassword(auth, email, password);
     }
 
+    function clearErrorMessages(query) {
+        const errorMessages = document.querySelectorAll(query);
+        errorMessages.forEach((msj) => {
+            msj.remove();
+        });
+    }
+
+    function displayErrorMessage(message, targetElement) {
+        const p = document.createElement('p');
+        p.classList.add('errorForMmsg');
+        p.innerText = message;
+
+        if (targetElement == form){
+            targetElement.prepend(p);
+        } else {
+            targetElement.parentElement.appendChild(p);
+        }
+    }
+
     const form = document.querySelector('form');
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         let { email, password } = form;
         
-
-
-        let errorMessages = form.querySelectorAll('p');
-
-        if (errorMessages.length > 0){
-            errorMessages.forEach((p) => {
-                p.remove();
-            })
-        }
+        clearErrorMessages('p');
 
 
         try {
             await signInWithEmailAndPasswordHandler(email.value, password.value);
-            // Autenticación exitosa
-            console.log('Se inició sesión');
             window.location.href = '/admin.html';
         } catch (error) {
-            if (error.message.includes('invalid-email')){
-                email.parentElement.innerHTML += `<p class="errorForMmsg">El email ingresado no es válido</p>`;
-            } else if (error.message.includes('missing-password')){
-                password.parentElement.innerHTML += `<p>La contraseña no puede estar vacía</p>`;
-            }else if (error.message.includes('invalid-login-credentials')){
-                let p = document.createElement('p');
-                p.classList.add('errorForMmsg');
-                p.innerText = 'Credenciales inválidas';
-                form.prepend(p);
+            if (error.message.includes('invalid-email')) {
+                displayErrorMessage('El email ingresado no es válido', email);
+            } else if (error.message.includes('missing-password')) {
+                displayErrorMessage('La contraseña no puede estar vacía', password);
+            } else if (error.message.includes('invalid-login-credentials')) {
+                displayErrorMessage('Credenciales inválidas', form);
             }
         }
-
     
     }) 
 
