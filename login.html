@@ -6,7 +6,7 @@
     <title>Iniciar sesión</title>
     <link rel="stylesheet" href="css/styles.css">
     <script src="https://kit.fontawesome.com/26eb2bb81f.js" crossorigin="anonymous"></script>
-    <script src="js/main.js" defer></script>
+    <!-- <script src="js/main.js" defer></script> -->
 </head>
 <body>
     <header class="navegacion">
@@ -92,17 +92,22 @@
 <script type="module">
     import app from './js/config.js';
     import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
-    import {getDatabase, ref, set} from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-database.js';
+    // import {getDatabase, ref, set} from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-database.js';
 
-    const db = getDatabase(app);
+    // const db = getDatabase(app);
     const auth = getAuth(app);
 
+    function signInWithEmailAndPasswordHandler(email, password) {
+        return signInWithEmailAndPassword(auth, email, password);
+    }
 
     const form = document.querySelector('form');
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
         let { email, password } = form;
         
+
+
         let errorMessages = form.querySelectorAll('p');
 
         if (errorMessages.length > 0){
@@ -111,23 +116,13 @@
             })
         }
 
-        signInWithEmailAndPassword(auth, email.value, password.value)
-        .then((userCredential) => {
-            // Signed in 
-            const user = userCredential.user;
-            console.log(user);
-            console.log('se inició sesión');
 
+        try {
+            await signInWithEmailAndPasswordHandler(email.value, password.value);
+            // Autenticación exitosa
+            console.log('Se inició sesión');
             window.location.href = '/admin.html';
-        })
-        .catch((error) => {
-            // const errorCode = error.code;
-            // const errorMessage = error.message;
-            // console.log("error code: " + errorCode);
-            // console.log("error msg: " + errorMessage);
-
-            // console.log('no se pudo iniciar sesión');
-
+        } catch (error) {
             if (error.message.includes('invalid-email')){
                 email.parentElement.innerHTML += `<p class="errorForMmsg">El email ingresado no es válido</p>`;
             } else if (error.message.includes('missing-password')){
@@ -138,13 +133,9 @@
                 p.innerText = 'Credenciales inválidas';
                 form.prepend(p);
             }
-        });
+        }
 
-
-
-
-        
-
+    
     }) 
 
 </script>
