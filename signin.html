@@ -6,7 +6,6 @@
     <title>Crear cuenta</title>
     <link rel="stylesheet" href="css/styles.css">
     <script src="https://kit.fontawesome.com/26eb2bb81f.js" crossorigin="anonymous"></script>
-    <script src="js/main.js" defer></script>
 </head>
 <body>
     <header class="navegacion">
@@ -110,86 +109,151 @@
     const db = getFirestore(app);
     const db2 = getDatabase(app);
 
+    function clearErrorMessages(query) {
+    const errorMessages = document.querySelectorAll(query);
+    errorMessages.forEach((msj) => {
+        msj.remove();
+    });
+}
+
+function displayErrorMessage(message, targetElement, formTarget) {
+    const p = document.createElement('p');
+    p.classList.add('errorForMmsg');
+    p.innerText = message;
+
+    if (formTarget){
+        targetElement.prepend(p);
+    } else {
+        targetElement.parentElement.appendChild(p);
+    }
+}
+
+
+    function validateEmptyFields(array) {
+        array.forEach((input) => {
+            if (!input.value.trim()) {
+                displayErrorMessage('Este campo no puede estar vacío', input);
+            }
+        });
+
+        let errorMessages = document.querySelectorAll('.errorForMmsg');
+        if (errorMessages.length > 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    export function createUserAndSetDocument(email, password, name, lastname) {
+    return createUserWithEmailAndPassword(auth, email, password)
+        .then((credentials) => {
+            const user = credentials.user.uid;
+
+            return setDoc(doc(db, "roles_by_user", user), {
+                "nombre": name,
+                "apellido": lastname,
+                "role": 'customer',
+                createdAt: serverTimestamp(),
+                updatedAt: serverTimestamp()
+            });
+        });
+}
+
+export function createChat(db, user) {
+    const chatRef = ref(db2, 'chats');
+    const newChatRef = push(chatRef);
+
+    return set(newChatRef, {
+        lastMessage: 'último mensaje',
+        fecha: Date.now(),
+        participants: { [user]: true, 'LIsaefMu3BYpF2jINUV9RH78EZs2': true }
+    });
+}
+
+
+
+
     const form = document.querySelector('form');
     
     form.addEventListener('submit', (e) => {
         e.preventDefault();
         let { name, lastname, email, password } = form;
-        console.log(name.parentElement);
 
-        let isValid = true;
         
-        let errorMessages = form.querySelectorAll('p');
+        clearErrorMessages('form p')
 
-        if (errorMessages.length > 0){
-            errorMessages.forEach((p) => {
-                p.remove();
-            })
-        }
+        if (!validateEmptyFields([name, lastname, email, password])) return;
 
-        if (!name.value.trim()) {
-        name.parentElement.innerHTML += `<p>El nombre no puede estar vacío</p>`;
-        isValid = false; 
-        }
-
-        if (!lastname.value.trim()) {
-            lastname.parentElement.innerHTML += `<p>El apellido no puede estar vacío</p>`;
-            isValid = false; 
-        }
-
-        if (!isValid) return;
-
-        let user;
-
-        createUserWithEmailAndPassword(auth, email.value, password.value)
-        .then((credentials) => {
-            // Signed in 
-            user = credentials.user.uid;
-    
-            console.log(user);
-            console.log('Se creó el usuario');
-            return setDoc(doc(db, "roles_by_user", user), {
-                "nombre": name.value,
-                "apellido": lastname.value,
-                "role": 'customer',
-                createdAt: serverTimestamp(),
-                updatedAt: serverTimestamp()
-            });
-        })
-        .then(() => {
-            // return 
-            // function createChat(participants) {
-                console.log('entré a createChat')
-                const chatRef = ref(db2, 'chats');
-                const newChatRef = push(chatRef);
-                return set(newChatRef, {
-                    lastMessage: 'último mensaje',
-                    fecha: Date.now(),
-                    participants: { [user]: true, 'LIsaefMu3BYpF2jINUV9RH78EZs2':true}
-                })
-            // };
-            
-        })
+        createUserAndSetDocument(email.value, password.value, name.value, lastname.value)
+        .then(() => createChat(db, auth.currentUser.uid))
         .then(() => {
             window.location.href = '/admin.html';
         })
         .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            console.log("error code: " + errorCode);
-            console.log("error msg: " + errorMessage);
-
             if (error.message.includes('invalid-email')){
-                email.parentElement.innerHTML += `<p>El email ingresado no es válido</p>`;
-            } else if (error.message.includes('missing-password')){
-                password.parentElement.innerHTML += `<p>La contraseña no puede estar vacía</p>`;
-            } else if (error.message.includes('weak-password')){
-                password.parentElement.innerHTML += `<p>La contraseña debe tener al menos 6 caracteres</p>`;
+                displayErrorMessage('El email ingresado no es válido', email);
             } else if (error.message.includes('email-already-in-use')){
-                email.parentElement.innerHTML += `<p>Este email ya tiene una cuenta</p>`;
-            }
+                displayErrorMessage('Este email ya tiene una cuenta', email);
+            } else if (error.message.includes('missing-password')){
+                displayErrorMessage('La contraseña no puede estar vacía', password);
+            } else if (error.message.includes('weak-password')){
+                displayErrorMessage('La contraseña debe tener al menos 6 caracteres', password);
+            } 
             // ..
         });
+
+
+        // let user;
+
+        // createUserWithEmailAndPassword(auth, email.value, password.value)
+        // .then((credentials) => {
+        //     // Signed in 
+        //     user = credentials.user.uid;
+    
+        //     console.log(user);
+        //     console.log('Se creó el usuario');
+        //     return setDoc(doc(db, "roles_by_user", user), {
+        //         "nombre": name.value,
+        //         "apellido": lastname.value,
+        //         "role": 'customer',
+        //         createdAt: serverTimestamp(),
+        //         updatedAt: serverTimestamp()
+        //     });
+        // })
+        // .then(() => {
+        //     // return 
+        //     // function createChat(participants) {
+        //         console.log('entré a createChat')
+        //         const chatRef = ref(db2, 'chats');
+        //         const newChatRef = push(chatRef);
+        //         return set(newChatRef, {
+        //             lastMessage: 'último mensaje',
+        //             fecha: Date.now(),
+        //             participants: { [user]: true, 'LIsaefMu3BYpF2jINUV9RH78EZs2':true}
+        //         })
+        //     // };
+            
+        // })
+        // .then(() => {
+        //     window.location.href = '/admin.html';
+        // })
+        // .catch((error) => {
+        //     const errorCode = error.code;
+        //     const errorMessage = error.message;
+        //     console.log("error code: " + errorCode);
+        //     console.log("error msg: " + errorMessage);
+
+        //     if (error.message.includes('invalid-email')){
+        //         email.parentElement.innerHTML += `<p>El email ingresado no es válido</p>`;
+        //     } else if (error.message.includes('missing-password')){
+        //         password.parentElement.innerHTML += `<p>La contraseña no puede estar vacía</p>`;
+        //     } else if (error.message.includes('weak-password')){
+        //         password.parentElement.innerHTML += `<p>La contraseña debe tener al menos 6 caracteres</p>`;
+        //     } else if (error.message.includes('email-already-in-use')){
+        //         email.parentElement.innerHTML += `<p>Este email ya tiene una cuenta</p>`;
+        //     }
+        //     // ..
+        // });
 
         
 

@@ -98,7 +98,7 @@
         e.preventDefault();
         let { email, password } = form;
         
-        app.login.clearErrorMessages('p');
+        app.main.clearErrorMessages('p');
 
 
         try {
@@ -106,11 +106,11 @@
             window.location.href = '/admin.html';
         } catch (error) {
             if (error.message.includes('invalid-email')) {
-                app.login.displayErrorMessage('El email ingresado no es válido', email);
+                app.main.displayErrorMessage('El email ingresado no es válido', email);
             } else if (error.message.includes('missing-password')) {
-                app.login.displayErrorMessage('La contraseña no puede estar vacía', password);
+                app.main.displayErrorMessage('La contraseña no puede estar vacía', password);
             } else if (error.message.includes('invalid-login-credentials')) {
-                app.login.displayErrorMessage('Credenciales inválidas', form, '1');
+                app.main.displayErrorMessage('Credenciales inválidas', form, '1');
             }
         }
     
