@@ -52,6 +52,21 @@ function displayErrorMessage(message, targetElement, formTarget) {
     }
 }
 
+function validateEmptyFields(array) {
+    array.forEach((input) => {
+        if (!input.value.trim()) {
+            displayErrorMessage('Este campo no puede estar vacío', input);
+        }
+    });
+
+    let errorMessages = document.querySelectorAll('.errorForMmsg');
+    if (errorMessages.length > 0) {
+        return false;
+    } else {
+        return true;
+    }
+}
 
 
-export { displayBreadcrumb, clearErrorMessages, displayErrorMessage }
+
+export { displayBreadcrumb, clearErrorMessages, displayErrorMessage, validateEmptyFields }

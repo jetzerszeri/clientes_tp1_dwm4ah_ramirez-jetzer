@@ -1,7 +1,7 @@
 import { findByCategory, renderServicesBtns, updateServicesList } from './services.js';
 import { signInWithEmailAndPasswordHandler } from './login.js';
 import { element } from './create.js';
-import { displayBreadcrumb, clearErrorMessages, displayErrorMessage } from './main.js';
+import { displayBreadcrumb, clearErrorMessages, displayErrorMessage, validateEmptyFields } from './main.js';
 
 
 const app = {
@@ -17,6 +17,7 @@ const app = {
         displayBreadcrumb,
         clearErrorMessages,
         displayErrorMessage,
+        validateEmptyFields,
     },
     login: {
         signInWithEmailAndPasswordHandler,
