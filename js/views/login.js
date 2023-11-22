@@ -47,7 +47,8 @@ form.addEventListener('submit', async (e) => {
     app.main.clearErrorMessages('form p');
     try {
         await app.login.signInWithEmailAndPasswordHandler(email.value, password.value);
-        window.location.href = '#admin';
+        window.location.href = '/app.html#admin';
+        location.reload();
     } catch (error) {
         if (error.message.includes('invalid-email')) {
             app.main.displayErrorMessage('El email ingresado no es válido', email);
