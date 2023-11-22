@@ -32,11 +32,26 @@ function displayBreadcrumb( breadcrumbItems){
     return breadcrumb;    
 }
 
-function changeView(view){
-    // let app = document.getElementById("app");
-    // app.innerHTML = '';
-    // app.appendChild(home);
-    console.log(view);
+function clearErrorMessages(query) {
+    const errorMessages = document.querySelectorAll(query);
+    errorMessages.forEach((msj) => {
+        msj.remove();
+    });
 }
 
-export { displayBreadcrumb }
+
+function displayErrorMessage(message, targetElement, formTarget) {
+    const p = document.createElement('p');
+    p.classList.add('errorForMmsg');
+    p.innerText = message;
+
+    if (formTarget){
+        targetElement.prepend(p);
+    } else {
+        targetElement.parentElement.appendChild(p);
+    }
+}
+
+
+
+export { displayBreadcrumb, clearErrorMessages, displayErrorMessage }

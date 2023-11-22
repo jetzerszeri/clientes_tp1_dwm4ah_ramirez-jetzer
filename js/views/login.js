@@ -44,17 +44,17 @@ form.addEventListener('submit', async (e) => {
     e.preventDefault();
     let { email, password } = form;
     
-    app.login.clearErrorMessages('form p');
+    app.main.clearErrorMessages('form p');
     try {
         await app.login.signInWithEmailAndPasswordHandler(email.value, password.value);
         window.location.href = '#admin';
     } catch (error) {
         if (error.message.includes('invalid-email')) {
-            app.login.displayErrorMessage('El email ingresado no es válido', email);
+            app.main.displayErrorMessage('El email ingresado no es válido', email);
         } else if (error.message.includes('missing-password')) {
-            app.login.displayErrorMessage('La contraseña no puede estar vacía', password);
+            app.main.displayErrorMessage('La contraseña no puede estar vacía', password);
         } else if (error.message.includes('invalid-login-credentials')) {
-            app.login.displayErrorMessage('Credenciales inválidas', form, '1');
+            app.main.displayErrorMessage('Credenciales inválidas', form, '1');
         }
     }
 }) 
