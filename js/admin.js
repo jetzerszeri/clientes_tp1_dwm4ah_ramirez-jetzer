@@ -13,14 +13,7 @@ async function checkUserRole(uid, adminOptionsContainer, arrayAdmin, chatBtn) {
     if (docSnap.exists()) {
         const role = docSnap.data().role;
         if (role == 'admin') {
-            // window.location.href = '/';
             console.log('SI es admin');
-            // adminOptionsContainer.innerHTML +=`
-            // <li><i class="fa-solid fa-hand-sparkles"></i><span>Servicios</span></li>
-            // <li><i class="fa-solid fa-table-list"></i><span>Categorías</span></li>
-            // <li><i class="fa-solid fa-comments"></i><span>Chat</span></li>
-            // `;
-
             arrayAdmin.forEach((item) => {
                 adminOptionsContainer.appendChild(item);
             });
