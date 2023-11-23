@@ -20,9 +20,7 @@ function displayBreadcrumb( breadcrumbItems){
             let a = element('a');
             a.href = item.view;
             a.textContent = item.name;
-            a.addEventListener('click', () => {
-                changeView(item.view)
-            });
+            renderView(a, item.view);
             li.appendChild(a);
         }
         ol.appendChild(li);
