@@ -28,10 +28,14 @@ form.innerHTML =  `
 `;
 
 const singUpBtn = app.create.element('div', ['signupmsg']);
-singUpBtn.innerHTML = `
-    <p>No tienes una cuenta?</p>
-    <a href="#signin" class="btn">Registrate aquí</a>
-`;
+const singUpP = app.create.element('p', [], 'No tienes una cuenta?');
+const singUpA = app.create.element('btn', ['btn'], 'Registrate aquí');
+// singUpBtn.innerHTML = `
+//     <p>No tienes una cuenta?</p>
+//     <a href="/app.html#signin" class="btn">Registrate aquí</a>
+// `;
+singUpBtn.appendChild(singUpP);
+singUpBtn.appendChild(singUpA);
 
 
 login.appendChild(app.main.displayBreadcrumb(breadcrumbItems));
@@ -60,5 +64,8 @@ form.addEventListener('submit', async (e) => {
     }
 }) 
 
+
+
+app.main.renderView(singUpA, '#signin');
 
 export default login;

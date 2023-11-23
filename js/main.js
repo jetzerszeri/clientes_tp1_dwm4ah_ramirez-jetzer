@@ -67,6 +67,13 @@ function validateEmptyFields(array) {
     }
 }
 
+function renderView(element, view) {
+    element.addEventListener("click", (e) => {
+        e.preventDefault();
+        window.location.href = '/app.html' + view;
+        location.reload();
+    })
+}
 
 
-export { displayBreadcrumb, clearErrorMessages, displayErrorMessage, validateEmptyFields }
+export { displayBreadcrumb, clearErrorMessages, displayErrorMessage, validateEmptyFields, renderView }
