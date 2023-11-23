@@ -99,76 +99,77 @@
     </footer>
 
 <script type="module">
-    import app from './js/config.js';
-    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
-    import { getFirestore, collection, addDoc, getDocs, orderBy, query, setDoc, doc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js';
-    import {getDatabase, ref, set, push} from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-database.js';
+    // import app from './js/config.js';
+    // import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
+    // import { getFirestore, collection, addDoc, getDocs, orderBy, query, setDoc, doc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js';
+    // import {getDatabase, ref, set, push} from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-database.js';
 
 
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    const db2 = getDatabase(app);
+    // const auth = getAuth(app);
+    // const db = getFirestore(app);
+    // const db2 = getDatabase(app);
 
-    function clearErrorMessages(query) {
-    const errorMessages = document.querySelectorAll(query);
-    errorMessages.forEach((msj) => {
-        msj.remove();
-    });
-}
+    import app from './js/app.js';
+//     function clearErrorMessages(query) {
+//     const errorMessages = document.querySelectorAll(query);
+//     errorMessages.forEach((msj) => {
+//         msj.remove();
+//     });
+// }
 
-function displayErrorMessage(message, targetElement, formTarget) {
-    const p = document.createElement('p');
-    p.classList.add('errorForMmsg');
-    p.innerText = message;
+// function displayErrorMessage(message, targetElement, formTarget) {
+//     const p = document.createElement('p');
+//     p.classList.add('errorForMmsg');
+//     p.innerText = message;
 
-    if (formTarget){
-        targetElement.prepend(p);
-    } else {
-        targetElement.parentElement.appendChild(p);
-    }
-}
+//     if (formTarget){
+//         targetElement.prepend(p);
+//     } else {
+//         targetElement.parentElement.appendChild(p);
+//     }
+// }
 
 
-    function validateEmptyFields(array) {
-        array.forEach((input) => {
-            if (!input.value.trim()) {
-                displayErrorMessage('Este campo no puede estar vacío', input);
-            }
-        });
+    // function validateEmptyFields(array) {
+    //     array.forEach((input) => {
+    //         if (!input.value.trim()) {
+    //             app.main.displayErrorMessage('Este campo no puede estar vacío', input);
+    //         }
+    //     });
 
-        let errorMessages = document.querySelectorAll('.errorForMmsg');
-        if (errorMessages.length > 0) {
-            return false;
-        } else {
-            return true;
-        }
-    }
+    //     let errorMessages = document.querySelectorAll('.errorForMmsg');
+    //     if (errorMessages.length > 0) {
+    //         return false;
+    //     } else {
+    //         return true;
+    //     }
+    // }
 
-    export function createUserAndSetDocument(email, password, name, lastname) {
-    return createUserWithEmailAndPassword(auth, email, password)
-        .then((credentials) => {
-            const user = credentials.user.uid;
+// function createUserAndSetDocument(email, password, name, lastname) {
+//     return createUserWithEmailAndPassword(auth, email, password)
+//         .then((credentials) => {
+//             const user = credentials.user.uid;
 
-            return setDoc(doc(db, "roles_by_user", user), {
-                "nombre": name,
-                "apellido": lastname,
-                "role": 'customer',
-                createdAt: serverTimestamp(),
-                updatedAt: serverTimestamp()
-            });
-        });
-}
+//             return setDoc(doc(db, "roles_by_user", user), {
+//                 "nombre": name,
+//                 "apellido": lastname,
+//                 "role": 'customer',
+//                 createdAt: serverTimestamp(),
+//                 updatedAt: serverTimestamp()
+//             });
+//         });
+// }
 
-export function createChat(db, user) {
-    const chatRef = ref(db2, 'chats');
-    const newChatRef = push(chatRef);
+// function createChat(user) {
+//     const chatRef = ref(db2, 'chats');
+//     const newChatRef = push(chatRef);
 
-    return set(newChatRef, {
-        lastMessage: 'último mensaje',
-        fecha: Date.now(),
-        participants: { [user]: true, 'LIsaefMu3BYpF2jINUV9RH78EZs2': true }
-    });
-}
+//     return set(newChatRef, {
+//         lastMessage: 'último mensaje',
+//         fecha: Date.now(),
+//         participants: { [user]: true, 'LIsaefMu3BYpF2jINUV9RH78EZs2': true }
+//     });
+// }
 
 
 
@@ -178,29 +179,44 @@ export function createChat(db, user) {
     form.addEventListener('submit', (e) => {
         e.preventDefault();
         let { name, lastname, email, password } = form;
+        // let user;
 
         
-        clearErrorMessages('form p')
+        app.main.clearErrorMessages('form p')
 
-        if (!validateEmptyFields([name, lastname, email, password])) return;
+        if (!app.main.validateEmptyFields([name, lastname, email, password])) return;
+        console.log( 'email: ' + email.value + ' password: ' + password.value + ' name: ' + name.value + ' lastname: ' + lastname.value)
 
-        createUserAndSetDocument(email.value, password.value, name.value, lastname.value)
-        .then(() => createChat(db, auth.currentUser.uid))
+        app.signin.createUserAndSetDocument(email.value, password.value, name.value, lastname.value)
+        .then((userId) => app.signin.createChat(userId))
         .then(() => {
-            window.location.href = '/admin.html';
+            window.location.href = '/app.html#admin';
+        //     // setTimeout(() => {
+        //         // location.reload();
+        //     // }, 100);
         })
         .catch((error) => {
+            console.log(error);
             if (error.message.includes('invalid-email')){
-                displayErrorMessage('El email ingresado no es válido', email);
+                app.main.displayErrorMessage('El email ingresado no es válido', email);
             } else if (error.message.includes('email-already-in-use')){
-                displayErrorMessage('Este email ya tiene una cuenta', email);
+                app.main.displayErrorMessage('Este email ya tiene una cuenta', email);
             } else if (error.message.includes('missing-password')){
-                displayErrorMessage('La contraseña no puede estar vacía', password);
+                app.main.displayErrorMessage('La contraseña no puede estar vacía', password);
             } else if (error.message.includes('weak-password')){
-                displayErrorMessage('La contraseña debe tener al menos 6 caracteres', password);
+                app.main.displayErrorMessage('La contraseña debe tener al menos 6 caracteres', password);
             } 
             // ..
         });
+
+
+
+
+
+
+
+
+        
 
 
         // let user;

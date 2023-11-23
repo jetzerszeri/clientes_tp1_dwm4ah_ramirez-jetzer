@@ -1,5 +1,6 @@
 import { findByCategory, renderServicesBtns, updateServicesList } from './services.js';
 import { signInWithEmailAndPasswordHandler } from './login.js';
+import { createUserAndSetDocument, createChat } from './signin.js';
 import { element } from './create.js';
 import { displayBreadcrumb, clearErrorMessages, displayErrorMessage, validateEmptyFields } from './main.js';
 
@@ -21,6 +22,10 @@ const app = {
     },
     login: {
         signInWithEmailAndPasswordHandler,
+    },
+    signin: {
+        createUserAndSetDocument,
+        createChat,
     }
 }
 
