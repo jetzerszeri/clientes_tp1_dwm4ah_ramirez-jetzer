@@ -6,7 +6,14 @@
     <title>Lista de servicios</title>
     <link rel="stylesheet" href="css/styles.css">
     <script src="https://kit.fontawesome.com/26eb2bb81f.js" crossorigin="anonymous"></script>
-    <script src="js/main.js" defer></script>
+    <!-- <script src="js/main.js" defer></script> -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css">
+
+    <!-- jQuery -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <!-- DataTables -->
+    <script type="text/javascript" src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
 </head>
 <body>
     <header class="navegacion">
@@ -49,6 +56,25 @@
     
         <h1>Panel de administrador</h1>
         <h2>Lista de servicios</h2>
+
+
+
+
+        <table id="dataTable" class="display" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Categoria</th>
+                    <th>Descripción</th>
+                    <th>Precio</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+
+        </table>
     
         <ul class="usersOptions">
             <!-- <li><a href="" class="btn">Mostrar todos</a></li> -->
@@ -94,9 +120,13 @@
     import { getFirestore, collection, addDoc, getDocs, orderBy, query, doc, getDoc, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js';
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
 
-    const tableBody = document.querySelector('tbody');
 
-    // Initialize Cloud Firestore and get a reference to the service
+
+
+
+
+    const tableBody = document.querySelector('#dataTable tbody');
+
     const db = getFirestore(app);
     const auth = getAuth(app);
 
@@ -114,29 +144,34 @@
                     const role = docSnap.data().role;
                     if (role == 'admin') {
 
-                        await getDocs(q).then((querySnapshot) => {
-                            querySnapshot.forEach((doc) => {
-                    
-                                let tableRow = document.createElement('tr');
-                                tableRow.innerHTML = `
-                                    <td>${doc.data().name}</td>
-                                    <td>${doc.data().category}</td>
-                                    <td>${doc.data().description}</td>
-                                    <td>$${doc.data().price}/sqft</td>
-                                    <td>
-                                        <a href="/admin_services_edit.html?id=${doc.id}" class="btn secundary-green"><i class="fa-solid fa-pen-to-square"></i></a>
-                                        <button class="btn secundary-green delete-btn" data-id="${doc.id}"><i class="fa-solid fa-trash"></i></button>
+                        // await getDocs(q).then((querySnapshot) => {
+                        const querySnapshot = await getDocs(q);
+                        querySnapshot.forEach((doc) => {
+                
+                            let tableRow = document.createElement('tr');
+                            tableRow.innerHTML = `
+                                <td>${doc.data().name}</td>
+                                <td>${doc.data().category}</td>
+                                <td>${doc.data().description}</td>
+                                <td>$${doc.data().price}/sqft</td>
+                                <td>
+                                    <a href="/admin_services_edit.html?id=${doc.id}" class="btn secundary-green"><i class="fa-solid fa-pen-to-square"></i></a>
+                                    <button class="btn secundary-green delete-btn" data-id="${doc.id}"><i class="fa-solid fa-trash"></i></button>
 
-                                    </td>`;
-                                tableBody.append(tableRow);
-                            });
-                            document.querySelectorAll('.delete-btn').forEach(button => {
-                                button.addEventListener('click', function() {
-                                    const serviceId = this.getAttribute('data-id');
-                                    deleteService(serviceId);
-                                });
+                                </td>`;
+                            tableBody.append(tableRow);
+                        });
+                        document.querySelectorAll('.delete-btn').forEach(button => {
+                            button.addEventListener('click', function() {
+                                const serviceId = this.getAttribute('data-id');
+                                deleteService(serviceId);
                             });
                         });
+
+                        $('#dataTable').DataTable();
+
+
+                        // });
 
 
 
@@ -158,7 +193,6 @@
 
 
 
-
                     } else {
                         window.location.href = '/admin.html';
                     }
@@ -172,6 +206,9 @@
         }
     });
 
+    // $(document).ready( function () {
+    //     $('#dataTable').DataTable();
+    // });
 
 
 
