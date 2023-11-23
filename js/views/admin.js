@@ -1,4 +1,5 @@
 import app from '../app.js'
+import login from './login.js';
 
 const admin = app.create.element('main', ['adminmain']);
 
@@ -78,7 +79,6 @@ let chatBtn = createAdminBtn('#adminChat', 'fa-comments', 'Chat', renderAdminVie
 // app.main.renderView(chatBtn, '#chat');
 
 
-// app.admin.verifyUser(adminOptions, [servicesBtn, categoriesBtn, chatBtn], chatBtn);
 
 
 // adminOptions.innerHTML = `
@@ -87,9 +87,13 @@ let chatBtn = createAdminBtn('#adminChat', 'fa-comments', 'Chat', renderAdminVie
 //     <li><a href="#adminChat"><i class="fa-solid fa-comments adminBtn"></i><span>Chat</span></a></li>
 // `;
 
-adminOptions.appendChild(servicesBtn);
-adminOptions.appendChild(categoriesBtn);
-adminOptions.appendChild(chatBtn);
+// adminOptions.appendChild(servicesBtn);
+// adminOptions.appendChild(categoriesBtn);
+// adminOptions.appendChild(chatBtn);
+
+app.admin.verifyUser(adminOptions, [servicesBtn, categoriesBtn, chatBtn], chatBtn, admin);
+// let currentUser = app.admin.verifyUser();
+// console.log(currentUser);
 
 // adminViewContent.appendChild(adminOptions);
 let currentHash = window.location.hash;
@@ -115,7 +119,7 @@ admin.appendChild(adminViewContent);
 function renderAdminView(view) {
     // e.preventDefault();
     // let currentHash = window.location.hash;
-    // console.log(view);
+    console.log(view);
 
     adminViewContent.innerHTML = '';
 
