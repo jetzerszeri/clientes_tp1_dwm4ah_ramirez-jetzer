@@ -7,7 +7,7 @@ togglebtn.addEventListener('click', () => {
     navbarlinks.classList.toggle('active');
 })
 
-function displayBreadcrumb( breadcrumbItems){
+function displayBreadcrumb( breadcrumbItems, renderAdminViewFunction){
     let breadcrumb = element('nav', ['breadcrumb']);
     let ol = element('ol');
 
@@ -16,12 +16,22 @@ function displayBreadcrumb( breadcrumbItems){
         if (index === breadcrumbItems.length - 1){
             li.setAttribute('aria-current', 'page');
             li.textContent = item.name;
-        } else {
+        } else if (item.view == '#home'){
             let a = element('a');
             a.href = item.view;
             a.textContent = item.name;
             renderView(a, item.view);
             li.appendChild(a);
+        } else {
+            let a = element('a');
+            a.href = item.view;
+            a.textContent = item.name;
+            // renderView(a, item.view);
+            li.appendChild(a);
+
+            a.addEventListener('click', () => {
+                renderAdminViewFunction(item.view);
+            });
         }
         ol.appendChild(li);
     } )

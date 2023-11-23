@@ -780,7 +780,7 @@ padding-left: 10px;
     max-width: 760px;
 }
 
-.admindoptions li {
+.admindoptions li a{
     display: flex;
     flex-direction: column;
     color: var(--color-white);
@@ -796,18 +796,18 @@ padding-left: 10px;
     background-color: var(--color-darkgreen);
 }
 
-.admindoptions li i{
+.admindoptions li a i{
     font-size: 1.5em;
 }
 
-.admindoptions li:hover{
+.admindoptions li a:hover{
     background-color: var(--color-yellow);
     color: var(--color-darkgreen);
     /* transform: translate(-5px, -5px); */
     /* z-index: 1; */
 }
 
-.admindoptions li::before{
+.admindoptions li a::before{
     content: "";
     position: absolute;
     top: 0px;
@@ -819,7 +819,7 @@ padding-left: 10px;
     transition: all 0.3s ease;
 }
 
-.admindoptions li:hover:before{
+.admindoptions li a:hover:before{
     top: 10px;
     left: 10px;
     right: -10px;

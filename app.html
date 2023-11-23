@@ -85,6 +85,8 @@
         // agrego esto para que se muestre el home o la vista que quiero justo cuando se cargue o refresque la página.
         if (currentHash == "" ) {
             app.append(router['#home']);
+        } else if (currentHash.startsWith('#admin')) {
+            app.append(router['#admin']);
         } else {
             app.append(router[currentHash]);
         }
@@ -92,8 +94,12 @@
         links.forEach(link => {
             link.addEventListener("click", (e) => {
                 app.innerHTML = "";
-                app.append(router[e.target.hash]);
-                // console.log(e.target.hash)
+
+                if (e.target.hash.startsWith('#admin')) {
+                    app.append(router['#admin']);
+                } else {
+                    app.append(router[e.target.hash]);
+                }
             })
         })
 
