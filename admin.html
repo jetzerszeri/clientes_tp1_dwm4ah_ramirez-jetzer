@@ -70,51 +70,33 @@
     </footer>
 
 <script type="module">
-        import app from './js/config.js';
-    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
-    import {getDatabase, ref, set} from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-database.js';
-    import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js';
 
-    const db = getDatabase(app);
-    const auth = getAuth(app);
-    const dbfirestore = getFirestore(app);
+    import app from './js/app.js'
 
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            const uid = user.uid;
-            let adminOptions = document.querySelector('.admindoptions');
+    let adminOptions = document.querySelector('.admindoptions');
 
-            async function checkUserRole(uid) {
-                const docRef = doc(dbfirestore, "roles_by_user", uid);
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists()) {
-                    const role = docSnap.data().role;
-                    if (role == 'admin') {
-                        // window.location.href = '/';
-                        console.log('SI es admin');
-                        adminOptions.innerHTML +=`
-                        <li><a href="/admin_services.html"><i class="fa-solid fa-hand-sparkles"></i><span>Servicios</span></a></li>
-                        <li><a href="/admin_categories.html"><i class="fa-solid fa-table-list"></i><span>Categorías</span></a></li>
-                        <li><a href="/chat.html"><i class="fa-solid fa-comments"></i><span>Chat</span></a></li>
-                        `;
 
-                    } else {
-                        adminOptions.innerHTML +=`
-                        <li><a href="/chat.html"><i class="fa-solid fa-comments"></i><span>Chat</span></a></li>
-                        `;
-                    }
-                } 
-                // else {
-                //     console.log("No such document!");
-                // }
-            }
 
-            checkUserRole(uid);  // Llama a la función
+    let servicesBtn = app.create.element('li')
+    servicesBtn.innerHTML = `<i class="fa-solid fa-hand-sparkles"></i><span>Servicios</span>`;
 
-        } else {
-            window.location.href = '/login.html';
-        }
-    });
+    let categoriesBtn = app.create.element('li')
+    categoriesBtn.innerHTML = `<i class="fa-solid fa-table-list"></i><span>Categorías</span>`;
+
+    let chatBtn = app.create.element('li')
+    chatBtn.innerHTML = `<i class="fa-solid fa-comments"></i><span>Chat</span>`;
+
+    app.main.renderView(servicesBtn, '#adminServices');
+    app.main.renderView(categoriesBtn, '#adminCategories');
+    app.main.renderView(chatBtn, '#chat');
+
+
+    app.admin.verifyUser(adminOptions, [servicesBtn, categoriesBtn, chatBtn], chatBtn);
+
+
+
+
+
 
 
 

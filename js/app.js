@@ -3,6 +3,7 @@ import { signInWithEmailAndPasswordHandler } from './login.js';
 import { createUserAndSetDocument, createChat } from './signin.js';
 import { element } from './create.js';
 import { displayBreadcrumb, clearErrorMessages, displayErrorMessage, validateEmptyFields, renderView } from './main.js';
+import { verifyUser } from './admin.js';
 
 
 const app = {
@@ -27,6 +28,9 @@ const app = {
     signin: {
         createUserAndSetDocument,
         createChat,
+    },
+    admin: {
+        verifyUser,
     }
 }
 
