@@ -111,7 +111,11 @@ function displayAdminBtns(adminOptionsContainer, arrayAdmin, chatBtn, admin){
 
 }
 
+function updateAdminHeader(current, changes){
+    current.breadcrumb = changes.breadcrumb;
+}
 
 
 
-export { verifyUser };
+
+export { verifyUser, updateAdminHeader };
