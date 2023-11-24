@@ -130,7 +130,7 @@ function createTableBtns(actionsColumn, id){
     let editButton = document.createElement('a');
     let deleteButton = document.createElement('button');
 
-    editButton.href = `/#adminServicesEdit?id=${id}`;
+    editButton.href = `#adminServicesEdit?id=${id}`;
     editButton.classList.add('btn', 'secundary-green', 'edit-btn');
     editButton.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
     deleteButton.classList.add('btn', 'secundary-green', 'delete-btn');
@@ -144,7 +144,7 @@ function createTableBtns(actionsColumn, id){
     });
 
     editButton.addEventListener('click', function(e) {
-        e.preventDefault();
+        // e.preventDefault();
         console.log('click en el botón de editar');
     });
 
