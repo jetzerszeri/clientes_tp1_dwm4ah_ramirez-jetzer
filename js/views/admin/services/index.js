@@ -11,7 +11,7 @@ let servicesIndexBreadcrumbs = app.main.displayBreadcrumb(servicesIndexBreadcrum
 
 let servicesList = app.create.element('div');
 let addNewLink = app.create.element('a', ['btn'], 'Agregar');
-addNewLink.href = '#adminServicesAdd';
+addNewLink.href = '#adminServicesCreate';
 const tbody = app.create.element('tbody');
 let tableHeadingList = ['Nombre', 'Categoria', 'Descripción', 'Precio', 'Acciones'];
 let tableBodyColumns = ['name', 'category', 'description', 'price'];
@@ -30,7 +30,14 @@ function renderServicesTable(){
     app.admin.renderData('services', 'name', tableBodyColumns, tbody, tableId);
 }
 
+let adminServicesRouterContent = {
+    content: servicesList,
+    breadcrumb: servicesIndexBreadcrumbs, 
+    h2Text: 'Lista de servicios',
+    render: renderServicesTable
+};
 
-export { servicesIndexBreadcrumbs, servicesList, renderServicesTable}
+
+export { servicesIndexBreadcrumbs, servicesList, renderServicesTable, adminServicesRouterContent}
 
 

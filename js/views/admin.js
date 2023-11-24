@@ -1,5 +1,5 @@
 import app from '../app.js'
-import {servicesIndexBreadcrumbs, servicesList, renderServicesTable} from './admin/services/index.js';
+import {servicesIndexBreadcrumbs, servicesList, renderServicesTable, adminServicesRouterContent} from './admin/services/index.js';
 
 const admin = app.create.element('main', ['adminmain']);
 
@@ -31,12 +31,7 @@ const adminRouter = {
         breadcrumb: adminBreadcrumbs, 
         h2Text: 'Bienvenido de nuevo!'
     },
-    '#adminServices': {
-        content: servicesList,
-        breadcrumb: servicesIndexBreadcrumbs, 
-        h2Text: 'Lista de servicios',
-        render: renderServicesTable
-    },
+    '#adminServices': adminServicesRouterContent,
     '#adminCategories': {
         content: categories,
         breadcrumb: servicesIndexBreadcrumbs, 
