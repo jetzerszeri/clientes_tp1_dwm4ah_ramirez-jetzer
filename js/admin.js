@@ -31,27 +31,8 @@ function verifyUser(adminOptionsContainer, arrayAdmin, chatBtn, container) {
     onAuthStateChanged(auth, (user) => {
         if (user) {
             const uid = user.uid;
-            // checkUserRole(uid, adminOptionsContainer, arrayAdmin, chatBtn);  // Llama a la función
-            
-            // if (isAdmin(uid)) {
-            //     console.log('SI es admin');
-            //     arrayAdmin.forEach((item) => {
-            //         adminOptionsContainer.appendChild(item);
-            //     });
-            // } else {
-            //     adminOptionsContainer.appendChild(chatBtn);
-            // }
 
-            // console.log(isAdmin(uid)); 
             isAdmin(uid).then((result) => {
-                // if (result) {
-                //     console.log('SI es admin');
-                //     arrayAdmin.forEach((item) => {
-                //         adminOptionsContainer.appendChild(item);
-                //     });
-                // } else {
-                //     adminOptionsContainer.appendChild(chatBtn);
-                // }
 
                 displayAdminBtns(adminOptionsContainer, arrayAdmin, chatBtn, result);
             });
@@ -72,14 +53,6 @@ function verifyUser(adminOptionsContainer, arrayAdmin, chatBtn, container) {
             errorA.addEventListener('click', () => {
                 location.reload();
             });
-
-            // container.innerHTML = `
-            //     <h1>Debes iniciar sesión para ver esta página</h1>
-            //     <a href="/app.html#login" class="btn">Iniciar sesión</a>
-            // `;
-            // window.location.href = '/app.html#login';
-            // container = login;
-            // location.reload();
         }
     });
 }

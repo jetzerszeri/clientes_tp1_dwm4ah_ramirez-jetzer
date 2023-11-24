@@ -120,49 +120,9 @@
     let tableHeadingList = ['Nombre', 'Categoria', 'Descripción', 'Precio', 'Acciones'];
     addHeadingTableRow(tableHeadingList);
 
-    // tableHeadingList.forEach(heading => {
-    //     let tableHeading = document.createElement('th');
-    //     tableHeading.textContent = heading;
-    //     tableHeadingRow.append(tableHeading);
-    // });
-
-
-
-
-
-    // const tableBody = document.querySelector('#dataTable tbody');
 
     const dbfirestore = getFirestore(app);
-    // const auth = getAuth(app);
 
-    // const servicesRef = collection(dbfirestore, "services");
-    // const q = query(servicesRef, orderBy("name"));
-
-
-    // const querySnapshot = await getDocs(q);
-    // querySnapshot.forEach((doc) => {
-
-    //     let tableRow = document.createElement('tr');
-    //     tableRow.innerHTML = `
-    //         <td>${doc.data().name}</td>
-    //         <td>${doc.data().category}</td>
-    //         <td>${doc.data().description}</td>
-    //         <td>$${doc.data().price}/sqft</td>
-    //         <td>
-    //             <a href="/admin_services_edit.html?id=${doc.id}" class="btn secundary-green"><i class="fa-solid fa-pen-to-square"></i></a>
-    //             <button class="btn secundary-green delete-btn" data-id="${doc.id}"><i class="fa-solid fa-trash"></i></button>
-
-    //         </td>`;
-    //     tableBody.append(tableRow);
-    // });
-    // document.querySelectorAll('.delete-btn').forEach(button => {
-    //     button.addEventListener('click', function() {
-    //         const serviceId = this.getAttribute('data-id');
-    //         deleteService(serviceId);
-    //     });
-    // });
-
-    // $('#dataTable').DataTable();
 
     let tableBodyColumns = ['name', 'category', 'description', 'price'];
 
@@ -176,10 +136,7 @@
         const q = query(reference, orderBy(order));
         const querySnapshot = await getDocs(q);
 
-        console.log(querySnapshot);
-
         querySnapshot.forEach((doc) => {
-            console.log(doc.data().name);
 
             let tableRow = document.createElement('tr');
             columnList.forEach((columnName) => {
@@ -188,24 +145,7 @@
                 tableRow.appendChild(column);
             });
 
-
-            // let nameColumn = document.createElement('td');
-            // let categoryColumn = document.createElement('td');
-            // let descriptionColumn = document.createElement('td');
-            // let priceColumn = document.createElement('td');
             let actionsColumn = document.createElement('td');
-
-
-            // nameColumn.textContent = doc.data().name;
-            // categoryColumn.textContent = doc.data().category;
-            // descriptionColumn.textContent = doc.data().description;
-            // priceColumn.textContent = doc.data().price;
-
-            // let nuevasColumnas = [];
-            // createTableBodyColumns(nuevasColumnas, columnList, doc);
-            // console.log(nuevasColumnas);
-
-
             createTableBtns(actionsColumn, doc.id);
 
             tableRow.append(actionsColumn);
@@ -214,28 +154,21 @@
 
         $('#dataTable').DataTable();
 
-        // addFunctionsToTableBtns('#dataTable tbody');
-
-
     }
 
     
 
     function createTableBodyColumns(array, list, document){
         console.log(document)
-        // array = []
         list.forEach(column => {
             let finalColumn = document.createElement('td');
             finalColumn.innerHTML = document.data()[column];
-            // tableRow.append(column);
             array.push(finalColumn);
         });
-        // return columns;
     }
 
 
     function createTableBtns(actionsColumn, id){
-        // let actionsColumn = document.createElement('td');
         let editButton = document.createElement('a');
         let deleteButton = document.createElement('button');
 
@@ -258,7 +191,6 @@
         });
 
         actionsColumn.append(editButton, deleteButton);
-        // row.append(actionsColumn);
     }
 
 
@@ -291,44 +223,6 @@
             tableHeadingRow.append(tableHeading);
         });
     }
-
-
-
-
-
-    // onAuthStateChanged(auth, (user) => {
-    //     if (user) {
-    //         const uid = user.uid;
-
-    //         async function checkUserRole(uid) {
-    //             const docRef = doc(dbfirestore, "roles_by_user", uid);
-    //             const docSnap = await getDoc(docRef);
-    //             if (docSnap.exists()) {
-    //                 const role = docSnap.data().role;
-    //                 if (role == 'admin') {
-
-                        
-
-
-    //                 } else {
-    //                     window.location.href = '/admin.html';
-    //                 }
-    //             } 
-    //         }
-
-    //         checkUserRole(uid);  // Llama a la función
-
-    //     } else {
-    //         window.location.href = '/login.html';
-    //     }
-    // });
-
-    // $(document).ready( function () {
-    //     $('#dataTable').DataTable();
-    // });
-
-
-
 
     
 </script>
