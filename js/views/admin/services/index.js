@@ -12,7 +12,63 @@ let servicesIndexBreadcrumbs = app.main.displayBreadcrumb(servicesIndexBreadcrum
 
 
 
-let servicesList = app.create.element('div', false, 'Lista de servicios desde index.js');
+let servicesList = app.create.element('div');
+let usersOptions = app.create.element('ul', ['usersOptions']);
+
+let addNewLi = app.create.element('li');
+let addNewLink = app.create.element('a', ['btn'], 'Agregar');
+addNewLink.href = '#adminServicesAdd';
+addNewLi.appendChild(addNewLink);
+
+
+addNewLink.addEventListener('click', () => {
+    renderAdminView(addNewLink.href);
+});
+usersOptions.appendChild(addNewLi);
+
+servicesList.appendChild(usersOptions);
+
+
+const table = app.create.element('table', ['display']);
+table.id = 'dataTable';
+
+
+
+
+servicesList.appendChild(table);
+
+
+let tableHeadingList = ['Nombre', 'Categoria', 'Descripción', 'Precio', 'Acciones'];
+let tableBodyColumns = ['name', 'category', 'description', 'price'];
+
+// function renderTable(){
+//     table.innerHTML = '';
+//     const thead = app.create.element('thead');
+//     const tr = app.create.element('tr');
+//     thead.appendChild(tr);
+//     table.appendChild(thead);
+    
+//     const tbody = app.create.element('tbody');
+//     table.appendChild(tbody);
+
+//     app.admin.addHeadingTableRow(tableHeadingList, tr);
+//     app.admin.loadDataOnTable('services', 'name', tableBodyColumns, tbody);
+// }
+
+// function renderServicesTable(){
+    // table.innerHTML = '';
+    const thead = app.create.element('thead');
+    const tr = app.create.element('tr');
+    thead.appendChild(tr);
+    table.appendChild(thead);
+    
+    const tbody = app.create.element('tbody');
+    table.appendChild(tbody);
+
+    app.admin.addHeadingTableRow(tableHeadingList, tr);
+    app.admin.loadDataOnTable('services', 'name', tableBodyColumns, tbody);
+// }
+
 
 export { servicesIndexBreadcrumbs, servicesList}
 

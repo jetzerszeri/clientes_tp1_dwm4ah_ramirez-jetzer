@@ -89,8 +89,8 @@ function displayAdminBtns(adminOptionsContainer, arrayAdmin, chatBtn, admin){
 
 /// functions for services
 
-async function loadDataOnTable(collectionName, order, columnList){
-    const tableBody = document.querySelector('#dataTable tbody');
+async function loadDataOnTable(collectionName, order, columnList, tableBody){
+    // const tableBody = document.querySelector('#dataTable tbody');
 
     const reference = collection(dbfirestore, collectionName);
     const q = query(reference, orderBy(order));
@@ -169,8 +169,8 @@ async function deleteDocumentFromFirestore(serviceId) {
 }
 
 
-function addHeadingTableRow(list){
-    let tableHeadingRow = document.querySelector('#dataTable thead tr');
+function addHeadingTableRow(list, tableHeadingRow){
+    // let tableHeadingRow = document.querySelector('#dataTable thead tr');
     if (!tableHeadingRow){
         console.log('No hay tabla');
         return;

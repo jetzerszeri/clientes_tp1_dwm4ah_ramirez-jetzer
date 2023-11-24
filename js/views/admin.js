@@ -37,7 +37,7 @@ const adminRouter = {
     '#adminServices': {
         content: servicesList,
         breadcrumb: servicesIndexBreadcrumbs, // Breadcrumbs para servicios
-        h2Text: 'Lista de servicios'
+        h2Text: 'Lista de servicios',
     },
     '#adminCategories': {
         content: categories,
@@ -78,7 +78,7 @@ const adminRouter = {
 
 
 
-function createAdminBtn (hash, icon, text, renderAdminViewFunction){
+function createAdminBtn (hash, icon, text, renderAdminViewFunction, renderTableFunction){
     let btn = app.create.element('li');
     let btnLink = app.create.element('a');
     btnLink.href = hash;
@@ -87,11 +87,12 @@ function createAdminBtn (hash, icon, text, renderAdminViewFunction){
     // btnLink.addEventListener('click', renderAdminViewFunction(hash));
     btnLink.addEventListener('click', () => {
         renderAdminViewFunction(hash);
+        // renderTableFunction();
     });
     return btn;
 }
 
-let servicesBtn = createAdminBtn('#adminServices', 'fa-hand-sparkles', 'ServiciosbT', renderAdminView);
+let servicesBtn = createAdminBtn('#adminServices', 'fa-hand-sparkles', 'ServiciosbT', renderAdminView, adminRouter['#adminServices'].render);
 
 let categoriesBtn = createAdminBtn('#adminCategories', 'fa-table-list', 'Categorías', renderAdminView);
 
@@ -162,6 +163,11 @@ function renderAdminView(view) {
     adminViewContent.append(adminRouter[view].content);
     breadcrumbs.append(adminRouter[view].breadcrumb);
     h2.textContent = adminRouter[view].h2Text;
+
+    // if (adminRouter[view].render) {
+    //     adminRouter[view].render();
+    // }
+
     // else {
     //     adminViewContent.append(adminRouter[view]);
     // }
