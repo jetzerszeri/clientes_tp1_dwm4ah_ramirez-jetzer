@@ -5,6 +5,7 @@ import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10
 
 
 
+
 const db = getDatabase(app);
 const auth = getAuth(app);
 const dbfirestore = getFirestore(app);
@@ -110,6 +111,10 @@ function displayAdminBtns(adminOptionsContainer, arrayAdmin, chatBtn, admin){
     }
 
 }
+
+
+
+
 
 
 export { verifyUser };
