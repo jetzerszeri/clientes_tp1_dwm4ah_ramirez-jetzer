@@ -1,7 +1,7 @@
 import app from './config.js';
+import { getFirestore, collection, addDoc, getDocs, orderBy, query, doc, getDoc, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js';
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
-import {getDatabase, ref, set} from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-database.js';
-import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js';
+import { getDatabase, ref, set } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-database.js';
 
 
 
@@ -87,7 +87,100 @@ function displayAdminBtns(adminOptionsContainer, arrayAdmin, chatBtn, admin){
 
 
 
+/// functions for services
+
+async function loadDataOnTable(collectionName, order, columnList){
+    const tableBody = document.querySelector('#dataTable tbody');
+
+    const reference = collection(dbfirestore, collectionName);
+    const q = query(reference, orderBy(order));
+    const querySnapshot = await getDocs(q);
+
+    querySnapshot.forEach((doc) => {
+
+        let tableRow = document.createElement('tr');
+        columnList.forEach((columnName) => {
+            let column = document.createElement('td');
+            column.textContent = doc.data()[columnName];
+            tableRow.appendChild(column);
+        });
+
+        let actionsColumn = document.createElement('td');
+        createTableBtns(actionsColumn, doc.id);
+
+        tableRow.append(actionsColumn);
+        tableBody.append(tableRow);
+    });
+
+    $('#dataTable').DataTable();
+
+}
 
 
+function createTableBodyColumns(array, list, document){
+    console.log(document)
+    list.forEach(column => {
+        let finalColumn = document.createElement('td');
+        finalColumn.innerHTML = document.data()[column];
+        array.push(finalColumn);
+    });
+}
 
-export { verifyUser };
+function createTableBtns(actionsColumn, id){
+    let editButton = document.createElement('a');
+    let deleteButton = document.createElement('button');
+
+    editButton.href = `/#adminServicesEdit?id=${id}`;
+    editButton.classList.add('btn', 'secundary-green', 'edit-btn');
+    editButton.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
+    deleteButton.classList.add('btn', 'secundary-green', 'delete-btn');
+    deleteButton.setAttribute('data-id', id);
+    deleteButton.innerHTML = '<i class="fa-solid fa-trash"></i>';
+
+    deleteButton.addEventListener('click', function() {
+        const serviceId = this.getAttribute('data-id');
+        console.log('click en el botón de eliminar', serviceId);
+        deleteDocumentFromFirestore(serviceId);
+    });
+
+    editButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        console.log('click en el botón de editar');
+    });
+
+    actionsColumn.append(editButton, deleteButton);
+}
+
+
+async function deleteDocumentFromFirestore(serviceId) {
+    const userConfirmed = window.confirm("¿Estás seguro de que deseas eliminar este servicio?");
+
+    if (!userConfirmed) {
+        return;
+    }
+
+    try {
+    await deleteDoc(doc(dbfirestore, 'services', serviceId));
+    console.log('Servicio eliminado correctamente');
+    window.location.reload();
+    } catch (error) {
+    console.error('Error al eliminar el Servicio:', error);
+    }
+}
+
+
+function addHeadingTableRow(list){
+    let tableHeadingRow = document.querySelector('#dataTable thead tr');
+    if (!tableHeadingRow){
+        console.log('No hay tabla');
+        return;
+    }
+    list.forEach(heading => {
+        let tableHeading = document.createElement('th');
+        tableHeading.textContent = heading;
+        tableHeadingRow.append(tableHeading);
+    });
+}
+
+
+export { verifyUser, loadDataOnTable, createTableBodyColumns, createTableBtns, deleteDocumentFromFirestore, addHeadingTableRow};
