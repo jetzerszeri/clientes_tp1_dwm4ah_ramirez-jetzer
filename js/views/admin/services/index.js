@@ -55,21 +55,35 @@ let tableBodyColumns = ['name', 'category', 'description', 'price'];
 //     app.admin.loadDataOnTable('services', 'name', tableBodyColumns, tbody);
 // }
 
-// function renderServicesTable(){
-    // table.innerHTML = '';
-    const thead = app.create.element('thead');
-    const tr = app.create.element('tr');
-    thead.appendChild(tr);
-    table.appendChild(thead);
-    
-    const tbody = app.create.element('tbody');
-    table.appendChild(tbody);
+const thead = app.create.element('thead');
+const tr = app.create.element('tr');
+thead.appendChild(tr);
+table.appendChild(thead);
 
-    app.admin.addHeadingTableRow(tableHeadingList, tr);
-    app.admin.loadDataOnTable('services', 'name', tableBodyColumns, tbody);
+const tbody = app.create.element('tbody');
+table.appendChild(tbody);
+
+app.admin.addHeadingTableRow(tableHeadingList, tr);
+
+
+function renderServicesTable(){
+    tbody.innerHTML = '';
+    render();
+
+}
+
+    async function render(){
+        await app.admin.loadDataOnTable('services', 'name', tableBodyColumns, tbody);
+        $('#dataTable').DataTable();
+        console.log('se renderizó la tabla');
+    }
+    // app.admin.loadDataOnTable('services', 'name', tableBodyColumns, tbody);
+    // $('#dataTable').DataTable();
+
+    // render();
 // }
 
 
-export { servicesIndexBreadcrumbs, servicesList}
+export { servicesIndexBreadcrumbs, servicesList, renderServicesTable}
 
 

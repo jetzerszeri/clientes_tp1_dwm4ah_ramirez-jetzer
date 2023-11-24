@@ -1,5 +1,5 @@
 import app from '../app.js'
-import {servicesIndexBreadcrumbs, servicesList } from './admin/services/index.js';
+import {servicesIndexBreadcrumbs, servicesList, renderServicesTable} from './admin/services/index.js';
 
 const admin = app.create.element('main', ['adminmain']);
 
@@ -38,6 +38,7 @@ const adminRouter = {
         content: servicesList,
         breadcrumb: servicesIndexBreadcrumbs, // Breadcrumbs para servicios
         h2Text: 'Lista de servicios',
+        render: renderServicesTable
     },
     '#adminCategories': {
         content: categories,
@@ -87,7 +88,7 @@ function createAdminBtn (hash, icon, text, renderAdminViewFunction, renderTableF
     // btnLink.addEventListener('click', renderAdminViewFunction(hash));
     btnLink.addEventListener('click', () => {
         renderAdminViewFunction(hash);
-        // renderTableFunction();
+        renderTableFunction();
     });
     return btn;
 }
@@ -163,6 +164,12 @@ function renderAdminView(view) {
     adminViewContent.append(adminRouter[view].content);
     breadcrumbs.append(adminRouter[view].breadcrumb);
     h2.textContent = adminRouter[view].h2Text;
+
+    window.addEventListener("load", () => {
+        if (adminRouter[view].render) {
+            adminRouter[view].render();
+        }
+    });
 
     // if (adminRouter[view].render) {
     //     adminRouter[view].render();

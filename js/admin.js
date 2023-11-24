@@ -92,6 +92,7 @@ function displayAdminBtns(adminOptionsContainer, arrayAdmin, chatBtn, admin){
 async function loadDataOnTable(collectionName, order, columnList, tableBody){
     // const tableBody = document.querySelector('#dataTable tbody');
 
+    tableBody.innerHTML = '';
     const reference = collection(dbfirestore, collectionName);
     const q = query(reference, orderBy(order));
     const querySnapshot = await getDocs(q);
@@ -112,7 +113,7 @@ async function loadDataOnTable(collectionName, order, columnList, tableBody){
         tableBody.append(tableRow);
     });
 
-    $('#dataTable').DataTable();
+    // $('#dataTable').DataTable();
 
 }
 
