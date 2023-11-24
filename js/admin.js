@@ -2,7 +2,7 @@ import app from './config.js';
 import { getFirestore, collection, addDoc, getDocs, orderBy, query, doc, getDoc, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js';
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
 import { getDatabase, ref, set } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-database.js';
-
+import { element } from './create.js';
 
 
 
@@ -183,5 +183,27 @@ function addHeadingTableRow(list, tableHeadingRow){
     });
 }
 
+function createListTable(container, newBtnLink, tbody, tableHeadingList){
+    let usersOptions = element('ul', ['usersOptions']);
+    let addNewLi = element('li');
+    addNewLi.appendChild(newBtnLink);
+    usersOptions.appendChild(addNewLi);
+    container.appendChild(usersOptions);
 
-export { verifyUser, loadDataOnTable, createTableBodyColumns, createTableBtns, deleteDocumentFromFirestore, addHeadingTableRow};
+    const table = element('table', ['display']);
+    table.id = 'dataTable';
+
+    container.appendChild(table);
+
+    const thead = element('thead');
+    const tr = element('tr');
+    thead.appendChild(tr);
+    table.appendChild(thead);
+    table.appendChild(tbody);
+    addHeadingTableRow(tableHeadingList, tr);
+
+}
+
+
+
+export { verifyUser, loadDataOnTable, createTableBodyColumns, createTableBtns, deleteDocumentFromFirestore, addHeadingTableRow, createListTable};
