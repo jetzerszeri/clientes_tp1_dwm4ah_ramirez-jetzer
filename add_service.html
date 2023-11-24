@@ -185,28 +185,61 @@
 
         if (!isValid) return;
 
-        let folder = 'services/'
-        let file = img.files[0]
-        let ext = file.type.split('/')[1]
-        const storageRef = ref(storage, folder + "test"+ crypto.randomUUID() + '.' + ext);
-        console.log(storageRef)
+
+        uploadImgToStorageAndAddService('services/', img, name, category, description, price)
+
+
+        function uploadImgToStorageAndAddService(folderName, fileInput, nameInput, categoryInput, descriptionInput, priceInput){
+            let folder = folderName;
+            let file = fileInput.files[0]
+            let ext = file.type.split('/')[1]
+            const storageRef = ref(storage, folder + "test"+ crypto.randomUUID() + '.' + ext);
+            console.log(storageRef);
+
+
+            uploadBytes(storageRef, file).then((snapshot) => {
+                console.log(snapshot);
+                console.log('Se subió el archivo');
+
+                getDownloadURL(storageRef).then((url) => {
+                    console.log(url);
+
+                    addNewServiceToDB(nameInput.value, categoryInput.value, descriptionInput.value, priceInput.value, url);
+
+
+                }).catch((error) => {
+                    console.log(error);
+                })
+            });
+
+
+        };
 
 
 
-        uploadBytes(storageRef, file).then((snapshot) => {
-            console.log(snapshot);
-            console.log('Se subió el archivo');
 
-            getDownloadURL(storageRef).then((url) => {
-                console.log(url);
-
-                addNewServiceToDB(name.value, category.value, description.value, price.value, url);
+        // let folder = 'services/'
+        // let file = img.files[0]
+        // let ext = file.type.split('/')[1]
+        // const storageRef = ref(storage, folder + "test"+ crypto.randomUUID() + '.' + ext);
+        // console.log(storageRef)
 
 
-            }).catch((error) => {
-                console.log(error);
-            })
-        });
+
+        // uploadBytes(storageRef, file).then((snapshot) => {
+        //     console.log(snapshot);
+        //     console.log('Se subió el archivo');
+
+        //     getDownloadURL(storageRef).then((url) => {
+        //         console.log(url);
+
+        //         addNewServiceToDB(name.value, category.value, description.value, price.value, url);
+
+
+        //     }).catch((error) => {
+        //         console.log(error);
+        //     })
+        // });
 
 
 
