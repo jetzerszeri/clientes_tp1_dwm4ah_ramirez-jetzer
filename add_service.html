@@ -89,13 +89,11 @@
                     <div>
                         <label for="price">Precio por pie cuadrado</label>
                         <input type="number" step="any" placeholder="Ingresa el precio del servicio por pie" name="price">
-
                     </div>
+
                     <div>
                         <label >Imagen</label>
-                        <!-- <input type="file" name="img"> -->
                         <div id="myDropzone" class="dropzone"></div>
-
                     </div>
                 </div>
 
@@ -137,6 +135,7 @@
     import app from './js/config.js';
     import { success, successMsgAdd } from './js/partials.js';
     import {getFirestore, collection, getDocs, addDoc, serverTimestamp, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js';
+    
     import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
     import {getStorage, ref, uploadBytes, getDownloadURL} from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-storage.js';
 
@@ -228,7 +227,7 @@
                 getDownloadURL(storageRef).then((url) => {
                     console.log(url);
 
-                    addNewServiceToDB(nameInput.value, categoryInput.value, descriptionInput.value, priceInput.value, url);
+                    addNewServiceToDB(nameInput.value, categoryInput.value, descriptionInput.value, priceInput.value, url, container);
 
 
                 }).catch((error) => {
@@ -237,14 +236,14 @@
             });
 
 
-        };
+        }
 
 
     }) 
 
 
 
-    async function addNewServiceToDB(name, category, description, price, imgUrl){
+    async function addNewServiceToDB(name, category, description, price, imgUrl, container){
         await addDoc(collection(dbfirestore, "services"), {
             name: name,
             category: category,
@@ -256,6 +255,7 @@
         });
 
         console.log('servicio agregado exitosamente');
+        container.innerHTML = successMsgAdd('Servicio agregado exitosamente', '/admin_services.html')
     }
 
 
