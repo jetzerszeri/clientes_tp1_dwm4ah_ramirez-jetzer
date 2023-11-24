@@ -1,5 +1,6 @@
 import app from '../app.js'
 import {servicesIndexBreadcrumbs, servicesList, renderServicesTable, adminServicesRouterContent} from './admin/services/index.js';
+import { adminServicesCreateRouterContent } from './admin/services/create.js';
 
 const admin = app.create.element('main', ['adminmain']);
 
@@ -41,7 +42,8 @@ const adminRouter = {
         content: chat,
         breadcrumb: servicesIndexBreadcrumbs, 
         h2Text: 'Chat de administración'
-    }
+    },
+    '#adminServicesCreate': adminServicesCreateRouterContent,
 };
 
 

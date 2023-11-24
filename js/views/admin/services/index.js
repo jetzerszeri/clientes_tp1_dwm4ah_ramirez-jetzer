@@ -18,7 +18,7 @@ let tableBodyColumns = ['name', 'category', 'description', 'price'];
 const tableId = 'servicesTable';
 
 addNewLink.addEventListener('click', () => {
-    renderAdminView(addNewLink.href);
+    renderAdminView('#adminServicesCreate');
 });
 
 
