@@ -57,7 +57,7 @@
 
         // conexion con el servicio firebase storage
         const storage = getStorage(app)
-        const db = getFirestore(app);
+        const dbfirestore = getFirestore(app);
 
         // ubicamos el formulario por el id
         const uploadForm = document.getElementById('upload');
@@ -73,17 +73,8 @@
             let file = e.target.files[0]
             let ext = file.type.split('/')[1]
             
-            // creamos una referencia al storage
             const storageRef = ref(storage, folder + crypto.randomUUID() + '.' + ext);
-
-            // uploadBytes(storageRef, file).then((snapshot) => {
-            //     console.log(snapshot);
-            //     console.log('Uploaded a blob or file!');
-
-            //     // continuar aca...
-
-            // });
-
+            console.log(storageRef)
 
         })
 
@@ -146,7 +137,7 @@
                     console.log(url);
 
 
-                    addDoc(collection(db, "photos"), {
+                    addDoc(collection(dbfirestore, "photos"), {
                         url: url,
                         text_alt: text_alt.value,
                         createdAt: serverTimestamp(),
@@ -161,13 +152,11 @@
                             <p>Imagen agregada exitosamente a la base de datos</p>
                         `;
 
-                    
-
 
                         // window.location.href = '/admin_avatars.html';
                         uploadForm.reset();
                     }).catch((error) => {
-                        console.error("Error adding document: ", error);
+                        console.error("Error al añadir el documento: ", error);
                     });
                    
 

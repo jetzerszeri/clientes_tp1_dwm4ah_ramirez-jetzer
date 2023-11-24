@@ -73,6 +73,11 @@
                     <input type="number" step="any" placeholder="Ingresa el precio del servicio por pie" name="price">
 
                 </div>
+                <div>
+                    <label for="img">Imagen</label>
+                    <input type="file" name="img">
+
+                </div>
 
             
                 <div>
@@ -104,98 +109,132 @@
     import { success, successMsgAdd } from './js/partials.js';
     import {getFirestore, collection, getDocs, addDoc, serverTimestamp, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js';
     import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
+    import {getStorage, ref, uploadBytes, getDownloadURL} from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-storage.js';
 
-    const db = getFirestore(app);
-    const querySnapshot = await getDocs(collection(db, "categories"));
+    const storage = getStorage(app)
+    const dbfirestore = getFirestore(app);
+
     const container = document.querySelector('.container');
     const auth = getAuth(app);
 
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            const uid = user.uid;
+    async function addCategoriesList(categoriesSelectInput){
+        const querySnapshot = await getDocs(collection(dbfirestore, "categories"));
+        querySnapshot.forEach((doc) => {
+            let option = document.createElement('option');
+            option.value = doc.data().name;
+            option.innerHTML = doc.data().name;
+            categoriesSelectInput.append(option);
+        })
 
-            async function checkUserRole(uid) {
-                const docRef = doc(db, "roles_by_user", uid);
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists()) {
-                    const role = docSnap.data().role;
-                    if (role == 'admin') {
-                        
-                        
-                        querySnapshot.forEach((doc) => {
-                            let option = document.createElement('option');
-                            option.value = doc.data().name;
-                            option.innerHTML = doc.data().name;
-                            document.querySelector('#categorySelect').append(option);
-                        })
-                    
-                    
-                        const form = document.querySelector('form');
-                        form.addEventListener('submit', (e) => {
-                            e.preventDefault();
-                    
-                            let { name, category, description, price } = form;
-                    
-                            let isValid = true;
-                            let errorMessages = form.querySelectorAll('p');
-                    
-                            if (errorMessages.length > 0){
-                                errorMessages.forEach((p) => {
-                                    p.remove();
-                                })
-                            }
-                    
-                            if (!name.value.trim()) {
-                            name.parentElement.innerHTML += `<p>El nombre no puede estar vacío</p>`;
-                            isValid = false; 
-                            };
-                    
-                            if (!description.value.trim()) {
-                                description.parentElement.innerHTML += `<p>La descripción es obligatoria</p>`;
-                                isValid = false; 
-                            };
-                            if (!price.value.trim()) {
-                                price.parentElement.innerHTML += `<p>El precio no puede estar vacío</p>`;
-                                isValid = false; 
-                            };
-                    
-                            if (!isValid) return;
-                    
-                    
-                    
-                    
-                            addDoc(collection(db, "services"), {
-                                name: name.value,
-                                category: category.value,
-                                description: description.value,
-                                price: price.value,
-                                createdAt: serverTimestamp(),
-                                updatedAt: serverTimestamp()
-                            });
-                    
-                            container.innerHTML = successMsgAdd('Servicio agregado exitosamente', '/admin_services.html');
-                        }) 
+    }
+
+    addCategoriesList(document.querySelector('#categorySelect'));
 
 
 
-                    } else {
-                        window.location.href = '/admin.html';
-                    }
-                } 
-            }
 
-            checkUserRole(uid);  // Llama a la función
+    const form = document.querySelector('form');
+    let imagen = form.img;
 
-        } else {
-            window.location.href = '/login.html';
+    imagen.addEventListener('change', function (e) {
+            e.preventDefault()
+            console.log('cambio')
+            let folder = 'avatars/'
+            let file = e.target.files[0]
+            let ext = file.type.split('/')[1]
+            console.log(file)
+
+    })
+
+
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        let { name, category, description, price, img} = form;
+
+
+
+
+        let isValid = true;
+        let errorMessages = form.querySelectorAll('p');
+
+        if (errorMessages.length > 0){
+            errorMessages.forEach((p) => {
+                p.remove();
+            })
         }
-    });
+
+        if (!name.value.trim()) {
+        name.parentElement.innerHTML += `<p>El nombre no puede estar vacío</p>`;
+        isValid = false; 
+        };
+
+        if (!description.value.trim()) {
+            description.parentElement.innerHTML += `<p>La descripción es obligatoria</p>`;
+            isValid = false; 
+        };
+        if (!price.value.trim()) {
+            price.parentElement.innerHTML += `<p>El precio no puede estar vacío</p>`;
+            isValid = false; 
+        };
+        if (img.files.length == 0) {
+            img.parentElement.innerHTML += `<p>la imagen no puede estar vacío</p>`;
+            isValid = false; 
+        };
+
+        if (!isValid) return;
+
+        let folder = 'services/'
+        let file = img.files[0]
+        let ext = file.type.split('/')[1]
+        const storageRef = ref(storage, folder + "test"+ crypto.randomUUID() + '.' + ext);
+        console.log(storageRef)
+
+
+
+        uploadBytes(storageRef, file).then((snapshot) => {
+            console.log(snapshot);
+            console.log('Se subió el archivo');
+
+            getDownloadURL(storageRef).then((url) => {
+                console.log(url);
+
+                addNewServiceToDB(name.value, category.value, description.value, price.value, url);
+
+
+            }).catch((error) => {
+                console.log(error);
+            })
+        });
 
 
 
 
 
 
+
+        // addNewServiceToDB(name.value, category.value, description.value, price.value);
+
+
+        // container.innerHTML = successMsgAdd('Servicio agregado exitosamente', '/admin_services.html');
+    }) 
+
+
+
+    async function addNewServiceToDB(name, category, description, price, imgUrl){
+        await addDoc(collection(dbfirestore, "services"), {
+            name: name,
+            category: category,
+            description: description,
+            price: price,
+            img: imgUrl,
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp()
+        });
+
+        console.log('servicio agregado exitosamente');
+    }
 
 
     
