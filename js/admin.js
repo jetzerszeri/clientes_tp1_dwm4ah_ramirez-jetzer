@@ -1,14 +1,17 @@
 import app from './config.js';
-import { getFirestore, collection, addDoc, getDocs, orderBy, query, doc, getDoc, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js';
+import { getFirestore, collection, addDoc, getDocs, orderBy, query, doc, getDoc, deleteDoc,  serverTimestamp, } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js';
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
-import { getDatabase, ref, set } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-database.js';
+import { getDatabase, ref as dbRef, set } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-database.js';
+import {getStorage, ref as storageRef, uploadBytes, getDownloadURL} from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-storage.js';
 import { element } from './create.js';
+import { success, successMsgAdd } from './partials.js';
 
 
 
 const db = getDatabase(app);
 const auth = getAuth(app);
 const dbfirestore = getFirestore(app);
+const storage = getStorage(app);
 
 async function checkUserRole(uid, adminOptionsContainer, arrayAdmin, chatBtn) {
     const docRef = doc(dbfirestore, "roles_by_user", uid);
@@ -247,11 +250,62 @@ async function renderData(collectionName, order, tableBodyColumns, tbody, tableI
 
 
 
-// edit services page
+// create services page
+
+
+async function addCategoriesList(categoriesSelectInput){
+    const querySnapshot = await getDocs(collection(dbfirestore, "categories"));
+    querySnapshot.forEach((doc) => {
+        let option = document.createElement('option');
+        option.value = doc.data().name;
+        option.innerHTML = doc.data().name;
+        categoriesSelectInput.append(option);
+    })
+};
+
+
+function uploadImgToStorageAndAddService(folderName, dropzoneFile, nameInput, categoryInput, descriptionInput, priceInput, container){
+
+    let folder = folderName;
+    let ext = dropzoneFile.type.split('/')[1]
+    const storageReference = storageRef(storage, folder + "test"+ crypto.randomUUID() + '.' + ext);
+    console.log(storageReference);
+
+
+    uploadBytes(storageReference, dropzoneFile).then((snapshot) => {
+        console.log(snapshot);
+        console.log('Se subió el archivo');
+
+        getDownloadURL(storageReference).then((url) => {
+            console.log(url);
+
+            addNewServiceToDB(nameInput.value, categoryInput.value, descriptionInput.value, priceInput.value, url, container);
+
+
+        }).catch((error) => {
+            console.log(error);
+        })
+    });
+
+
+};
+
+
+async function addNewServiceToDB(name, category, description, price, imgUrl, container){
+    await addDoc(collection(dbfirestore, "services"), {
+        name: name,
+        category: category,
+        description: description,
+        price: price,
+        img: imgUrl,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+    });
+
+    console.log('servicio agregado exitosamente');
+    container.innerHTML = successMsgAdd('Servicio agregado exitosamente', '/admin_services.html')
+}
 
 
 
-
-
-
-export { verifyUser, loadDataOnTable, createTableBodyColumns, createTableBtns, deleteDocumentFromFirestore, addHeadingTableRow, createListTable, renderData, createAdminBtn};
+export { verifyUser, loadDataOnTable, createTableBodyColumns, createTableBtns, deleteDocumentFromFirestore, addHeadingTableRow, createListTable, renderData, createAdminBtn, addCategoriesList, uploadImgToStorageAndAddService, addNewServiceToDB, };
