@@ -86,6 +86,19 @@ function displayAdminBtns(adminOptionsContainer, arrayAdmin, chatBtn, admin){
 }
 
 
+function createAdminBtn (hash, icon, text, renderAdminViewFunction, renderTableFunction){
+    let btn = element('li');
+    let btnLink = element('a');
+    btnLink.href = hash;
+    btnLink.innerHTML = `<i class="fa-solid ${icon} adminBtn"></i><span>${text}</span>`;
+    btn.appendChild(btnLink);
+    btnLink.addEventListener('click', () => {
+        renderAdminViewFunction(hash);
+        renderTableFunction();
+    });
+    return btn;
+}
+
 
 /// functions for services
 
@@ -233,4 +246,4 @@ async function renderData(collectionName, order, tableBodyColumns, tbody, tableI
 }
 
 
-export { verifyUser, loadDataOnTable, createTableBodyColumns, createTableBtns, deleteDocumentFromFirestore, addHeadingTableRow, createListTable, renderData};
+export { verifyUser, loadDataOnTable, createTableBodyColumns, createTableBtns, deleteDocumentFromFirestore, addHeadingTableRow, createListTable, renderData, createAdminBtn};
