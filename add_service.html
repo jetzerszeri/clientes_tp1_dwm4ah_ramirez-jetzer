@@ -7,6 +7,21 @@
     <link rel="stylesheet" href="css/styles.css">
     <script src="https://kit.fontawesome.com/26eb2bb81f.js" crossorigin="anonymous"></script>
     <!-- <script src="js/main.js" defer></script> -->
+
+    <!-- dropzone -->
+    <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+    <style>
+        /* .dz-error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+} */
+
+#myForm{
+    /* background-color: black; */
+    color: black !important;
+}
+    </style>
 </head>
 <body>
     <header class="navegacion">
@@ -52,8 +67,8 @@
         <h2>Agregar servicio</h2>
     
 
-        <div class="container">
-            <form action="">
+        <div class="container ">
+            <form action="" >
                 <div>
                     <label for="name">Nombre del servicio</label>
                     <input type="text" placeholder="Ingresa el nombre del servicio" name="name">
@@ -74,17 +89,26 @@
 
                 </div>
                 <div>
-                    <label for="img">Imagen</label>
-                    <input type="file" name="img">
+                    <label >Imagen</label>
+                    <!-- <input type="file" name="img"> -->
+                    <div id="myDropzone" class="dropzone"></div>
 
                 </div>
+
+
+                
 
             
                 <div>
                     <button type="submit" class="btn primary-green">Agregar servicio</button>
                 </div>
             </form>
+            <!-- <form id="myForm">
+                <div id="myDropzone" class="dropzone"></div>
+                <button type="submit" id="submit-button">Submit</button>
+            </form> -->
         </div>
+
 
 
 
@@ -103,6 +127,7 @@
             </div>
         </div>
     </footer>
+    <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
 
 <script type="module">
     import app from './js/config.js';
@@ -134,17 +159,17 @@
 
 
     const form = document.querySelector('form');
-    let imagen = form.img;
+    // let imagen = form.img;
 
-    imagen.addEventListener('change', function (e) {
-            e.preventDefault()
-            console.log('cambio')
-            let folder = 'avatars/'
-            let file = e.target.files[0]
-            let ext = file.type.split('/')[1]
-            console.log(file)
+    // imagen.addEventListener('change', function (e) {
+    //         e.preventDefault()
+    //         console.log('cambio')
+    //         let folder = 'avatars/'
+    //         let file = e.target.files[0]
+    //         let ext = file.type.split('/')[1]
+    //         console.log(file)
 
-    })
+    // })
 
 
 
@@ -178,26 +203,50 @@
             price.parentElement.innerHTML += `<p>El precio no puede estar vacío</p>`;
             isValid = false; 
         };
-        if (img.files.length == 0) {
-            img.parentElement.innerHTML += `<p>la imagen no puede estar vacío</p>`;
-            isValid = false; 
-        };
+        // if (img.files.length == 0) {
+        //     img.parentElement.innerHTML += `<p>la imagen no puede estar vacío</p>`;
+        //     isValid = false; 
+        // };
+
+        let dropzoneContainer = document.querySelector('.dropzone').parentElement;
+        // console.log(dropzoneContainer);
+        
+                if (myDropzone.files.length == 0) {
+                    console.log(myDropzone.files.length)
+                    // Añadir mensaje de error si no hay archivo
+                    let errorP = document.createElement('p');
+                    errorP.innerText = "La imagen es obligatoria";
+                    errorP.classList.add('errorForMmsg');
+                    dropzoneContainer.appendChild(errorP);
+                    // dropzoneContainer.innerHTML += `<p class="errorForMmsg">La imagen es obligatoria</p>`;
+                    // ...
+                    return; // No continuar si no hay archivo
+                }
+                // console.log(myDropzone.files.length)
 
         if (!isValid) return;
+        let file = myDropzone.files[0]; 
 
 
-        uploadImgToStorageAndAddService('services/', img, name, category, description, price)
+        uploadImgToStorageAndAddService('services/', file, name, category, description, price)
 
 
-        function uploadImgToStorageAndAddService(folderName, fileInput, nameInput, categoryInput, descriptionInput, priceInput){
+        function uploadImgToStorageAndAddService(folderName, dropzoneFile, nameInput, categoryInput, descriptionInput, priceInput){
+
+    //         if (!dropzoneFile || !dropzoneFile.type) {
+    //     console.error("Archivo no válido o no definido");
+    //     return;
+    // }
+
+
             let folder = folderName;
-            let file = fileInput.files[0]
-            let ext = file.type.split('/')[1]
+            // let file = dropzoneFile;
+            let ext = dropzoneFile.type.split('/')[1]
             const storageRef = ref(storage, folder + "test"+ crypto.randomUUID() + '.' + ext);
             console.log(storageRef);
 
 
-            uploadBytes(storageRef, file).then((snapshot) => {
+            uploadBytes(storageRef, dropzoneFile).then((snapshot) => {
                 console.log(snapshot);
                 console.log('Se subió el archivo');
 
@@ -270,7 +319,132 @@
     }
 
 
-    
+//     let selectedFiles = [];
+
+//     Dropzone.options.myDropzone = {
+//         autoProcessQueue: false,
+//         init: function() {
+//             var myDropzone = this;
+
+//             this.on("addedfile", function(file) {
+//                 selectedFiles.push(file);
+//             });
+
+//             // Opcional: Eliminar un archivo del arreglo si el usuario lo remueve de Dropzone
+//             this.on("removedfile", function(file) {
+//                 selectedFiles = selectedFiles.filter(function(f) { return f !== file; });
+//             });
+//         }
+//     };
+
+//     document.getElementById('myForm').addEventListener('submit', function(event) {
+//     event.preventDefault();
+
+//     // Procesar cada archivo seleccionado
+//     selectedFiles.forEach(function(file) {
+//         // Subir archivo a Firestore
+//         // var storageRef = firebase.storage().ref('tus_archivos/' + file.name);
+//         // var uploadTask = storageRef.put(file);
+
+//         // uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
+//         //     function(snapshot) {
+//         //         // Opcional: Actualizar el progreso de la carga aquí
+//         //     },
+//         //     function(error) {
+//         //         // Opcional: Manejar errores aquí
+//         //     },
+//         //     function() {
+//         //         // Opcional: Acciones después de que se completa la carga
+//         //     }
+//         // );
+
+//         console.log(file);
+//     });
+
+//     // Limpiar el arreglo y resetear Dropzone si es necesario
+//     selectedFiles = [];
+//     myDropzone.removeAllFiles();
+// });
+
+Dropzone.autoDiscover = false;
+
+let myDropzone = new Dropzone("#myDropzone", { 
+    url: "#", // URL ficticia
+    autoProcessQueue: false ,
+    maxFiles: 1,
+    acceptedFiles: 'image/jpeg, image/png, image/jpg, image/webp',
+});
+
+// let formPrueba = document.querySelector('#myForm');
+// formPrueba.addEventListener('submit', function(e) {
+//     e.preventDefault();
+//     // myDropzone.processQueue(); // Procesa los archivos en la cola
+// });
+
+myDropzone.on("addedfile", function(file) {
+    // Ocultar la barra de progreso ya que no se cargará automáticamente
+    if (this.files[1]!=null){
+        this.removeFile(this.files[0]);
+    }
+    file.previewElement.querySelector(".dz-progress").style.display = 'none';
+    // file.previewElement.querySelector(".dz-error-message").style.display = 'none';
+
+    var removeButton = document.createElement('div');
+    removeButton.innerHTML = 'X';
+    removeButton.classList.add('dz-remove'); // Puedes añadir clases para estilos
+
+    // Obtener el primer hijo del elemento de vista previa
+    var firstChild = file.previewElement.firstChild;
+
+    // Insertar el botón antes del primer hijo del elemento de vista previa
+    file.previewElement.insertBefore(removeButton, firstChild);
+
+    // Escuchar el evento de clic en el botón de eliminación
+    removeButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        // Eliminar el archivo de Dropzone
+        myDropzone.removeFile(file);
+    });
+
+});
+
+// myDropzone.on("addedfile", function(file) {
+//     // Aquí estableces el estado del archivo manualmente
+//     // file.status = Dropzone.QUEUED;
+//     console.log(file);
+
+//     // Aquí puedes añadir tu lógica personalizada si es necesario
+//     // Por ejemplo, almacenar el archivo en un array, como se mencionó antes
+// });
+
+// ... resto del código ...
+
+// document.getElementById('submit-button').addEventListener('click', function(e) {
+//     e.preventDefault();
+//     // myDropzone.processQueue(); // Procesa los archivos en la cola
+//     let fileProgressBar = file.previewElement.querySelector(".dz-progress");
+//         fileProgressBar.style.display = 'block';
+// });
+
+
+myDropzone.on("error", function(file, response) {
+    // `response` es el mensaje de error devuelto por Dropzone
+    // Aquí puedes personalizar cómo quieres mostrar el mensaje de error
+    // var errorMessage = document.createElement('div');
+    // errorMessage.className = 'dz-error-message';
+    // errorMessage.textContent = response;
+    // console.log(response);
+    // file.previewElement.appendChild(errorMessage);
+
+
+});
+
+
+
 </script>
+
+
 </body>
 </html>

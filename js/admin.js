@@ -246,4 +246,12 @@ async function renderData(collectionName, order, tableBodyColumns, tbody, tableI
 }
 
 
+
+// edit services page
+
+
+
+
+
+
 export { verifyUser, loadDataOnTable, createTableBodyColumns, createTableBtns, deleteDocumentFromFirestore, addHeadingTableRow, createListTable, renderData, createAdminBtn};

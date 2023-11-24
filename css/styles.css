@@ -1044,6 +1044,31 @@ input + p, select + p, textarea + p, .errorForMmsg{
     box-shadow: none;
     padding: 0;
 }
+.dropzone{
+    color: var(--color-darkgray);
+}
+/* dropzone */
+.dz-remove {
+    color: red;
+    cursor: pointer;
+    border: none;
+    font-size: 20px;
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: aliceblue;
+    z-index: 100;
+    text-align: center;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    line-height: 25px;
+}
+.dz-remove:hover {
+    transform: scale(1.2);
+}
 
 @media (min-width: 650px){
 
