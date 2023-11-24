@@ -183,7 +183,7 @@ function addHeadingTableRow(list, tableHeadingRow){
     });
 }
 
-function createListTable(container, newBtnLink, tbody, tableHeadingList){
+function createListTable(container, newBtnLink, tbody, tableHeadingList, id){
     let usersOptions = element('ul', ['usersOptions']);
     let addNewLi = element('li');
     addNewLi.appendChild(newBtnLink);
@@ -191,7 +191,7 @@ function createListTable(container, newBtnLink, tbody, tableHeadingList){
     container.appendChild(usersOptions);
 
     const table = element('table', ['display']);
-    table.id = 'dataTable';
+    table.id = id;
 
     container.appendChild(table);
 
@@ -204,6 +204,33 @@ function createListTable(container, newBtnLink, tbody, tableHeadingList){
 
 }
 
+const dataTableOptions = {
+    lengthMenu: [3, 10, 30, 100],
+    pageLength: 3,
+    destroy: true,
+    language: {
+        lengthMenu: "Mostrar _MENU_ registros por página",
+        zeroRecords: "Ningún usuario encontrado",
+        info: "Mostrando de _START_ a _END_ de un total de _TOTAL_ registros",
+        infoEmpty: "Ningún usuario encontrado",
+        infoFiltered: "(filtrados desde _MAX_ registros totales)",
+        search: "Buscar:",
+        loadingRecords: "Cargando...",
+        paginate: {
+            first: "Primero",
+            last: "Último",
+            next: "Siguiente",
+            previous: "Anterior"
+        }
+    }
+};
+
+async function renderData(collectionName, order, tableBodyColumns, tbody, tableId){
+    await loadDataOnTable(collectionName, order, tableBodyColumns, tbody);
+    let id = `#${tableId}`
+    $(id).DataTable(dataTableOptions);
+    console.log('se renderizó la tabla');
+}
 
 
-export { verifyUser, loadDataOnTable, createTableBodyColumns, createTableBtns, deleteDocumentFromFirestore, addHeadingTableRow, createListTable};
+export { verifyUser, loadDataOnTable, createTableBodyColumns, createTableBtns, deleteDocumentFromFirestore, addHeadingTableRow, createListTable, renderData};
