@@ -173,24 +173,13 @@ async function deleteDocumentFromFirestore(serviceId, collectionName) {
 
     console.log( collectionName, serviceId);
 
-    // const userConfirmed = window.confirm("¿Estás seguro de que deseas eliminar este servicio?");
-
-    // if (!userConfirmed) {
-    //     return;
-    // }
-
-    // try {
     await deleteDoc(doc(dbfirestore, collectionName, serviceId));
-    // console.log('documento eliminado correctamente');
     window.location.reload();
-    // } catch (error) {
-    // console.error('Error al eliminar el documento:', error);
-    // }
+
 }
 
 
 function addHeadingTableRow(list, tableHeadingRow){
-    // let tableHeadingRow = document.querySelector('#dataTable thead tr');
     if (!tableHeadingRow){
         console.log('No hay tabla');
         return;
