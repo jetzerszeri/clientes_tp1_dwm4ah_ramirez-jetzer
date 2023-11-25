@@ -372,21 +372,4 @@ function myDropzoneHandler(currentDropzone){
     });
 }
 
-function initializeDropzone(myDropzone, prepared){
-    if (!document.querySelector("#myDropzone").dropzone) {
-        myDropzone = new Dropzone("#myDropzone", {
-            url: "#", // Cambia esto por una URL válida
-            autoProcessQueue: false,
-            maxFiles: 1,
-            acceptedFiles: 'image/jpeg, image/png, image/jpg, image/webp',
-        });
-        myDropzoneHandler(myDropzone);
-        prepared = true;
-    }
-}
-
-
-
-
-
-export { verifyUser, loadDataOnTable, createTableBodyColumns, createTableBtns, deleteDocumentFromFirestore, addHeadingTableRow, createListTable, renderData, createAdminBtn, addCategoriesList, uploadImgToStorageAndAddService, addNewServiceToDB, myDropzoneHandler, initializeDropzone};
+export { verifyUser, loadDataOnTable, createTableBodyColumns, createTableBtns, deleteDocumentFromFirestore, addHeadingTableRow, createListTable, renderData, createAdminBtn, addCategoriesList, uploadImgToStorageAndAddService, addNewServiceToDB, myDropzoneHandler};
