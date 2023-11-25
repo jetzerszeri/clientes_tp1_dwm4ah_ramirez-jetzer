@@ -277,8 +277,6 @@ function uploadImgToStorageAndAddService(folderName, dropzoneFile, nameInput, ca
         getDownloadURL(storageReference).then((url) => {
             console.log(url);
 
-            // addNewServiceToDB(nameInput.value, categoryInput.value, descriptionInput.value, priceInput.value, url, container);
-
             addNewDocToMyFirestore(
                 "services", 
                 { name: nameInput.value, category: categoryInput.value, description:descriptionInput.value, price: priceInput.value, img: url }, 
@@ -297,47 +295,6 @@ function uploadImgToStorageAndAddService(folderName, dropzoneFile, nameInput, ca
 };
 
 
-async function addNewServiceToDB(name, category, description, price, imgUrl, container){
-
-    try{
-        await addDoc(collection(dbfirestore, "services"), {
-            name: name,
-            category: category,
-            description: description,
-            price: price,
-            img: imgUrl,
-            createdAt: serverTimestamp(),
-            updatedAt: serverTimestamp()
-        });
-    
-        // console.log('servicio agregado exitosamente');
-        // container.innerHTML = successMsgAdd('Servicio agregado exitosamente', '/admin_services.html')
-        container.innerHTML = '';
-        container.append(successMsgAdd('Servicio agregado exitosamente', '/app.html#adminServices', '#admin'));
-        
-    }catch(error){
-        container.append(successMsgAdd('Hubo un error en el servidor, por favor intenta más tarde.', '/app.html#adminServices', '#admin'));
-    }
-}
-
-async function addNewCategoryToDB(name, container){
-    try{
-        await addDoc(collection(dbfirestore, "categories"), {
-            name: name,
-            createdAt: serverTimestamp(),
-            updatedAt: serverTimestamp()
-        });
-    
-        container.innerHTML = '';
-        container.append(successMsgAdd('Categoría agregada exitosamente', '/app.html#adminCategories', '#admin'));
-    }catch(error){
-        console.log(error);
-        // displayServerError(container, false, '#adminCategories');
-    }
-    
-}
-
-
 
 async function addNewDocToMyFirestore(collectionName, data, container, redirect) {
     try {
@@ -353,27 +310,6 @@ async function addNewDocToMyFirestore(collectionName, data, container, redirect)
         displayServerError(container, false, redirect);
     }
 }
-
-
-// // Ejemplo de uso para agregar un servicio
-// addNewDocToMyFirestore(
-//     "services", 
-//     { name: serviceName, category: serviceCategory, description: serviceDescription, price: servicePrice, img: serviceImgUrl }, 
-//     serviceContainer, 
-//     '/app.html#adminServices', 
-//     '#adminServices'
-// );
-
-// // Ejemplo de uso para agregar una categoría
-// addToDB(
-//     "categories", 
-//     { name: categoryName }, 
-//     categoryContainer, 
-//     '/app.html#adminCategories', 
-//     '#adminCategories'
-// );
-
-
 
 
 
@@ -533,4 +469,4 @@ function displayServerError(container, text, hash){
 }
 
 
-export { verifyUser, loadDataOnTable, createTableBodyColumns, createTableBtns, deleteDocumentFromFirestore, addHeadingTableRow, createListTable, renderData, createAdminBtn, addCategoriesList, uploadImgToStorageAndAddService, addNewServiceToDB, myDropzoneHandler, createServiceForm, getSeviceData, updateServiceData, addNewCategoryToDB, addNewDocToMyFirestore};
+export { verifyUser, loadDataOnTable, createTableBodyColumns, createTableBtns, deleteDocumentFromFirestore, addHeadingTableRow, createListTable, renderData, createAdminBtn, addCategoriesList, uploadImgToStorageAndAddService, myDropzoneHandler, createServiceForm, getSeviceData, updateServiceData, addNewDocToMyFirestore};
