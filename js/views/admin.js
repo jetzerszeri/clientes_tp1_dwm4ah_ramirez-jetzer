@@ -5,6 +5,7 @@ import { adminServicesEditRouterContent } from './admin/services/edit.js';
 import { adminCategoriesRouterContent } from './admin/categories/index.js';
 import { adminCategoriesCreateRouterContent } from './admin/categories/create.js';
 import { adminCategoriesEditRouterContent } from './admin/categories/edit.js';
+import { adminChatRouterContent } from './admin/chat/index.js';
 
 const admin = app.create.element('main', ['adminmain']);
 
@@ -38,11 +39,7 @@ const adminRouter = {
     },
     '#adminServices': adminServicesRouterContent,
     '#adminCategories': adminCategoriesRouterContent,
-    '#adminChat': {
-        content: chat,
-        breadcrumb: servicesIndexBreadcrumbs, 
-        h2Text: 'Chat de administración'
-    },
+    '#adminChat': adminChatRouterContent,
     '#adminServicesCreate': adminServicesCreateRouterContent,
     '#adminServicesEdit': adminServicesEditRouterContent,
     '#adminCategoriesCreate': adminCategoriesCreateRouterContent,
