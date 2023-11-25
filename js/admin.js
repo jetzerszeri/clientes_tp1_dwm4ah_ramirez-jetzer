@@ -123,14 +123,12 @@ async function loadDataOnTable(collectionName, order, columnList, tableBody, ){
         });
 
         let actionsColumn = document.createElement('td');
-        createTableBtns(actionsColumn, doc.id, collectionName, 'adminServicesEdit');
+        let editType = collectionName === 'services' ? 'Services' : 'Categories';
+        createTableBtns(actionsColumn, doc.id, collectionName, `admin${editType}Edit`);
 
         tableRow.append(actionsColumn);
         tableBody.append(tableRow);
     });
-
-    // $('#dataTable').DataTable();
-
 }
 
 
@@ -239,7 +237,7 @@ async function renderData(collectionName, order, tableBodyColumns, tbody, tableI
     await loadDataOnTable(collectionName, order, tableBodyColumns, tbody);
     let id = `#${tableId}`
     $(id).DataTable(dataTableOptions);
-    console.log('se renderizó la tabla');
+    // console.log('se renderizó la tabla');
 }
 
 
