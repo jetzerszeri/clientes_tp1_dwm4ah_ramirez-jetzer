@@ -76,23 +76,18 @@ function renderAdminView(view) {
     adminViewContent.innerHTML = '';
     breadcrumbs.innerHTML = '';
 
-    let currentView = adminRouter[view];
-    view = currentView ? view : '#admin';
+    const { base, id } = parseHash(view);
+    let currentView = adminRouter[base];
+    view = currentView ? base : '#admin';
 
-    console.log(view);
+    
+    console.log(id);
     adminViewContent.append(adminRouter[view].content);
     breadcrumbs.append(adminRouter[view].breadcrumb);
     h2.textContent = adminRouter[view].h2Text;
 
-    // window.addEventListener("load", () => {
-    //     if (adminRouter[view].render) {
-    //         adminRouter[view].render();
-    //     }
-    //     // return
-    // });
-
     if (adminRouter[view].render) {
-        adminRouter[view].render();
+        adminRouter[view].render(id);
     }
     // console.log(renderTimes, 'renderTimes');
     // adminRouter[view].render();
@@ -100,8 +95,27 @@ function renderAdminView(view) {
 }
 
 
+function parseHash(hash) {
+    const [base, paramString] = hash.split('?');
+    let id = null;
+
+    if (paramString) {
+        const params = paramString.split('&');
+        for (let param of params) {
+            const [key, value] = param.split('=');
+            if (key === 'id') {
+                id = value;
+                break; // Romper el bucle una vez que encuentres el ID
+            }
+        }
+    }
+
+    return { base, id };
+}
+
+
 
 Dropzone.autoDiscover = false;
 
 export default admin;
-export { renderAdminView, renderTimes };
+export { renderAdminView,  };

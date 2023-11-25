@@ -83,5 +83,10 @@ function renderView(element, view) {
     })
 }
 
+function parseHash(hash) {
+    const [base, params] = hash.split('?');
+    return { base, params };
+}
 
-export { displayBreadcrumb, clearErrorMessages, displayErrorMessage, validateEmptyFields, renderView }
+
+export { displayBreadcrumb, clearErrorMessages, displayErrorMessage, validateEmptyFields, renderView, parseHash }

@@ -162,7 +162,9 @@ function createTableBtns(actionsColumn, id, collectionName, editLink){
 
     editButton.addEventListener('click', function(e) {
         // e.preventDefault();
-        console.log('click en el botón de editar');
+        // console.log('click en el botón de editar');
+        window.location.href = `#${editLink}?id=${id}`;
+        location.reload();
     });
 
     actionsColumn.append(editButton, deleteButton);
@@ -325,4 +327,72 @@ function myDropzoneHandler(currentDropzone){
     });
 }
 
-export { verifyUser, loadDataOnTable, createTableBodyColumns, createTableBtns, deleteDocumentFromFirestore, addHeadingTableRow, createListTable, renderData, createAdminBtn, addCategoriesList, uploadImgToStorageAndAddService, addNewServiceToDB, myDropzoneHandler};
+
+function createServiceForm(formContainer, form, typeForm){
+    form.setAttribute('method', 'post');
+    let formContentPart1 = element('div');
+    formContentPart1.innerHTML = `
+    <div>
+    <label for="name">Nombre del servicio</label>
+    <input type="text" placeholder="Ingresa el nombre del servicio" name="name">
+    </div>
+    <div>
+    `;
+
+
+    let divContainerCategories = element('div',);
+    let categoriesInputLabel = element('label', [], 'Categoría');
+    let categoriesSelect = element('select');
+    categoriesSelect.name = 'category';
+    categoriesSelect.id = 'categorySelect';
+    divContainerCategories.appendChild(categoriesInputLabel);
+    divContainerCategories.appendChild(categoriesSelect);
+    addCategoriesList(categoriesSelect);
+
+    let formContentPart2 = element('div');
+    formContentPart2.innerHTML = `
+    <div>
+    <label for="description">Descripción</label>
+    <textarea name="description" cols="30" rows="10"></textarea>
+    </div>
+    
+    <div>
+    <label for="price">Precio por pie cuadrado</label>
+    <input type="number" step="any" placeholder="Ingresa el precio del servicio por pie" name="price">
+    </div>
+    
+
+    </div> 
+    `;
+
+    if (typeForm === 'edit'){
+        formContentPart2.innerHTML += `
+            </div>
+        `;
+
+    } else {
+        formContentPart2.innerHTML += `
+            <div>
+            <label >Imagen</label>
+            <div id="myDropzone" class="dropzone"></div>
+            </div>
+            </div>
+        `
+    }
+
+    let btnContainer = element('div');
+    let submitBtn = element('button', ['btn', 'primary-green'], 'Agregar servicio');
+    submitBtn.type = 'submit';
+    btnContainer.appendChild(submitBtn);
+
+
+    form.appendChild(formContentPart1);
+    form.appendChild(divContainerCategories);
+    form.appendChild(formContentPart2);
+    form.appendChild(btnContainer);
+    formContainer.appendChild(form);
+}
+
+
+
+export { verifyUser, loadDataOnTable, createTableBodyColumns, createTableBtns, deleteDocumentFromFirestore, addHeadingTableRow, createListTable, renderData, createAdminBtn, addCategoriesList, uploadImgToStorageAndAddService, addNewServiceToDB, myDropzoneHandler, createServiceForm};
