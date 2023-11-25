@@ -34,7 +34,7 @@ form.addEventListener('submit', (e) => {
 
     console.log('enviando datos');
 
-    app.admin.addNewCategoryToDB(name.value, categoriesCreate);
+    app.admin.addNewDocToMyFirestore('categories', {name: name.value}, categoriesCreate, '/app.html#adminCategories');
 
 
 

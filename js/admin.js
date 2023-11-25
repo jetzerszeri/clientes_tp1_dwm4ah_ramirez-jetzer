@@ -277,7 +277,15 @@ function uploadImgToStorageAndAddService(folderName, dropzoneFile, nameInput, ca
         getDownloadURL(storageReference).then((url) => {
             console.log(url);
 
-            addNewServiceToDB(nameInput.value, categoryInput.value, descriptionInput.value, priceInput.value, url, container);
+            // addNewServiceToDB(nameInput.value, categoryInput.value, descriptionInput.value, priceInput.value, url, container);
+
+            addNewDocToMyFirestore(
+                "services", 
+                { name: nameInput.value, category: categoryInput.value, description:descriptionInput.value, price: priceInput.value, img: url }, 
+                container, 
+                '/app.html#adminServices', 
+                '#adminServices'
+            );
 
 
         }).catch((error) => {
@@ -328,6 +336,43 @@ async function addNewCategoryToDB(name, container){
     }
     
 }
+
+
+
+async function addNewDocToMyFirestore(collectionName, data, container, redirect) {
+    try {
+        await addDoc(collection(dbfirestore, collectionName), {
+            ...data,
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp()
+        });
+
+        container.innerHTML = '';
+        container.append(successMsgAdd(`Elemento agregado exitosamente a ${collectionName}`, redirect));
+    } catch (error) {
+        displayServerError(container, false, redirect);
+    }
+}
+
+
+// // Ejemplo de uso para agregar un servicio
+// addNewDocToMyFirestore(
+//     "services", 
+//     { name: serviceName, category: serviceCategory, description: serviceDescription, price: servicePrice, img: serviceImgUrl }, 
+//     serviceContainer, 
+//     '/app.html#adminServices', 
+//     '#adminServices'
+// );
+
+// // Ejemplo de uso para agregar una categoría
+// addToDB(
+//     "categories", 
+//     { name: categoryName }, 
+//     categoryContainer, 
+//     '/app.html#adminCategories', 
+//     '#adminCategories'
+// );
+
 
 
 
@@ -488,4 +533,4 @@ function displayServerError(container, text, hash){
 }
 
 
-export { verifyUser, loadDataOnTable, createTableBodyColumns, createTableBtns, deleteDocumentFromFirestore, addHeadingTableRow, createListTable, renderData, createAdminBtn, addCategoriesList, uploadImgToStorageAndAddService, addNewServiceToDB, myDropzoneHandler, createServiceForm, getSeviceData, updateServiceData, addNewCategoryToDB};
+export { verifyUser, loadDataOnTable, createTableBodyColumns, createTableBtns, deleteDocumentFromFirestore, addHeadingTableRow, createListTable, renderData, createAdminBtn, addCategoriesList, uploadImgToStorageAndAddService, addNewServiceToDB, myDropzoneHandler, createServiceForm, getSeviceData, updateServiceData, addNewCategoryToDB, addNewDocToMyFirestore};
