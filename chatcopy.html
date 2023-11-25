@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Añadir servicio</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://kit.fontawesome.com/26eb2bb81f.js" crossorigin="anonymous"></script>
+    <!-- <script src="js/main.js" defer></script> -->
+</head>
+<body>
+    <header class="navegacion">
+        <nav >
+            <div class="navbar">
+                <div>
+                    <a href="/" class="navbarlogo">GbyG PCS</a>
+    
+                    <div class="toggle-button">
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </div>
+                    
+                </div>
+    
+                <div class="navbar-links">
+                    <ul>
+                        <li><a href="/">Inicio</a></li>
+                        <li><a href="/services.html" >Servicios</a></li>
+                        <li><a href="/admin.html" class="active">Dashboard</a></li>
+                    </ul>
+                    <div>
+                        <a href="/login.html" class="btn">Iniciar sesión</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="adminmain">
+        <nav class="breadcrumb">
+                <ol>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/admin.html">Dashboard</a></li>
+                    <li aria-current="page">Chat</li>
+                </ol>
+        </nav>
+    
+    
+        <h1>Panel de administrador</h1>
+        <h2>Centro de Contacto</h2>
+    
+
+        <div>
+
+            <div class="misChats">
+                <div class="chatContainer">
+                    <div  class="chatList">
+                        <div>
+                            <p>Mis chats</p>
+                        </div>
+                        <ul>
+                        </ul>
+                    </div>
+                    <div class="chatConversation">
+
+                        <!-- <div class="chatName">Nombre del chat</div>
+                        <div class="chatMessages">
+                            <div class="received">
+                                <p>Mensaje</p>
+                                <p>10:55</p>
+                            </div>
+                            <div class="sent">
+                                <p>Mensaje Mensaje</p>
+                                <p>10:55</p>
+                            </div>
+                            <div class="received">
+                                <p>Mensaje</p>
+                                <p>10:55</p>
+                            </div>
+                            <div class="sent">
+                                <p>Mensaje Mensaje</p>
+                                <p>10:55</p>
+                            </div>
+
+                        </div>
+                        <form action="" class="chatForm">
+                            <textarea name="texto" id="textochat"></textarea>
+                            <button type="submit" class="btn">Enviar</button>
+                        </form> -->
+                    </div>
+                    
+                </div>
+            </div>
+
+
+
+            <div class="conversation">
+
+            </div>
+
+
+
+
+        </div>
+
+
+
+    
+    </main>
+
+    <footer>
+        <div>
+            <ul>
+                <li><a href="https://www.facebook.com" target="_blank"><i class="fa-brands fa-facebook"></i></a></li>
+                <li><a href="https://twitter.com" target="_blank"><i class="fa-brands fa-x-twitter"></i></i></a></li>
+                <li><a href="https://www.instagram.com" target="_blank"><i class="fa-brands fa-instagram"></i></a></li>
+            </ul>
+            <div>
+                <p>gbygpcs.com</p>
+                <p>© 2023 Copyright</p>
+            </div>
+        </div>
+    </footer>
+
+<script type="module">
+    import app from './js/config.js';
+    import { success, successMsgAdd, createChat } from './js/partials.js';
+    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
+    import {getDatabase, ref, set, push, query, orderByChild, equalTo, onValue, update} from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-database.js';
+    import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js';
+
+    const dbfirestore = getFirestore(app);
+    const db = getDatabase(app);
+    const auth = getAuth(app);
+    const currentChats = document.querySelector('.chatList ul');
+    let currentChatId;
+    let currentUserId;
+    let chatConversation = document.querySelector('.chatConversation');
+
+
+    //funcion para traer el nombre del usuario del chat
+    async function getTheNameOfTheUser(usuarioId) {
+        const docRef = doc(dbfirestore, "roles_by_user", usuarioId);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            // console.log("Existe:", docSnap.data());
+            const {nombre, apellido} = docSnap.data();
+            // console.log(nombre, apellido);
+            return nombre + ' ' + apellido;
+        } else {
+            console.log("No existe");
+        }
+    }
+
+    //funcion para agregar el nombre del usuario del chat
+    async function appendChatName(arrayUsuarioId, idDelChat) {
+        let nombre = await getTheNameOfTheUser(arrayUsuarioId);
+        let li = document.createElement('li');
+        li.innerHTML = nombre;
+        currentChats.appendChild(li);
+        
+        
+        
+        li.addEventListener('click', ( ) => {
+            
+            chatConversation.innerHTML = '';
+            let chatName = document.createElement('div');
+            chatName.classList.add('chatName');
+            chatName.innerHTML = nombre;
+            chatConversation.appendChild(chatName);
+    
+            let chatMessages = document.createElement('div');
+            chatMessages.classList.add('chatMessages');
+            chatConversation.appendChild(chatMessages);
+    
+            let chatForm = `
+            <form action="" class="chatForm">
+                <textarea name="texto" id="textochat"></textarea>
+                <button type="submit" class="btn">Enviar</button>
+            </form>
+            `;
+
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+    
+            chatConversation.innerHTML += chatForm;
+            
+
+            currentChatId = idDelChat;
+            // currentUserId = idUsuario;
+            // console.log('chat actual' + currentChatId);
+            // console.log('usuario actual' + currentUserId);
+            getMessagesOfThisChat();
+            sendAMsg();
+        })
+    }
+
+    //funcion para agregar un mensaje al chat
+    async function sendMessage(chatId, userId, text) {
+        const messagesRef = ref(db, `messages/${chatId}`);
+        const newMessageRef = push(messagesRef);
+        
+        const message = {
+            senderId: userId,
+            text: text,
+            timestamp: Date.now() 
+        };
+
+        await set(newMessageRef, message);
+
+        const chatRef = ref(db, `chats/${chatId}`);
+        await update(chatRef, {
+            lastMessage: text,
+            fecha: Date.now()
+        });
+    }
+
+    async function getMessagesOfThisChat() {
+        const messagesRef = ref(db, `messages/${currentChatId}`);
+        const messagesQuery = query(messagesRef, orderByChild('timestamp'));
+
+        onValue(messagesQuery, (snapshot) => {
+            if (snapshot.hasChildren()) {
+                let chatMessages = document.querySelector('.chatMessages');
+                chatMessages.innerHTML = '';
+            snapshot.forEach(childSnapshot => {
+                const message = childSnapshot.val();
+
+                const {senderId, text, timestamp} = message;
+                const hora =  timestampToReadableDateAndTime(timestamp)
+                // console.log(hora)
+                // console.log("mensaje: ", message);
+
+                let divMsg = document.createElement('div');
+                if (senderId == currentUserId) {
+                    divMsg.classList.add('sent');
+                } else {
+                    divMsg.classList.add('received');
+                }
+                divMsg.innerHTML = `
+                
+                <p>${text}</p>
+                <p>${hora}</p>
+                `;
+
+                
+
+                chatMessages.appendChild(divMsg);
+
+                // let thisMessageId = childSnapshot.key; // Aquí obtienes el ID del chat
+
+            });
+
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            } else {
+                console.log('Snapshot no tiene hijos.');
+            }
+        });
+    }
+
+    function timestampToReadableDateAndTime(timestamp) {
+        const date = new Date(timestamp);
+
+        let day = date.getDate();
+        let month = date.getMonth() + 1; // Los meses en JavaScript van de 0 a 11, por eso añadimos 1
+        let year = date.getFullYear().toString().substr(-2); // Obtener los últimos dos dígitos del año
+
+        let hours = date.getHours();
+        let minutes = date.getMinutes();
+
+        // Asegurarse de que día, mes, horas y minutos sean siempre dos dígitos
+        day = day < 10 ? '0' + day : day;
+        month = month < 10 ? '0' + month : month;
+        hours = hours < 10 ? '0' + hours : hours;
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+
+        const formattedDate = month + '/' + day + '/' + year;
+        const formattedTime = hours + ':' + minutes;
+
+        // return formattedDate + ', ' + formattedTime; 
+        return formattedTime; //por ahora solo quiero el tiempo
+    }
+
+
+    function sendAMsg(){
+        const form = document.querySelector('.chatForm');
+            const {texto} = form;
+            // console.log(texto);
+
+            const conversation = document.querySelector('.conversation');
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                // console.log('enviando mensaje');
+                // console.log(texto.value);
+                if (texto.value.trim() === "") {
+                    console.log('El textarea está vacío. No se enviará el mensaje.');
+                    return;
+                }
+
+                sendMessage(currentChatId, currentUserId, texto.value);
+                // getMessagesOfThisChat();
+
+
+                form.reset();
+            })
+    }
+
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+
+            const uid = user.uid;
+            currentUserId = uid;
+
+            async function checkUserRole(uid) {
+                const docRef = doc(dbfirestore, "roles_by_user", uid);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    // console.log("Existe:", docSnap.data());
+                    const {role} = docSnap.data();
+                    // console.log(role);
+
+
+                    const chatsRef = ref(db, 'chats');
+                    const userChatsQuery = query(chatsRef, orderByChild(`participants/${uid}`), equalTo(true));
+
+                    onValue(userChatsQuery, (snapshot) => {
+                    if (snapshot.hasChildren()) {
+                        currentChats.innerHTML = '';
+                    snapshot.forEach(childSnapshot => {
+                        const chat = childSnapshot.val();
+                        // console.log(chat);
+                        let thisChatId = childSnapshot.key;
+                        // console.log("Chat ID:", thisChatId);
+
+                        let participants = Object.keys(chat.participants);
+                        let personIdChat = participants.filter((participant) => participant != uid);
+                        appendChatName(personIdChat[0],  thisChatId);
+
+                    });
+                    } else {
+                        console.log('Snapshot no tiene hijos.');
+                    }
+                }); 
+
+                }
+            }
+
+            checkUserRole(uid);
+
+            
+        } else {
+            window.location.href = '/login.html';
+        }
+    });
+
+
+</script>
+</body>
+</html>
