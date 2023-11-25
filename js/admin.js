@@ -308,7 +308,7 @@ async function addNewServiceToDB(name, category, description, price, imgUrl, con
         container.append(successMsgAdd('Servicio agregado exitosamente', '/app.html#adminServices', '#admin'));
         
     }catch(error){
-container.append(successMsgAdd('Hubo un error en el servidor, por favor intenta más tarde.', '/app.html#adminServices', '#admin'));
+        container.append(successMsgAdd('Hubo un error en el servidor, por favor intenta más tarde.', '/app.html#adminServices', '#admin'));
     }
 }
 

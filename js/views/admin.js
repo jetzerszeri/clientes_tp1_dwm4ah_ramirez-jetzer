@@ -2,6 +2,7 @@ import app from '../app.js'
 import {servicesIndexBreadcrumbs, servicesList, renderServicesTable, adminServicesRouterContent} from './admin/services/index.js';
 import { adminServicesCreateRouterContent } from './admin/services/create.js';
 import { adminServicesEditRouterContent } from './admin/services/edit.js';
+import { adminCategoriesRouterContent } from './admin/categories/index.js';
 
 const admin = app.create.element('main', ['adminmain']);
 
@@ -34,11 +35,7 @@ const adminRouter = {
         h2Text: 'Bienvenido de nuevo!'
     },
     '#adminServices': adminServicesRouterContent,
-    '#adminCategories': {
-        content: categories,
-        breadcrumb: servicesIndexBreadcrumbs, 
-        h2Text: 'Gestión de categorías'
-    },
+    '#adminCategories': adminCategoriesRouterContent,
     '#adminChat': {
         content: chat,
         breadcrumb: servicesIndexBreadcrumbs, 
@@ -53,8 +50,8 @@ const adminRouter = {
 
 
 let servicesBtn = app.admin.createAdminBtn('#adminServices', 'fa-hand-sparkles', 'Servicios', renderAdminView, adminRouter['#adminServices'].render);
-let categoriesBtn = app.admin.createAdminBtn('#adminCategories', 'fa-table-list', 'Categorías', renderAdminView);
-let chatBtn = app.admin.createAdminBtn('#adminChat', 'fa-comments', 'Chat', renderAdminView);
+let categoriesBtn = app.admin.createAdminBtn('#adminCategories', 'fa-table-list', 'Categorías', renderAdminView, adminRouter['#adminCategories'].render);
+let chatBtn = app.admin.createAdminBtn('#adminChat', 'fa-comments', 'Chat', renderAdminView, adminRouter['#adminChat'].render);
 
 
 
@@ -81,7 +78,6 @@ function renderAdminView(view) {
     view = currentView ? base : '#admin';
 
     
-    console.log(id);
     adminViewContent.append(adminRouter[view].content);
     breadcrumbs.append(adminRouter[view].breadcrumb);
     h2.textContent = adminRouter[view].h2Text;

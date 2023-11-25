@@ -4,7 +4,7 @@ import { renderAdminView } from '../../admin.js';
 let servicesIndexBreadcrumbList = [
     {name: 'Inicio', view: '#home'},
     {name: 'Dashboard', view: "#admin"},
-    {name: 'Services'}
+    {name: 'Servicios'}
 ];
 
 let servicesIndexBreadcrumbs = app.main.displayBreadcrumb(servicesIndexBreadcrumbList, renderAdminView);
@@ -17,9 +17,7 @@ let tableHeadingList = ['Nombre', 'Categoria', 'Descripción', 'Precio', 'Accion
 let tableBodyColumns = ['name', 'category', 'description', 'price'];
 const tableId = 'servicesTable';
 
-addNewLink.addEventListener('click', () => {
-    renderAdminView('#adminServicesCreate');
-});
+addNewLink.addEventListener('click', () => { renderAdminView('#adminServicesCreate') });
 
 
 app.admin.createListTable(servicesList, addNewLink, tbody, tableHeadingList, tableId);
