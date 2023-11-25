@@ -4,7 +4,7 @@ import { renderAdminView } from '../../admin.js';
 let categoriesCreateBreadcrumbList = [
     {name: 'Inicio', view: '#home'},
     {name: 'Dashboard', view: "#admin"},
-    {name: 'categorías', view: "#adminCategories"},
+    {name: 'Categorías', view: "#adminCategories"},
     {name: 'Agregar categoría'}
 ];
 
@@ -12,18 +12,8 @@ let categoriesCreateBreadcrumbList = [
 let categoriesIndexBreadcrumbs = app.main.displayBreadcrumb(categoriesCreateBreadcrumbList, renderAdminView);
 let categoriesCreate = app.create.element('div', ['container']);
 let form = app.create.element('form');
-form.setAttribute('method', 'post');
-form.innerHTML = `
-<div>
-<label for="name">Nombre de la categoría</label>
-<input type="text" placeholder="Ingresa el nombre de la categoría" name="name">
-</div>
+app.admin.renderCategoriesForm(form, categoriesCreate);
 
-<div>
-<button type="submit" class="btn primary-green">Agregar Categoría</button>
-</div>
-`;
-categoriesCreate.appendChild(form);
 
 form.addEventListener('submit', (e) => {
     e.preventDefault();

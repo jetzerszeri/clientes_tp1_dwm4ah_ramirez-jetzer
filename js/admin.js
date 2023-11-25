@@ -411,31 +411,25 @@ async function getSeviceData(docId, form, container) {
     let { name, category, description, price } = form;
     category.innerHTML = '';
 
-    // console.log(docServicesRef);
     try {
         const docSnap = await getDoc(docServicesRef);
-        // console.log(docSnap);
 
         if (docSnap.exists()) {
             const data = docSnap.data();
             name.value = data.name;
-            let categorySelected = data.category;
             description.value = data.description;
             price.value = data.price;
 
             addCategoriesList(category,  data.category);
-
         } 
         else {
-            // console.log("No such document!");
-            // window.location.href = '/app.html#adminServices';
-            // location.reload();
             displayServerError(container, 'Ups, No se encontró ningun servicio con ese id', '#adminServices');
         }
     } catch (error) {
         displayServerError(container, false, '#adminServices');
     }
 }
+
 
 async function updateServiceData(docId, form, container) {
     const docServicesRef = doc(dbfirestore, "services", docId);
@@ -458,6 +452,23 @@ async function updateServiceData(docId, form, container) {
 }
 
 
+async function getCategoryData(docId, form, container) {
+    const docServicesRef = doc(dbfirestore, "categories", docId);
+    try {
+        const docSnap = await getDoc(docServicesRef);
+        if (docSnap.exists()) {
+            form.name.value = docSnap.data().name;
+        } 
+        else {
+            // console.log('No se encontró ninguna categoría con ese id');
+            displayServerError(container, 'Ups, No se encontró ninguna categoría con ese id', '#adminCategories');
+        }
+    } catch (error) {
+        // console.log(error);
+        displayServerError(container, false, '#adminCategories');
+    }
+}
+
 
 function displayServerError(container, text, hash){
     container.innerHTML = '';
@@ -469,4 +480,22 @@ function displayServerError(container, text, hash){
 }
 
 
-export { verifyUser, loadDataOnTable, createTableBodyColumns, createTableBtns, deleteDocumentFromFirestore, addHeadingTableRow, createListTable, renderData, createAdminBtn, addCategoriesList, uploadImgToStorageAndAddService, myDropzoneHandler, createServiceForm, getSeviceData, updateServiceData, addNewDocToMyFirestore};
+
+function renderCategoriesForm(form, container){
+    form.setAttribute('method', 'post');
+    form.innerHTML = `
+    <div>
+    <label for="name">Nombre de la categoría</label>
+    <input type="text" placeholder="Ingresa el nombre de la categoría" name="name">
+    </div>
+    
+    <div>
+    <button type="submit" class="btn primary-green">Agregar Categoría</button>
+    </div>
+    `;
+    container.appendChild(form);
+}
+
+
+
+export { verifyUser, loadDataOnTable, createTableBodyColumns, createTableBtns, deleteDocumentFromFirestore, addHeadingTableRow, createListTable, renderData, createAdminBtn, addCategoriesList, uploadImgToStorageAndAddService, myDropzoneHandler, createServiceForm, getSeviceData, updateServiceData, addNewDocToMyFirestore, renderCategoriesForm, getCategoryData };
