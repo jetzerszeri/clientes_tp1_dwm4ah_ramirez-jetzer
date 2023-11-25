@@ -11,6 +11,9 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
 
+        <!-- dropzone -->
+        <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+
 </head>
 <body>
 
@@ -61,7 +64,7 @@
 
 
 
-
+    
 
 
     <script type="module">
@@ -72,7 +75,7 @@
         import signin from './js/views/signin.js';
         import admin from './js/views/admin.js';
 
-
+        Dropzone.autoDiscover = false;
         
         let currentHash = window.location.hash;
 
@@ -124,5 +127,7 @@
 
 
     </script>
+
+    <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
 </body>
 </html>

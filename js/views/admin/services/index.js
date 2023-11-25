@@ -24,11 +24,21 @@ addNewLink.addEventListener('click', () => {
 
 app.admin.createListTable(servicesList, addNewLink, tbody, tableHeadingList, tableId);
 
-
+let servicesTableRendered = false;
 function renderServicesTable(){
+    // window.addEventListener("load", () => {
     tbody.innerHTML = '';
     app.admin.renderData('services', 'name', tableBodyColumns, tbody, tableId);
+    servicesTableRendered = true;
+    // });
 }
+
+// function preLoadServicesTable(){
+//     if (!servicesTableRendered) {
+//         renderServicesTable();
+//     }
+// }
+
 
 let adminServicesRouterContent = {
     content: servicesList,

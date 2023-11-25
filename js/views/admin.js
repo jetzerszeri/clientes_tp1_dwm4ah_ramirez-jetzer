@@ -82,13 +82,20 @@ function renderAdminView(view) {
     breadcrumbs.append(adminRouter[view].breadcrumb);
     h2.textContent = adminRouter[view].h2Text;
 
-    window.addEventListener("load", () => {
-        if (adminRouter[view].render) {
-            adminRouter[view].render();
-        }
-    });
+    // window.addEventListener("load", () => {
+    //     if (adminRouter[view].render) {
+    //         adminRouter[view].render();
+    //     }
+    //     // return
+    // });
+
+    if (adminRouter[view].render) {
+        adminRouter[view].render();
+    }
+    // adminRouter[view].render();
 }
 
+Dropzone.autoDiscover = false;
 
 export default admin;
 export { renderAdminView };
