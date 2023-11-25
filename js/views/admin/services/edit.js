@@ -18,7 +18,7 @@ let currentServiceId;
 function loadServiceData(serviceId){
     app.admin.getCollectionData(serviceId, form, servicesEdit, 'services');
     currentServiceId = serviceId;
-    console.log(currentServiceId);
+    // console.log(currentServiceId);
 }
 
 form.addEventListener('submit', (e) => {
@@ -29,8 +29,8 @@ form.addEventListener('submit', (e) => {
     let inputsValidated = app.main.validateEmptyFields([name, category, description, price]);
     if (!inputsValidated) return;
 
-    app.admin.updateServiceData(currentServiceId, form, servicesEdit);
-    console.log(currentServiceId);
+    app.admin.updateFirestoreDocument('services', currentServiceId, form, servicesEdit, '/app.html#adminServices');
+    // console.log(currentServiceId);
 
 
 

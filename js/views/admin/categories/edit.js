@@ -40,10 +40,7 @@ form.addEventListener('submit', (e) => {
     let inputsValidated = app.main.validateEmptyFields([form.name]);
     if (!inputsValidated) return;
 
-
-
-
-
+    app.admin.updateFirestoreDocument('categories', currentCategoryId, form, categoriesEdit, '/app.html#adminCategories');
 
 });
 

@@ -471,68 +471,98 @@ async function getCollectionData(docId, form, container, collectionName) {
 
 
 
-async function getSeviceData(docId, form, container) {
-    const docServicesRef = doc(dbfirestore, "services", docId);
+// async function getSeviceData(docId, form, container) {
+//     const docServicesRef = doc(dbfirestore, "services", docId);
+//     let { name, category, description, price } = form;
+//     category.innerHTML = '';
+
+//     try {
+//         const docSnap = await getDoc(docServicesRef);
+
+//         if (docSnap.exists()) {
+//             const data = docSnap.data();
+//             name.value = data.name;
+//             description.value = data.description;
+//             price.value = data.price;
+
+//             addCategoriesList(category,  data.category);
+//         } 
+//         else {
+//             displayServerError(container, 'Ups, No se encontró ningun servicio con ese id', '#adminServices');
+//         }
+//     } catch (error) {
+//         displayServerError(container, false, '#adminServices');
+//     }
+// }
+
+
+// async function updateServiceData(docId, form, container) {
+//     const docServicesRef = doc(dbfirestore, "services", docId);
+//     console.log(docServicesRef);
+//     let { name, category, description, price } = form;
+//     try{
+//         await updateDoc(docServicesRef, {
+//             name: name.value,
+//             category: category.value,
+//             description: description.value,
+//             price: price.value,
+//             updatedAt: serverTimestamp()
+//         });
+//         container.innerHTML = '';
+//         container.append(successMsgAdd('Servicio actualizado exitosamente.', '/app.html#adminServices'));
+//     }catch(error){
+//         displayServerError(container, false, '#adminServices');
+//         // console.log(error);
+//     }
+// }
+
+async function updateFirestoreDocument(collectionName, docId, form, container, redirect) {
+    const docRef = doc(dbfirestore, collectionName, docId);
     let { name, category, description, price } = form;
-    category.innerHTML = '';
+
+    let updateData = {};
+    if (collectionName === 'services') {
+        updateData.name = name.value;
+        updateData.category = category.value;
+        updateData.description = description.value;
+        updateData.price = price.value;
+    } else if (collectionName === 'categories') {
+        updateData.name = name.value;
+    }
+    updateData.updatedAt = serverTimestamp();
 
     try {
-        const docSnap = await getDoc(docServicesRef);
+        await updateDoc(docRef, updateData);
 
-        if (docSnap.exists()) {
-            const data = docSnap.data();
-            name.value = data.name;
-            description.value = data.description;
-            price.value = data.price;
-
-            addCategoriesList(category,  data.category);
-        } 
-        else {
-            displayServerError(container, 'Ups, No se encontró ningun servicio con ese id', '#adminServices');
-        }
-    } catch (error) {
-        displayServerError(container, false, '#adminServices');
-    }
-}
-
-
-async function updateServiceData(docId, form, container) {
-    const docServicesRef = doc(dbfirestore, "services", docId);
-    console.log(docServicesRef);
-    let { name, category, description, price } = form;
-    try{
-        await updateDoc(docServicesRef, {
-            name: name.value,
-            category: category.value,
-            description: description.value,
-            price: price.value,
-            updatedAt: serverTimestamp()
-        });
         container.innerHTML = '';
-        container.append(successMsgAdd('Servicio actualizado exitosamente.', '/app.html#adminServices'));
-    }catch(error){
-        displayServerError(container, false, '#adminServices');
-        // console.log(error);
-    }
-}
-
-
-async function getCategoryData(docId, form, container) {
-    const docServicesRef = doc(dbfirestore, "categories", docId);
-    try {
-        const docSnap = await getDoc(docServicesRef);
-        if (docSnap.exists()) {
-            form.name.value = docSnap.data().name;
-        } 
-        else {
-            // console.log('No se encontró ninguna categoría con ese id');
-            displayServerError(container, 'Ups, No se encontró ninguna categoría con ese id', '#adminCategories');
-        }
+        container.append(successMsgAdd(`Elemento actualizado exitosamente en ${collectionName}.`, redirect));
     } catch (error) {
-        // console.log(error);
-        displayServerError(container, false, '#adminCategories');
+        displayServerError(container, false, redirect);
     }
 }
+
+
+
+
+
+
+
+// async function getCategoryData(docId, form, container) {
+//     const docServicesRef = doc(dbfirestore, "categories", docId);
+//     try {
+//         const docSnap = await getDoc(docServicesRef);
+//         if (docSnap.exists()) {
+//             form.name.value = docSnap.data().name;
+//         } 
+//         else {
+//             // console.log('No se encontró ninguna categoría con ese id');
+//             displayServerError(container, 'Ups, No se encontró ninguna categoría con ese id', '#adminCategories');
+//         }
+//     } catch (error) {
+//         // console.log(error);
+//         displayServerError(container, false, '#adminCategories');
+//     }
+// }
 
 
 
@@ -565,4 +595,4 @@ function renderCategoriesForm(form, container){
 
 
 
-export { verifyUser, loadDataOnTable, createTableBodyColumns, createTableBtns, deleteDocumentFromFirestore, addHeadingTableRow, createListTable, renderData, createAdminBtn, addCategoriesList, uploadImgToStorageAndAddService, myDropzoneHandler, createServiceForm, getSeviceData, updateServiceData, addNewDocToMyFirestore, renderCategoriesForm, getCategoryData, getCollectionData };
+export { verifyUser, loadDataOnTable, createTableBodyColumns, createTableBtns, deleteDocumentFromFirestore, addHeadingTableRow, createListTable, renderData, createAdminBtn, addCategoriesList, uploadImgToStorageAndAddService, myDropzoneHandler, createServiceForm, addNewDocToMyFirestore, renderCategoriesForm, getCollectionData, updateFirestoreDocument };
