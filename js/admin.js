@@ -1,5 +1,5 @@
 import app from './config.js';
-import { getFirestore, collection, addDoc, getDocs, orderBy, query, doc, getDoc, deleteDoc,  serverTimestamp, } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js';
+import { getFirestore, collection, addDoc, getDocs, orderBy, query, doc, getDoc, deleteDoc,  serverTimestamp, updateDoc} from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js';
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
 import { getDatabase, ref as dbRef, set } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-database.js';
 import {getStorage, ref as storageRef, uploadBytes, getDownloadURL} from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-storage.js';
@@ -247,12 +247,16 @@ async function renderData(collectionName, order, tableBodyColumns, tbody, tableI
 // create services page
 
 
-async function addCategoriesList(categoriesSelectInput){
+async function addCategoriesList(categoriesSelectInput, categorySelected){
     const querySnapshot = await getDocs(collection(dbfirestore, "categories"));
     querySnapshot.forEach((doc) => {
         let option = document.createElement('option');
         option.value = doc.data().name;
         option.innerHTML = doc.data().name;
+
+        if(option.value === categorySelected) {
+            option.selected = true;
+        }
         categoriesSelectInput.append(option);
     })
 };
@@ -347,7 +351,9 @@ function createServiceForm(formContainer, form, typeForm){
     categoriesSelect.id = 'categorySelect';
     divContainerCategories.appendChild(categoriesInputLabel);
     divContainerCategories.appendChild(categoriesSelect);
+    if (typeForm !== 'edit'){
     addCategoriesList(categoriesSelect);
+    }
 
     let formContentPart2 = element('div');
     formContentPart2.innerHTML = `
@@ -395,4 +401,34 @@ function createServiceForm(formContainer, form, typeForm){
 
 
 
-export { verifyUser, loadDataOnTable, createTableBodyColumns, createTableBtns, deleteDocumentFromFirestore, addHeadingTableRow, createListTable, renderData, createAdminBtn, addCategoriesList, uploadImgToStorageAndAddService, addNewServiceToDB, myDropzoneHandler, createServiceForm};
+async function getSeviceData(docId, form) {
+    const docServicesRef = doc(dbfirestore, "services", docId);
+    let { name, category, description, price } = form;
+    category.innerHTML = '';
+
+    // console.log(docServicesRef);
+    try {
+        const docSnap = await getDoc(docServicesRef);
+        // console.log(docSnap);
+
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            name.value = data.name;
+            let categorySelected = data.category;
+            description.value = data.description;
+            price.value = data.price;
+
+            addCategoriesList(category,  data.category);
+
+        } 
+        // else {
+        //     console.log("el servicio");
+        // }
+    } catch (error) {
+        console.log("error al traer el documento",error);
+    }
+}
+
+
+
+export { verifyUser, loadDataOnTable, createTableBodyColumns, createTableBtns, deleteDocumentFromFirestore, addHeadingTableRow, createListTable, renderData, createAdminBtn, addCategoriesList, uploadImgToStorageAndAddService, addNewServiceToDB, myDropzoneHandler, createServiceForm, getSeviceData};

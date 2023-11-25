@@ -117,22 +117,24 @@
     if (!id) {
         window.location.href = '/admin_services.html';
     }
-    const docServicesRef = doc(db, "services", id);
     const form = document.querySelector('form');
-    let { name, category, description, price } = form;
+    
+    
+    
+    async function getSeviceData(collectionName, docId) {
+        const docServicesRef = doc(db, collectionName, docId);
+        let { name, category, description, price } = form;
 
-    async function getSeviceData() {
         try {
             const docSnap = await getDoc(docServicesRef);
+
             if (docSnap.exists()) {
                 const data = docSnap.data();
                 name.value = data.name;
-                // document.querySelector('select[name="category"]').value = data.category;
                 let categorySelected = data.category;
                 description.value = data.description;
                 price.value = data.price;
 
-                //traer los servicios desde la base de datos                        
                 querySnapshot.forEach((doc) => {
                     let option = document.createElement('option');
                     option.value = doc.data().name;
@@ -155,7 +157,7 @@
         }
     }
     
-    getSeviceData();
+    getSeviceData("services", id);
 
 
     form.addEventListener('submit', async function(e) {

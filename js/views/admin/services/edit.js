@@ -12,9 +12,15 @@ let servicesEditBreadcrumbs = app.main.displayBreadcrumb(servicesCreateBreadcrum
 
 let servicesEdit = app.create.element('div', ['container']); //este es mi container
 let form = app.create.element('form');
-
+let categoriesSelect = app.create.element('select');
 
 app.admin.createServiceForm(servicesEdit, form, 'edit');
+
+function loadServiceData(serviceId){
+    // console.log('serviceId', serviceId);
+    app.admin.getSeviceData(serviceId, form)
+}
+
 
 
 // function createServiceForm(formContainer, form, typeForm = 'create'){
@@ -96,7 +102,7 @@ let adminServicesEditRouterContent = {
     content: servicesEdit,
     breadcrumb: servicesEditBreadcrumbs, 
     h2Text: 'Editar servicio',
-    render: test
+    render: loadServiceData
 };
 
 
