@@ -123,7 +123,7 @@ async function loadDataOnTable(collectionName, order, columnList, tableBody, ){
         });
 
         let actionsColumn = document.createElement('td');
-        createTableBtns(actionsColumn, doc.id, collectionName);
+        createTableBtns(actionsColumn, doc.id, collectionName, 'adminServicesEdit');
 
         tableRow.append(actionsColumn);
         tableBody.append(tableRow);
@@ -143,11 +143,11 @@ function createTableBodyColumns(array, list, document){
     });
 }
 
-function createTableBtns(actionsColumn, id, collectionName){
+function createTableBtns(actionsColumn, id, collectionName, editLink){
     let editButton = document.createElement('a');
     let deleteButton = document.createElement('button');
 
-    editButton.href = `#adminServicesEdit?id=${id}`;
+    editButton.href = `#${editLink}?id=${id}`;
     editButton.classList.add('btn', 'secundary-green', 'edit-btn');
     editButton.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
     deleteButton.classList.add('btn', 'secundary-green', 'delete-btn');
