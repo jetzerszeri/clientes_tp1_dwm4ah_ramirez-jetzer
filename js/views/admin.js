@@ -52,7 +52,7 @@ const adminRouter = {
 
 
 
-let servicesBtn = app.admin.createAdminBtn('#adminServices', 'fa-hand-sparkles', 'ServiciosbT', renderAdminView, adminRouter['#adminServices'].render);
+let servicesBtn = app.admin.createAdminBtn('#adminServices', 'fa-hand-sparkles', 'Servicios', renderAdminView, adminRouter['#adminServices'].render);
 let categoriesBtn = app.admin.createAdminBtn('#adminCategories', 'fa-table-list', 'Categorías', renderAdminView);
 let chatBtn = app.admin.createAdminBtn('#adminChat', 'fa-comments', 'Chat', renderAdminView);
 

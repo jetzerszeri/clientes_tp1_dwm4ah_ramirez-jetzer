@@ -12,13 +12,32 @@ let servicesEditBreadcrumbs = app.main.displayBreadcrumb(servicesCreateBreadcrum
 
 let servicesEdit = app.create.element('div', ['container']); //este es mi container
 let form = app.create.element('form');
-let categoriesSelect = app.create.element('select');
 
 app.admin.createServiceForm(servicesEdit, form, 'edit');
-
+let currentServiceId;
 function loadServiceData(serviceId){
-    app.admin.getSeviceData(serviceId, form)
+    app.admin.getSeviceData(serviceId, form, servicesEdit);
+    currentServiceId = serviceId;
+    console.log(currentServiceId);
 }
+
+form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    let { name, category, description, price } = form;
+
+    app.main.clearErrorMessages('form p');
+    let inputsValidated = app.main.validateEmptyFields([name, category, description, price]);
+    if (!inputsValidated) return;
+
+    app.admin.updateServiceData(currentServiceId, form, servicesEdit);
+    console.log(currentServiceId);
+
+
+
+});
+
+
+
 
 
 let adminServicesEditRouterContent = {

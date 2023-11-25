@@ -37,7 +37,7 @@ const successMsgAdd = (text, btnlink) => {
 
     a.addEventListener('click', (e) => {
         e.preventDefault();
-        window.location.href = '/app.html#adminServices';
+        window.location.href = btnlink;
         location.reload();
     });
 

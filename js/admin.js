@@ -290,20 +290,26 @@ function uploadImgToStorageAndAddService(folderName, dropzoneFile, nameInput, ca
 
 
 async function addNewServiceToDB(name, category, description, price, imgUrl, container){
-    await addDoc(collection(dbfirestore, "services"), {
-        name: name,
-        category: category,
-        description: description,
-        price: price,
-        img: imgUrl,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp()
-    });
 
-    console.log('servicio agregado exitosamente');
-    // container.innerHTML = successMsgAdd('Servicio agregado exitosamente', '/admin_services.html')
-    container.innerHTML = '';
-    container.append(successMsgAdd('Servicio agregado exitosamente', '/app.html#adminServices', '#admin'));
+    try{
+        await addDoc(collection(dbfirestore, "services"), {
+            name: name,
+            category: category,
+            description: description,
+            price: price,
+            img: imgUrl,
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp()
+        });
+    
+        // console.log('servicio agregado exitosamente');
+        // container.innerHTML = successMsgAdd('Servicio agregado exitosamente', '/admin_services.html')
+        container.innerHTML = '';
+        container.append(successMsgAdd('Servicio agregado exitosamente', '/app.html#adminServices', '#admin'));
+        
+    }catch(error){
+container.append(successMsgAdd('Hubo un error en el servidor, por favor intenta más tarde.', '/app.html#adminServices', '#admin'));
+    }
 }
 
 
@@ -387,7 +393,7 @@ function createServiceForm(formContainer, form, typeForm){
     }
 
     let btnContainer = element('div');
-    let submitBtn = element('button', ['btn', 'primary-green'], 'Agregar servicio');
+    let submitBtn = element('button', ['btn', 'primary-green'], 'Guardar');
     submitBtn.type = 'submit';
     btnContainer.appendChild(submitBtn);
 
@@ -401,7 +407,7 @@ function createServiceForm(formContainer, form, typeForm){
 
 
 
-async function getSeviceData(docId, form) {
+async function getSeviceData(docId, form, container) {
     const docServicesRef = doc(dbfirestore, "services", docId);
     let { name, category, description, price } = form;
     category.innerHTML = '';
@@ -421,14 +427,47 @@ async function getSeviceData(docId, form) {
             addCategoriesList(category,  data.category);
 
         } 
-        // else {
-        //     console.log("el servicio");
-        // }
+        else {
+            // console.log("No such document!");
+            // window.location.href = '/app.html#adminServices';
+            // location.reload();
+            displayServerError(container, 'Ups, No se encontró ningun servicio con ese id');
+        }
     } catch (error) {
-        console.log("error al traer el documento",error);
+        displayServerError(container);
+    }
+}
+
+async function updateServiceData(docId, form, container) {
+    const docServicesRef = doc(dbfirestore, "services", docId);
+    console.log(docServicesRef);
+    let { name, category, description, price } = form;
+    try{
+        await updateDoc(docServicesRef, {
+            name: name.value,
+            category: category.value,
+            description: description.value,
+            price: price.value,
+            updatedAt: serverTimestamp()
+        });
+        container.innerHTML = '';
+        container.append(successMsgAdd('Servicio actualizado exitosamente.', '/app.html#adminServices'));
+    }catch(error){
+        // displayServerError(container);
+        console.log(error);
     }
 }
 
 
 
-export { verifyUser, loadDataOnTable, createTableBodyColumns, createTableBtns, deleteDocumentFromFirestore, addHeadingTableRow, createListTable, renderData, createAdminBtn, addCategoriesList, uploadImgToStorageAndAddService, addNewServiceToDB, myDropzoneHandler, createServiceForm, getSeviceData};
+function displayServerError(container, text){
+    container.innerHTML = '';
+    if (text) {
+        container.append(successMsgAdd(text, '/app.html#adminServices'));
+    } else {
+    container.append(successMsgAdd('Hubo un error en el servidor, por favor intenta más tarde.', '/app.html#adminServices'));
+    }
+}
+
+
+export { verifyUser, loadDataOnTable, createTableBodyColumns, createTableBtns, deleteDocumentFromFirestore, addHeadingTableRow, createListTable, renderData, createAdminBtn, addCategoriesList, uploadImgToStorageAndAddService, addNewServiceToDB, myDropzoneHandler, createServiceForm, getSeviceData, updateServiceData};
