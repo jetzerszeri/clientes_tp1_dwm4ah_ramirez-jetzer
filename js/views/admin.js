@@ -12,7 +12,7 @@ let breadcrumbItems = [
 const adminOptions = app.create.element('ul', ['admindoptions']);
 const categories = app.create.element('div', [], 'Categorías');
 const chat = app.create.element('div', [], 'Chat');
-
+let renderTimes = 0;
 
 
 let adminBreadcrumbs = app.main.displayBreadcrumb(breadcrumbItems, renderAdminView);
@@ -92,10 +92,14 @@ function renderAdminView(view) {
     if (adminRouter[view].render) {
         adminRouter[view].render();
     }
+    // console.log(renderTimes, 'renderTimes');
     // adminRouter[view].render();
+    renderTimes += 1;
 }
+
+
 
 Dropzone.autoDiscover = false;
 
 export default admin;
-export { renderAdminView };
+export { renderAdminView, renderTimes };

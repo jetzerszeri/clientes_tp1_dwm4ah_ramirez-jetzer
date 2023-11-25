@@ -1,5 +1,5 @@
 import app from '../../../app.js';
-import { renderAdminView } from '../../admin.js';
+import { renderAdminView, renderTimes } from '../../admin.js';
 
 let servicesCreateBreadcrumbList = [
     {name: 'Inicio', view: '#home'},
@@ -9,7 +9,7 @@ let servicesCreateBreadcrumbList = [
 ];
 
 let servicesIndexBreadcrumbs = app.main.displayBreadcrumb(servicesCreateBreadcrumbList, renderAdminView);
-
+let timesRun = 0;
 let servicesCreate = app.create.element('div', ['container']); //este es mi container
 let form = app.create.element('form');
 form.setAttribute('method', 'post');
@@ -64,45 +64,111 @@ form.appendChild(formContentPart2);
 form.appendChild(btnContainer);
 servicesCreate.appendChild(form);
 let myDropzone;
+let prepared = false;
 
-function prepareDropzone(){
-    app.admin.setUpDropzone()
 
-    window.addEventListener("load", () => {
-    
-        if (!document.querySelector("#myDropzone").dropzone) {
-            myDropzone = new Dropzone("#myDropzone", {
-                url: "#", // Cambia esto por una URL válida
-                autoProcessQueue: false,
-                maxFiles: 1,
-                acceptedFiles: 'image/jpeg, image/png, image/jpg, image/webp',
+
+// console.log(renderTimes, 'renderTimes');
+
+function initializeDropzone(){
+    if (!document.querySelector("#myDropzone").dropzone) {
+        myDropzone = new Dropzone("#myDropzone", {
+            url: "#", // Cambia esto por una URL válida
+            autoProcessQueue: false,
+            maxFiles: 1,
+            acceptedFiles: 'image/jpeg, image/png, image/jpg, image/webp',
+        });
+
+        myDropzone.on("addedfile", function(file) {
+            if (this.files[1]!=null){
+                this.removeFile(this.files[0]);
+            }
+            file.previewElement.querySelector(".dz-progress").style.display = 'none';
+
+            var removeButton = document.createElement('div');
+            removeButton.innerHTML = 'X';
+            removeButton.classList.add('dz-remove'); 
+
+            // Obtener el primer hijo del elemento de vista previa
+            var firstChild = file.previewElement.firstChild;
+            file.previewElement.insertBefore(removeButton, firstChild);
+
+            removeButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                myDropzone.removeFile(file);
             });
-    
-            myDropzone.on("addedfile", function(file) {
-                if (this.files[1]!=null){
-                    this.removeFile(this.files[0]);
-                }
-                file.previewElement.querySelector(".dz-progress").style.display = 'none';
-    
-                var removeButton = document.createElement('div');
-                removeButton.innerHTML = 'X';
-                removeButton.classList.add('dz-remove'); 
-    
-                // Obtener el primer hijo del elemento de vista previa
-                var firstChild = file.previewElement.firstChild;
-                file.previewElement.insertBefore(removeButton, firstChild);
-    
-                removeButton.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    myDropzone.removeFile(file);
-                });
-            });
-        }
-    });
+        });
+        
+        prepared = true;
+        
+    }
 }
 
 
+function prepareDropzone(){
+    // app.admin.setUpDropzone()
+    // prepared = false;
+    console.log(prepared, 'prepared', timesRun, 'timesRun')
+    timesRun += 1;
+
+    // window.addEventListener("load", () => {
+    
+    //     // if (!document.querySelector("#myDropzone").dropzone) {
+    //     //     myDropzone = new Dropzone("#myDropzone", {
+    //     //         url: "#", // Cambia esto por una URL válida
+    //     //         autoProcessQueue: false,
+    //     //         maxFiles: 1,
+    //     //         acceptedFiles: 'image/jpeg, image/png, image/jpg, image/webp',
+    //     //     });
+    
+    //     //     myDropzone.on("addedfile", function(file) {
+    //     //         if (this.files[1]!=null){
+    //     //             this.removeFile(this.files[0]);
+    //     //         }
+    //     //         file.previewElement.querySelector(".dz-progress").style.display = 'none';
+    
+    //     //         var removeButton = document.createElement('div');
+    //     //         removeButton.innerHTML = 'X';
+    //     //         removeButton.classList.add('dz-remove'); 
+    
+    //     //         // Obtener el primer hijo del elemento de vista previa
+    //     //         var firstChild = file.previewElement.firstChild;
+    //     //         file.previewElement.insertBefore(removeButton, firstChild);
+    
+    //     //         removeButton.addEventListener('click', function(e) {
+    //     //             e.preventDefault();
+    //     //             e.stopPropagation();
+    //     //             myDropzone.removeFile(file);
+    //     //         });
+    //     //     });
+
+    //     //     prepared = true;
+    //     // }
+    //     initializeDropzone()
+    //     return;
+    // });
+
+        // setTimeout(() => {
+        // // location.reload();
+        // // initializeDropzone()
+        
+        // }, 100);
+
+    if (!prepared) {
+        // setTimeout(prepareDropzone, 500);
+        
+        setTimeout(() => {
+            console.log('momento de render');
+            prepared = true;
+        // location.reload();
+            initializeDropzone()
+        
+        }, 500);
+
+        // initializeDropzone()
+    }
+};
 
 
 form.addEventListener('submit', (e) => {
@@ -190,5 +256,6 @@ let adminServicesCreateRouterContent = {
     h2Text: 'Agregar Nuevo servicio',
     render: prepareDropzone
 };
+// prepared = true;
 
 export { adminServicesCreateRouterContent };

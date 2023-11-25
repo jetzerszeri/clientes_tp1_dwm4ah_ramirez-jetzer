@@ -36,6 +36,8 @@ const successMsgAdd = (text, btnlink) => {
     mensaje.appendChild(div);
 
     a.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.href = '/app.html#adminServices';
         location.reload();
     });
 
