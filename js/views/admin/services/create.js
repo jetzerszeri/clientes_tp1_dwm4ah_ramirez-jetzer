@@ -79,31 +79,34 @@ function initializeDropzone(){
             acceptedFiles: 'image/jpeg, image/png, image/jpg, image/webp',
         });
 
-        myDropzone.on("addedfile", function(file) {
-            if (this.files[1]!=null){
-                this.removeFile(this.files[0]);
-            }
-            file.previewElement.querySelector(".dz-progress").style.display = 'none';
+        // myDropzone.on("addedfile", function(file) {
+        //     if (this.files[1]!=null){
+        //         this.removeFile(this.files[0]);
+        //     }
+        //     file.previewElement.querySelector(".dz-progress").style.display = 'none';
 
-            var removeButton = document.createElement('div');
-            removeButton.innerHTML = 'X';
-            removeButton.classList.add('dz-remove'); 
+        //     var removeButton = document.createElement('div');
+        //     removeButton.innerHTML = 'X';
+        //     removeButton.classList.add('dz-remove'); 
 
-            // Obtener el primer hijo del elemento de vista previa
-            var firstChild = file.previewElement.firstChild;
-            file.previewElement.insertBefore(removeButton, firstChild);
+        //     // Obtener el primer hijo del elemento de vista previa
+        //     var firstChild = file.previewElement.firstChild;
+        //     file.previewElement.insertBefore(removeButton, firstChild);
 
-            removeButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                myDropzone.removeFile(file);
-            });
-        });
+        //     removeButton.addEventListener('click', function(e) {
+        //         e.preventDefault();
+        //         e.stopPropagation();
+        //         myDropzone.removeFile(file);
+        //     });
+        // });
+        app.admin.myDropzoneHandler(myDropzone);
         
         prepared = true;
         
     }
 }
+
+
 
 
 function prepareDropzone(){
