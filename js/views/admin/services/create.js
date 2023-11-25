@@ -68,37 +68,15 @@ let prepared = false;
 
 
 
-// console.log(renderTimes, 'renderTimes');
-
 function initializeDropzone(){
     if (!document.querySelector("#myDropzone").dropzone) {
         myDropzone = new Dropzone("#myDropzone", {
-            url: "#", // Cambia esto por una URL válida
+            url: "#", 
             autoProcessQueue: false,
             maxFiles: 1,
             acceptedFiles: 'image/jpeg, image/png, image/jpg, image/webp',
         });
 
-        // myDropzone.on("addedfile", function(file) {
-        //     if (this.files[1]!=null){
-        //         this.removeFile(this.files[0]);
-        //     }
-        //     file.previewElement.querySelector(".dz-progress").style.display = 'none';
-
-        //     var removeButton = document.createElement('div');
-        //     removeButton.innerHTML = 'X';
-        //     removeButton.classList.add('dz-remove'); 
-
-        //     // Obtener el primer hijo del elemento de vista previa
-        //     var firstChild = file.previewElement.firstChild;
-        //     file.previewElement.insertBefore(removeButton, firstChild);
-
-        //     removeButton.addEventListener('click', function(e) {
-        //         e.preventDefault();
-        //         e.stopPropagation();
-        //         myDropzone.removeFile(file);
-        //     });
-        // });
         app.admin.myDropzoneHandler(myDropzone);
         
         prepared = true;
@@ -110,66 +88,14 @@ function initializeDropzone(){
 
 
 function prepareDropzone(){
-    // app.admin.setUpDropzone()
-    // prepared = false;
-    console.log(prepared, 'prepared', timesRun, 'timesRun')
-    timesRun += 1;
-
-    // window.addEventListener("load", () => {
-    
-    //     // if (!document.querySelector("#myDropzone").dropzone) {
-    //     //     myDropzone = new Dropzone("#myDropzone", {
-    //     //         url: "#", // Cambia esto por una URL válida
-    //     //         autoProcessQueue: false,
-    //     //         maxFiles: 1,
-    //     //         acceptedFiles: 'image/jpeg, image/png, image/jpg, image/webp',
-    //     //     });
-    
-    //     //     myDropzone.on("addedfile", function(file) {
-    //     //         if (this.files[1]!=null){
-    //     //             this.removeFile(this.files[0]);
-    //     //         }
-    //     //         file.previewElement.querySelector(".dz-progress").style.display = 'none';
-    
-    //     //         var removeButton = document.createElement('div');
-    //     //         removeButton.innerHTML = 'X';
-    //     //         removeButton.classList.add('dz-remove'); 
-    
-    //     //         // Obtener el primer hijo del elemento de vista previa
-    //     //         var firstChild = file.previewElement.firstChild;
-    //     //         file.previewElement.insertBefore(removeButton, firstChild);
-    
-    //     //         removeButton.addEventListener('click', function(e) {
-    //     //             e.preventDefault();
-    //     //             e.stopPropagation();
-    //     //             myDropzone.removeFile(file);
-    //     //         });
-    //     //     });
-
-    //     //     prepared = true;
-    //     // }
-    //     initializeDropzone()
-    //     return;
-    // });
-
-        // setTimeout(() => {
-        // // location.reload();
-        // // initializeDropzone()
-        
-        // }, 100);
 
     if (!prepared) {
-        // setTimeout(prepareDropzone, 500);
-        
         setTimeout(() => {
             console.log('momento de render');
             prepared = true;
-        // location.reload();
             initializeDropzone()
         
         }, 500);
-
-        // initializeDropzone()
     }
 };
 
@@ -178,7 +104,6 @@ form.addEventListener('submit', (e) => {
     e.preventDefault();
     let { name, category, description, price } = form;
 
-    // console.log(name.value, category.value, description.value, price.value);
     app.main.clearErrorMessages('form p');
     let inputsValidated = app.main.validateEmptyFields([name, category, description, price])
 
@@ -200,57 +125,7 @@ form.addEventListener('submit', (e) => {
 
     app.admin.uploadImgToStorageAndAddService('services/', file, name, category, description, price, servicesCreate)
 
-
 })
-
-
-// function setUpDropzone(){}
-
-// window.addEventListener("load", () => {
-//     // Dropzone.autoDiscover = false;
-
-//     // Verifica si Dropzone ya está inicializado en el elemento
-//     if (!document.querySelector("#myDropzone").dropzone) {
-//         let myDropzone = new Dropzone("#myDropzone", {
-//             url: "#", // Cambia esto por una URL válida
-//             autoProcessQueue: false,
-//             maxFiles: 1,
-//             acceptedFiles: 'image/jpeg, image/png, image/jpg, image/webp',
-//         });
-
-//         myDropzone.on("addedfile", function(file) {
-//             if (this.files[1]!=null){
-//                 this.removeFile(this.files[0]);
-//             }
-//             file.previewElement.querySelector(".dz-progress").style.display = 'none';
-
-//             var removeButton = document.createElement('div');
-//             removeButton.innerHTML = 'X';
-//             removeButton.classList.add('dz-remove'); 
-
-//             // Obtener el primer hijo del elemento de vista previa
-//             var firstChild = file.previewElement.firstChild;
-//             file.previewElement.insertBefore(removeButton, firstChild);
-
-//             removeButton.addEventListener('click', function(e) {
-//                 e.preventDefault();
-//                 e.stopPropagation();
-//                 myDropzone.removeFile(file);
-//             });
-//         });
-//     }
-// });
-
-
-
-
-
-
-
-
-function testing() {
-    console.log('testing');
-}
 
 
 let adminServicesCreateRouterContent = {
@@ -259,6 +134,6 @@ let adminServicesCreateRouterContent = {
     h2Text: 'Agregar Nuevo servicio',
     render: prepareDropzone
 };
-// prepared = true;
+
 
 export { adminServicesCreateRouterContent };

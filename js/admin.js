@@ -221,8 +221,8 @@ function createListTable(container, newBtnLink, tbody, tableHeadingList, id){
 }
 
 const dataTableOptions = {
-    lengthMenu: [3, 10, 30, 100],
-    pageLength: 3,
+    lengthMenu: [5, 10, 30, 100],
+    pageLength: 5,
     destroy: true,
     language: {
         lengthMenu: "Mostrar _MENU_ registros por página",
@@ -307,45 +307,6 @@ async function addNewServiceToDB(name, category, description, price, imgUrl, con
     container.innerHTML = '';
     container.append(successMsgAdd('Servicio agregado exitosamente', '/app.html#adminServices', '#admin'));
 }
-
-
-// function setUpDropzone(){
-    
-//     window.addEventListener("load", () => {
-//         // Dropzone.autoDiscover = false;
-    
-//         // Verifica si Dropzone ya está inicializado en el elemento
-//         if (!document.querySelector("#myDropzone").dropzone) {
-//             let myDropzone = new Dropzone("#myDropzone", {
-//                 url: "#", // Cambia esto por una URL válida
-//                 autoProcessQueue: false,
-//                 maxFiles: 1,
-//                 acceptedFiles: 'image/jpeg, image/png, image/jpg, image/webp',
-//             });
-    
-//             myDropzone.on("addedfile", function(file) {
-//                 if (this.files[1]!=null){
-//                     this.removeFile(this.files[0]);
-//                 }
-//                 file.previewElement.querySelector(".dz-progress").style.display = 'none';
-    
-//                 var removeButton = document.createElement('div');
-//                 removeButton.innerHTML = 'X';
-//                 removeButton.classList.add('dz-remove'); 
-    
-//                 // Obtener el primer hijo del elemento de vista previa
-//                 var firstChild = file.previewElement.firstChild;
-//                 file.previewElement.insertBefore(removeButton, firstChild);
-    
-//                 removeButton.addEventListener('click', function(e) {
-//                     e.preventDefault();
-//                     e.stopPropagation();
-//                     myDropzone.removeFile(file);
-//                 });
-//             });
-//         }
-//     });
-// }
 
 
 
