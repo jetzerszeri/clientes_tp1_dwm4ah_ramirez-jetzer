@@ -51,7 +51,7 @@
         <h2>Centro de Contacto</h2>
     
 
-        <div>
+        <!-- <div> -->
 
             <div class="misChats">
                 <div class="chatContainer">
@@ -95,14 +95,14 @@
 
 
 
-            <div class="conversation">
+            <!-- <div class="conversation">
 
-            </div>
-
-
+            </div> -->
 
 
-        </div>
+
+
+        <!-- </div> -->
 
 
 
@@ -145,9 +145,7 @@
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-            // console.log("Existe:", docSnap.data());
             const {nombre, apellido} = docSnap.data();
-            // console.log(nombre, apellido);
             return nombre + ' ' + apellido;
         } else {
             console.log("No existe");
@@ -159,42 +157,42 @@
         let nombre = await getTheNameOfTheUser(arrayUsuarioId);
         let li = document.createElement('li');
         li.innerHTML = nombre;
+        //este es el ul del chat list
         currentChats.appendChild(li);
         
-        
-        
         li.addEventListener('click', ( ) => {
-            
-            chatConversation.innerHTML = '';
-            let chatName = document.createElement('div');
-            chatName.classList.add('chatName');
-            chatName.innerHTML = nombre;
-            chatConversation.appendChild(chatName);
-    
-            let chatMessages = document.createElement('div');
-            chatMessages.classList.add('chatMessages');
-            chatConversation.appendChild(chatMessages);
-    
-            let chatForm = `
-            <form action="" class="chatForm">
-                <textarea name="texto" id="textochat"></textarea>
-                <button type="submit" class="btn">Enviar</button>
-            </form>
-            `;
-
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-    
-            chatConversation.innerHTML += chatForm;
-            
-
-            currentChatId = idDelChat;
-            // currentUserId = idUsuario;
-            // console.log('chat actual' + currentChatId);
-            // console.log('usuario actual' + currentUserId);
-            getMessagesOfThisChat();
-            sendAMsg();
+            renderChatConversation(chatConversation, nombre, idDelChat);
         })
     }
+
+
+    function renderChatConversation(chatConversationContainer, personName, chatId){
+        chatConversationContainer.innerHTML = '';
+        let chatName = document.createElement('div');
+        chatName.classList.add('chatName');
+        chatName.innerHTML = personName;
+        chatConversationContainer.appendChild(chatName);
+
+        let chatMessages = document.createElement('div');
+        chatMessages.classList.add('chatMessages');
+        chatConversationContainer.appendChild(chatMessages);
+
+        let chatForm = `
+        <form action="" class="chatForm">
+            <textarea name="texto" id="textochat"></textarea>
+            <button type="submit" class="btn">Enviar</button>
+        </form>
+        `;
+
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        chatConversationContainer.innerHTML += chatForm;
+        currentChatId = chatId;
+        getMessagesOfThisChat();
+        sendAMsg();
+    }
+
+
 
     //funcion para agregar un mensaje al chat
     async function sendMessage(chatId, userId, text) {
@@ -263,8 +261,8 @@
         const date = new Date(timestamp);
 
         let day = date.getDate();
-        let month = date.getMonth() + 1; // Los meses en JavaScript van de 0 a 11, por eso añadimos 1
-        let year = date.getFullYear().toString().substr(-2); // Obtener los últimos dos dígitos del año
+        let month = date.getMonth() + 1; 
+        let year = date.getFullYear().toString().substr(-2);
 
         let hours = date.getHours();
         let minutes = date.getMinutes();
@@ -278,8 +276,8 @@
         const formattedDate = month + '/' + day + '/' + year;
         const formattedTime = hours + ':' + minutes;
 
-        // return formattedDate + ', ' + formattedTime; 
-        return formattedTime; //por ahora solo quiero el tiempo
+        return formattedDate + ', ' + formattedTime; 
+        // return formattedTime; //por ahora solo quiero el tiempo
     }
 
 
