@@ -105,7 +105,7 @@ function createAdminBtn (hash, icon, text, renderAdminViewFunction, renderTableF
 
 /// functions for services
 
-async function loadDataOnTable(collectionName, order, columnList, tableBody){
+async function loadDataOnTable(collectionName, order, columnList, tableBody, ){
     // const tableBody = document.querySelector('#dataTable tbody');
 
     tableBody.innerHTML = '';
@@ -123,7 +123,7 @@ async function loadDataOnTable(collectionName, order, columnList, tableBody){
         });
 
         let actionsColumn = document.createElement('td');
-        createTableBtns(actionsColumn, doc.id);
+        createTableBtns(actionsColumn, doc.id, collectionName);
 
         tableRow.append(actionsColumn);
         tableBody.append(tableRow);
@@ -143,7 +143,7 @@ function createTableBodyColumns(array, list, document){
     });
 }
 
-function createTableBtns(actionsColumn, id){
+function createTableBtns(actionsColumn, id, collectionName){
     let editButton = document.createElement('a');
     let deleteButton = document.createElement('button');
 
@@ -156,8 +156,8 @@ function createTableBtns(actionsColumn, id){
 
     deleteButton.addEventListener('click', function() {
         const serviceId = this.getAttribute('data-id');
-        console.log('click en el botón de eliminar', serviceId);
-        deleteDocumentFromFirestore(serviceId);
+        // console.log('click en el botón de eliminar', serviceId);
+        deleteDocumentFromFirestore(serviceId, collectionName);
     });
 
     editButton.addEventListener('click', function(e) {
@@ -169,20 +169,23 @@ function createTableBtns(actionsColumn, id){
 }
 
 
-async function deleteDocumentFromFirestore(serviceId) {
-    const userConfirmed = window.confirm("¿Estás seguro de que deseas eliminar este servicio?");
+async function deleteDocumentFromFirestore(serviceId, collectionName) {
 
-    if (!userConfirmed) {
-        return;
-    }
+    console.log( collectionName, serviceId);
 
-    try {
-    await deleteDoc(doc(dbfirestore, 'services', serviceId));
-    console.log('Servicio eliminado correctamente');
+    // const userConfirmed = window.confirm("¿Estás seguro de que deseas eliminar este servicio?");
+
+    // if (!userConfirmed) {
+    //     return;
+    // }
+
+    // try {
+    await deleteDoc(doc(dbfirestore, collectionName, serviceId));
+    // console.log('documento eliminado correctamente');
     window.location.reload();
-    } catch (error) {
-    console.error('Error al eliminar el Servicio:', error);
-    }
+    // } catch (error) {
+    // console.error('Error al eliminar el documento:', error);
+    // }
 }
 
 
