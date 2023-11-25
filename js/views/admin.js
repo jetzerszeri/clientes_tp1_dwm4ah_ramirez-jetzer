@@ -3,6 +3,7 @@ import {servicesIndexBreadcrumbs, servicesList, renderServicesTable, adminServic
 import { adminServicesCreateRouterContent } from './admin/services/create.js';
 import { adminServicesEditRouterContent } from './admin/services/edit.js';
 import { adminCategoriesRouterContent } from './admin/categories/index.js';
+import { adminCategoriesCreateRouterContent } from './admin/categories/create.js';
 
 const admin = app.create.element('main', ['adminmain']);
 
@@ -43,6 +44,7 @@ const adminRouter = {
     },
     '#adminServicesCreate': adminServicesCreateRouterContent,
     '#adminServicesEdit': adminServicesEditRouterContent,
+    '#adminCategoriesCreate': adminCategoriesCreateRouterContent,
 };
 
 

@@ -312,6 +312,24 @@ async function addNewServiceToDB(name, category, description, price, imgUrl, con
     }
 }
 
+async function addNewCategoryToDB(name, container){
+    try{
+        await addDoc(collection(dbfirestore, "categories"), {
+            name: name,
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp()
+        });
+    
+        container.innerHTML = '';
+        container.append(successMsgAdd('Categoría agregada exitosamente', '/app.html#adminCategories', '#admin'));
+    }catch(error){
+        console.log(error);
+        // displayServerError(container, false, '#adminCategories');
+    }
+    
+}
+
+
 
 
 function myDropzoneHandler(currentDropzone){
@@ -431,10 +449,10 @@ async function getSeviceData(docId, form, container) {
             // console.log("No such document!");
             // window.location.href = '/app.html#adminServices';
             // location.reload();
-            displayServerError(container, 'Ups, No se encontró ningun servicio con ese id');
+            displayServerError(container, 'Ups, No se encontró ningun servicio con ese id', '#adminServices');
         }
     } catch (error) {
-        displayServerError(container);
+        displayServerError(container, false, '#adminServices');
     }
 }
 
@@ -453,21 +471,21 @@ async function updateServiceData(docId, form, container) {
         container.innerHTML = '';
         container.append(successMsgAdd('Servicio actualizado exitosamente.', '/app.html#adminServices'));
     }catch(error){
-        // displayServerError(container);
-        console.log(error);
+        displayServerError(container, false, '#adminServices');
+        // console.log(error);
     }
 }
 
 
 
-function displayServerError(container, text){
+function displayServerError(container, text, hash){
     container.innerHTML = '';
     if (text) {
-        container.append(successMsgAdd(text, '/app.html#adminServices'));
+        container.append(successMsgAdd(text, `/app.html${hash}`));
     } else {
-    container.append(successMsgAdd('Hubo un error en el servidor, por favor intenta más tarde.', '/app.html#adminServices'));
+    container.append(successMsgAdd('Hubo un error en el servidor, por favor intenta más tarde.', `/app.html${hash}`));
     }
 }
 
 
-export { verifyUser, loadDataOnTable, createTableBodyColumns, createTableBtns, deleteDocumentFromFirestore, addHeadingTableRow, createListTable, renderData, createAdminBtn, addCategoriesList, uploadImgToStorageAndAddService, addNewServiceToDB, myDropzoneHandler, createServiceForm, getSeviceData, updateServiceData};
+export { verifyUser, loadDataOnTable, createTableBodyColumns, createTableBtns, deleteDocumentFromFirestore, addHeadingTableRow, createListTable, renderData, createAdminBtn, addCategoriesList, uploadImgToStorageAndAddService, addNewServiceToDB, myDropzoneHandler, createServiceForm, getSeviceData, updateServiceData, addNewCategoryToDB};

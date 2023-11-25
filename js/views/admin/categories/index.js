@@ -29,13 +29,6 @@ function renderCategoriesTable(){
 
 
 
-
-
-
-function test () {
-    console.log('test from categories index');
-}
-
 let adminCategoriesRouterContent = {
     content: categoriesList,
     breadcrumb: categoriesIndexBreadcrumbs, 

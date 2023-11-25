@@ -4,7 +4,7 @@ import { renderAdminView } from '../../admin.js';
 let servicesCreateBreadcrumbList = [
     {name: 'Inicio', view: '#home'},
     {name: 'Dashboard', view: "#admin"},
-    {name: 'Services', view: "#adminServices"},
+    {name: 'Servicios', view: "#adminServices"},
     {name: 'Agregar servicio'}
 ];
 
@@ -58,7 +58,7 @@ form.addEventListener('submit', (e) => {
         document.querySelector('.dropzone').parentElement.appendChild(errorP);
         return; 
     }
-    
+
     if (!inputsValidated || myDropzone.files.length == 0) return;
     let file = myDropzone.files[0]; 
     app.admin.uploadImgToStorageAndAddService('services/', file, name, category, description, price, servicesCreate)
