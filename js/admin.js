@@ -403,6 +403,73 @@ function createServiceForm(formContainer, form, typeForm){
 }
 
 
+// async function getDataFromFirestore(docId, type, form, container) {
+//     const collectionName = `${type}s`;
+//     const docRef = doc(dbfirestore, collectionName, docId);
+
+//     try {
+//         const docSnap = await getDoc(docRef);
+//         if (docSnap.exists()) {
+//             const data = docSnap.data();
+
+//             if (type === 'service') {
+//                 let { name, category, description, price } = form;
+//                 category.innerHTML = '';
+
+//                 name.value = data.name;
+//                 description.value = data.description;
+//                 price.value = data.price;
+
+//                 addCategoriesList(category, data.category);
+//             } else if (type === 'category') {
+//                 form.name.value = data.name;
+//             }
+//         } else {
+//             displayServerError(container, `Ups, No se encontró ningún ${type} con ese id`, `#admin${type.charAt(0).toUpperCase() + type.slice(1)}s`);
+//         }
+//     } catch (error) {
+//         displayServerError(container, false, `#admin${type.charAt(0).toUpperCase() + type.slice(1)}s`);
+//     }
+// }
+
+async function getCollectionData(docId, form, container, collectionName) {
+    const docRef = doc(dbfirestore, collectionName, docId);
+
+    try {
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            let { name } = form;
+
+            // // Asumiendo que la estructura de los documentos es conocida y consistente
+            // // con los nombres de los campos en el formulario
+            // Object.keys(form).forEach(key => {
+            //     if (data[key] !== undefined) {
+            //         form[key].value = data[key];
+            //     }
+            // });
+
+            if (collectionName === 'services') {
+                let { category, description, price } = form;
+                category.innerHTML = '';
+
+                name.value = data.name;
+                description.value = data.description;
+                price.value = data.price;
+                addCategoriesList(category, data.category);
+            } else if (collectionName === 'categories') {
+                name.value = data.name;
+            }
+        } else {
+            displayServerError(container, `Ups, No se encontró ningún elemento con ese id en ${collectionName}`, `#admin${collectionName.charAt(0).toUpperCase() + collectionName.slice(1)}`);
+        }
+    } catch (error) {
+        displayServerError(container, false, `#admin${collectionName.charAt(0).toUpperCase() + collectionName.slice(1)}`);
+    }
+}
+
+
+
 
 async function getSeviceData(docId, form, container) {
     const docServicesRef = doc(dbfirestore, "services", docId);
@@ -468,6 +535,8 @@ async function getCategoryData(docId, form, container) {
 }
 
 
+
+
 function displayServerError(container, text, hash){
     container.innerHTML = '';
     if (text) {
@@ -496,4 +565,4 @@ function renderCategoriesForm(form, container){
 
 
 
-export { verifyUser, loadDataOnTable, createTableBodyColumns, createTableBtns, deleteDocumentFromFirestore, addHeadingTableRow, createListTable, renderData, createAdminBtn, addCategoriesList, uploadImgToStorageAndAddService, myDropzoneHandler, createServiceForm, getSeviceData, updateServiceData, addNewDocToMyFirestore, renderCategoriesForm, getCategoryData };
+export { verifyUser, loadDataOnTable, createTableBodyColumns, createTableBtns, deleteDocumentFromFirestore, addHeadingTableRow, createListTable, renderData, createAdminBtn, addCategoriesList, uploadImgToStorageAndAddService, myDropzoneHandler, createServiceForm, getSeviceData, updateServiceData, addNewDocToMyFirestore, renderCategoriesForm, getCategoryData, getCollectionData };

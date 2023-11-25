@@ -19,7 +19,7 @@ app.admin.renderCategoriesForm(form, categoriesEdit);
 let currentCategoryId;
 function loadCategoryData(categoryId){
 
-    app.admin.getCategoryData(categoryId, form, categoriesEdit);
+    app.admin.getCollectionData(categoryId, form, categoriesEdit, 'categories');
 
     // app.admin.getCategoryData(categoryId, form, categoriesEdit);
     currentCategoryId = categoryId;

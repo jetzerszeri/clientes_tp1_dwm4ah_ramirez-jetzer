@@ -16,7 +16,7 @@ let form = app.create.element('form');
 app.admin.createServiceForm(servicesEdit, form, 'edit');
 let currentServiceId;
 function loadServiceData(serviceId){
-    app.admin.getSeviceData(serviceId, form, servicesEdit);
+    app.admin.getCollectionData(serviceId, form, servicesEdit, 'services');
     currentServiceId = serviceId;
     console.log(currentServiceId);
 }
