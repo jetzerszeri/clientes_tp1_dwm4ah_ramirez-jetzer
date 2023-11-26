@@ -47,8 +47,6 @@ async function getUserChats(uid, chatsList, chatConversation){
 
 
 
-
-
 async function renderChatName(userId, idDelChat, currentChats, chatConversation) {
     let nombre = await getTheNameOfTheUser(userId);
     let li = document.createElement('li');
@@ -69,7 +67,6 @@ async function getTheNameOfTheUser(usuarioId) {
         return nombre + ' ' + apellido;
     }
 }
-
 
 
 
@@ -97,9 +94,7 @@ async function getMessagesOfThisChat(currentChatId, chatMessages) {
 
     onValue(messagesQuery, (snapshot) => {
         if (snapshot.hasChildren()) {
-
             chatMessages.innerHTML = '';
-
             snapshot.forEach(childSnapshot => {
                 const message = childSnapshot.val();
 

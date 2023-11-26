@@ -15,8 +15,6 @@ let breadcrumbItems = [
 ];
 
 const adminOptions = app.create.element('ul', ['admindoptions']);
-const categories = app.create.element('div', [], 'Categorías');
-const chat = app.create.element('div', [], 'Chat');
 let renderTimes = 0;
 
 
@@ -86,8 +84,6 @@ function renderAdminView(view) {
     if (adminRouter[view].render) {
         adminRouter[view].render(id);
     }
-    // console.log(renderTimes, 'renderTimes');
-    // adminRouter[view].render();
     renderTimes += 1;
 }
 
@@ -102,14 +98,13 @@ function parseHash(hash) {
             const [key, value] = param.split('=');
             if (key === 'id') {
                 id = value;
-                break; // Romper el bucle una vez que encuentres el ID
+                break; 
             }
         }
     }
 
     return { base, id };
 }
-
 
 
 Dropzone.autoDiscover = false;

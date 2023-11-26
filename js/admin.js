@@ -19,7 +19,6 @@ async function checkUserRole(uid, adminOptionsContainer, arrayAdmin, chatBtn) {
     if (docSnap.exists()) {
         const role = docSnap.data().role;
         if (role == 'admin') {
-            console.log('SI es admin');
             arrayAdmin.forEach((item) => {
                 adminOptionsContainer.appendChild(item);
             });
@@ -67,7 +66,6 @@ async function isAdmin(uid) {
     if (docSnap.exists()) {
         const role = docSnap.data().role;
         if (role == 'admin') {
-            console.log('SI es admin');
             return true;
         } else {
             console.log('NO es admin');
@@ -78,7 +76,6 @@ async function isAdmin(uid) {
 
 function displayAdminBtns(adminOptionsContainer, arrayAdmin, chatBtn, admin){
     if (admin) {
-        console.log('SI es admin');
         arrayAdmin.forEach((item) => {
             adminOptionsContainer.appendChild(item);
         });

@@ -212,8 +212,10 @@
             lastMessage: text,
             fecha: Date.now()
         });
-    }
+    };
+
     
+
 
     async function getMessagesOfThisChat() {
         const messagesRef = ref(db, `messages/${currentChatId}`);
