@@ -26,10 +26,14 @@ misChats.appendChild(chatContainer);
 
 
 
-app.chat.testChatFunctions();
+
+
+
+
+app.chat.loadChats(chatList, chatConversation);
 
 function test(){
-    console.log('test from chat');
+    // console.log('test from chat');
 }
 
 let adminChatRouterContent = {

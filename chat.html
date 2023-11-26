@@ -213,6 +213,7 @@
             fecha: Date.now()
         });
     }
+    
 
     async function getMessagesOfThisChat() {
         const messagesRef = ref(db, `messages/${currentChatId}`);
@@ -286,7 +287,7 @@
             const {texto} = form;
             // console.log(texto);
 
-            const conversation = document.querySelector('.conversation');
+            // const conversation = document.querySelector('.conversation');
 
             form.addEventListener('submit', (e) => {
                 e.preventDefault();
@@ -325,23 +326,23 @@
                     const userChatsQuery = query(chatsRef, orderByChild(`participants/${uid}`), equalTo(true));
 
                     onValue(userChatsQuery, (snapshot) => {
-                    if (snapshot.hasChildren()) {
-                        currentChats.innerHTML = '';
-                    snapshot.forEach(childSnapshot => {
-                        const chat = childSnapshot.val();
-                        // console.log(chat);
-                        let thisChatId = childSnapshot.key;
-                        // console.log("Chat ID:", thisChatId);
+                        if (snapshot.hasChildren()) {
+                            currentChats.innerHTML = '';
+                        snapshot.forEach(childSnapshot => {
+                            const chat = childSnapshot.val();
+                            // console.log(chat);
+                            let thisChatId = childSnapshot.key;
+                            // console.log("Chat ID:", thisChatId);
 
-                        let participants = Object.keys(chat.participants);
-                        let personIdChat = participants.filter((participant) => participant != uid);
-                        appendChatName(personIdChat[0],  thisChatId);
+                            let participants = Object.keys(chat.participants);
+                            let personIdChat = participants.filter((participant) => participant != uid);
+                            appendChatName(personIdChat[0],  thisChatId);
 
-                    });
-                    } else {
-                        console.log('Snapshot no tiene hijos.');
-                    }
-                }); 
+                        });
+                        } else {
+                            console.log('Snapshot no tiene hijos.');
+                        }
+                    }); 
 
                 }
             }
