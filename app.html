@@ -11,8 +11,8 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
 
-        <!-- dropzone -->
-        <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+    <!-- dropzone -->
+    <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
 
 </head>
 <body>
@@ -33,9 +33,9 @@
     
                 <div class="navbar-links">
                     <ul>
-                        <li><a href="#home" class="active">Inicio</a></li>
+                        <li><a href="#home">Inicio</a></li>
                         <li><a href="#services" class="">Servicios</a></li>
-                        <li><a href="#admin" class="">Dashboard</a></li>
+                        <li><a href="#admin" class=""  id="dashboardLink">Dashboard</a></li>
                     </ul>
                     <div>
                         <a href="#login" class="btn">Iniciar sesión</a>
@@ -97,17 +97,25 @@
             app.append(router['#admin']);
         } else {
             app.append(router[currentHash]);
-        }
+        };
+
+
 
         links.forEach(link => {
             link.addEventListener("click", (e) => {
                 app.innerHTML = "";
 
+                links.forEach(link => link.classList.remove('active'));
+                
                 if (e.target.hash.startsWith('#admin')) {
                     app.append(router['#admin']);
                 } else {
                     app.append(router[e.target.hash]);
-                }
+                };
+
+                e.target.classList.add('active');
+
+                // setActiveLink();
             })
         })
 
@@ -120,6 +128,30 @@
         //     })
         // }
 
+        // setActiveLink()
+
+
+        function setActiveLink(){
+            links.forEach(link => {
+                if (link.href == currentHash) {
+                    link.classList.add("active");
+                } else {
+                    link.classList.remove("active");
+                }
+            })
+        }
+        // setActiveLink()
+        getActiveLink(links, currentHash)
+
+        function getActiveLink(links, currentHash){
+            links.forEach(link => {
+                if (link.getAttribute('href') === currentHash) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            })
+        }
 
 
 
