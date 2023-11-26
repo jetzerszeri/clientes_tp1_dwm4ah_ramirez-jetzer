@@ -63,7 +63,7 @@ form.addEventListener('submit', async (e) => {
     app.signin.createUserAndSetDocument(email.value, password.value, name.value, lastname.value)
     .then((userId) => app.signin.createChat(userId))
     .then(() => {
-        window.location.href = '/app.html#admin';
+        window.location.href = '/index.html#admin';
         location.reload();
     })
     .catch((error) => {

@@ -89,7 +89,7 @@ async function updateServicesList(category, container){
             getCurrentCategoryName(category, pCategory)
 
             a.addEventListener('click', (e) => {
-                window.location.href = '/app.html#adminChat';
+                window.location.href = '/index.html#adminChat';
                 location.reload();
             })
 

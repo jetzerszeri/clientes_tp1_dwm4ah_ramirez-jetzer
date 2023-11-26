@@ -70,7 +70,7 @@ function validateEmptyFields(array) {
 function renderView(element, view) {
     element.addEventListener("click", (e) => {
         e.preventDefault();
-        window.location.href = '/app.html' + view;
+        window.location.href = '/index.html' + view;
         location.reload();
     })
 }

@@ -42,13 +42,13 @@ function verifyUser(adminOptionsContainer, arrayAdmin, chatBtn, container) {
             let errorH1 = document.createElement('h1');
             errorH1.textContent = 'Debes iniciar sesión para ver esta página';
             let errorA = document.createElement('a');
-            errorA.href = '/app.html#login';
+            errorA.href = '/index.html#login';
             errorA.classList.add('btn');
             errorA.textContent = 'Iniciar sesión';
             container.appendChild(errorH1);
             container.appendChild(errorA);
 
-            window.location.href = '/app.html#login'
+            window.location.href = '/index.html#login'
 
             errorA.addEventListener('click', () => {
                 location.reload();
@@ -275,7 +275,7 @@ function uploadImgToStorageAndAddService(folderName, dropzoneFile, nameInput, ca
                 "services", 
                 { name: nameInput.value, category: categoryInput.value, description:descriptionInput.value, price: priceInput.value, img: url }, 
                 container, 
-                '/app.html#adminServices', 
+                '/index.html#adminServices', 
                 '#adminServices'
             );
 
@@ -455,9 +455,9 @@ async function updateFirestoreDocument(collectionName, docId, form, container, r
 function displayServerError(container, text, hash){
     container.innerHTML = '';
     if (text) {
-        container.append(successMsgAdd(text, `/app.html${hash}`));
+        container.append(successMsgAdd(text, `/index.html${hash}`));
     } else {
-    container.append(successMsgAdd('Hubo un error en el servidor, por favor intenta más tarde.', `/app.html${hash}`));
+    container.append(successMsgAdd('Hubo un error en el servidor, por favor intenta más tarde.', `/index.html${hash}`));
     }
 }
 
