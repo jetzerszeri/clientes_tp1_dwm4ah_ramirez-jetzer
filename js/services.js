@@ -7,7 +7,7 @@ const db = getFirestore(app);
 const categoriesSnapshot = await getDocs(collection(db, "categories"))
 console.log(categoriesSnapshot.docs.map(doc => doc.id))
 
-let categoryTag = document.createElement('div');
+
 async function getCurrentCategoryName(categoryId, element) {
     categoriesSnapshot.forEach(doc => {
         if (doc.id === categoryId && doc.data().name) {
@@ -30,18 +30,38 @@ async function findByCategory(category) {
 }
 
 
+function createLiFilterBtns(text, attribute, container, servicesUlContainer){
+    let liAll = document.createElement('li');
+    liAll.classList.add('btn', 'secundary-green');
+    liAll.textContent =  text;
+    liAll.setAttribute('data-category', attribute);
+    if (text === 'Todos') { liAll.classList.add('active');}
+    liAll.addEventListener('click', (e) => filterServices(e, servicesUlContainer));
+    container.appendChild(liAll);
+}
+
 //function to render the categories buttons in the services view
-function renderServicesBtns(labels, container, servicesUlContainer){
-    labels.forEach(label => {
-        let li = document.createElement('li');
-        li.classList.add('btn', 'secundary-green');
-        li.textContent = label;
-        if (label === 'Todos') {
-            li.classList.add('active');
-        }
-        li.addEventListener('click', (e) => filterServices(e, servicesUlContainer)); 
-        container.appendChild(li);
-    });
+function renderServicesBtns(container, servicesUlContainer){
+
+    createLiFilterBtns('Todos', 'all', container, servicesUlContainer);
+
+    // let liAll = document.createElement('li');
+    // liAll.classList.add('btn', 'secundary-green');
+    // liAll.textContent = 'Todos';
+    // liAll.setAttribute('data-category', 'all');
+    // liAll.classList.add('active');
+    // liAll.addEventListener('click', (e) => filterServices(e, servicesUlContainer));
+    // container.appendChild(liAll);
+
+    categoriesSnapshot.forEach(doc => {
+        createLiFilterBtns(doc.data().name, doc.id, container, servicesUlContainer);
+    //     let li = document.createElement('li');
+    //     li.classList.add('btn', 'secundary-green');
+    //     li.textContent = doc.data().name;
+    //     li.setAttribute('data-category', doc.id);
+    //     li.addEventListener('click', (e) => filterServices(e, servicesUlContainer));
+    //     container.appendChild(li);
+    })
 }
 
 
@@ -52,8 +72,8 @@ function filterServices(e, servicesUlContainer) {
         item.classList.remove('active');
     });
 
-    let category = e.target.textContent;
-    category = (category === 'Todos') ? 'all' : category;
+    let category = e.target.getAttribute('data-category');
+    // category = (category === 'Todos') ? 'all' : category;
 
     e.target.classList.add('active');
 

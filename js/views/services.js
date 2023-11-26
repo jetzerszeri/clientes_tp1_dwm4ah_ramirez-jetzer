@@ -10,7 +10,7 @@ const header = app.create.element('header', ['servicesheader']);
 
 let btnLabels = ['Todos', 'Remodelación', 'Mudanza', 'Real State'];
 
-app.services.renderServicesBtns(btnLabels, filterBtns, ulServices);
+app.services.renderServicesBtns(filterBtns, ulServices);
 app.services.updateServicesList('all', ulServices);
 
 
