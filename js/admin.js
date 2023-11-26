@@ -246,7 +246,7 @@ async function addCategoriesList(categoriesSelectInput, categorySelected){
     const querySnapshot = await getDocs(collection(dbfirestore, "categories"));
     querySnapshot.forEach((doc) => {
         let option = document.createElement('option');
-        option.value = doc.data().name;
+        option.value = doc.id;
         option.innerHTML = doc.data().name;
 
         if(option.value === categorySelected) {
