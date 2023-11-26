@@ -6,10 +6,10 @@ const db = getFirestore(app);
 const categoriesSnapshot = await getDocs(collection(db, "categories"))
 
 async function getCurrentCategoryName(categoryId, element) {
-    categoriesSnapshot.forEach(doc => {
+    await categoriesSnapshot.forEach(doc => {
         if (doc.id === categoryId && doc.data().name) {
             element.textContent = doc.data().name;
-            return;
+            // return;
         }
     })
 }
@@ -104,5 +104,5 @@ async function updateServicesList(category, container){
 }
 
 
-export { findByCategory, renderServicesBtns, updateServicesList };
+export { findByCategory, renderServicesBtns, updateServicesList, getCurrentCategoryName };
 

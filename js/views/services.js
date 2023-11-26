@@ -8,8 +8,6 @@ let filterBtns = app.create.element('ul', ['filterBtns']);
 const servicesView = app.create.element('main', ['servicescontainer']);
 const header = app.create.element('header', ['servicesheader']);
 
-let btnLabels = ['Todos', 'Remodelación', 'Mudanza', 'Real State'];
-
 app.services.renderServicesBtns(filterBtns, ulServices);
 app.services.updateServicesList('all', ulServices);
 

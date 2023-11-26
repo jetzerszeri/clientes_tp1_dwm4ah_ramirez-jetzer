@@ -4,11 +4,9 @@ import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "https:/
 import { getDatabase, ref as dbRef, set } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-database.js';
 import {getStorage, ref as storageRef, uploadBytes, getDownloadURL} from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-storage.js';
 import { element } from './create.js';
-import { success, successMsgAdd } from './partials.js';
+import { successMsgAdd } from './partials.js';
 
 
-
-const db = getDatabase(app);
 const auth = getAuth(app);
 const dbfirestore = getFirestore(app);
 const storage = getStorage(app);
@@ -100,11 +98,17 @@ function createAdminBtn (hash, icon, text, renderAdminViewFunction, renderTableF
 }
 
 
-/// functions for services
+async function getCurrentCategoryName(categoryId, element) {
+    const categoriesSnapshot = await getDocs(collection(dbfirestore, "categories"))
+    categoriesSnapshot.forEach(doc => {
+        if (doc.id === categoryId && doc.data().name) {
+            element.textContent = doc.data().name;
+        }
+    })
+}
+
 
 async function loadDataOnTable(collectionName, order, columnList, tableBody, ){
-    // const tableBody = document.querySelector('#dataTable tbody');
-
     tableBody.innerHTML = '';
     const reference = collection(dbfirestore, collectionName);
     const q = query(reference, orderBy(order));
@@ -115,7 +119,11 @@ async function loadDataOnTable(collectionName, order, columnList, tableBody, ){
         let tableRow = document.createElement('tr');
         columnList.forEach((columnName) => {
             let column = document.createElement('td');
-            column.textContent = doc.data()[columnName];
+            if (columnName === 'category') {
+                getCurrentCategoryName(doc.data()[columnName], column);
+            } else {
+                column.textContent = doc.data()[columnName];
+            }
             tableRow.appendChild(column);
         });
 
@@ -126,6 +134,7 @@ async function loadDataOnTable(collectionName, order, columnList, tableBody, ){
         tableRow.append(actionsColumn);
         tableBody.append(tableRow);
     });
+
 }
 
 
@@ -151,13 +160,10 @@ function createTableBtns(actionsColumn, id, collectionName, editLink){
 
     deleteButton.addEventListener('click', function() {
         const serviceId = this.getAttribute('data-id');
-        // console.log('click en el botón de eliminar', serviceId);
         deleteDocumentFromFirestore(serviceId, collectionName);
     });
 
     editButton.addEventListener('click', function(e) {
-        // e.preventDefault();
-        // console.log('click en el botón de editar');
         window.location.href = `#${editLink}?id=${id}`;
         location.reload();
     });
@@ -167,9 +173,6 @@ function createTableBtns(actionsColumn, id, collectionName, editLink){
 
 
 async function deleteDocumentFromFirestore(serviceId, collectionName) {
-
-    console.log( collectionName, serviceId);
-
     await deleteDoc(doc(dbfirestore, collectionName, serviceId));
     window.location.reload();
 
@@ -234,7 +237,6 @@ async function renderData(collectionName, order, tableBodyColumns, tbody, tableI
     await loadDataOnTable(collectionName, order, tableBodyColumns, tbody);
     let id = `#${tableId}`
     $(id).DataTable(dataTableOptions);
-    // console.log('se renderizó la tabla');
 }
 
 

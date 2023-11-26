@@ -1,4 +1,4 @@
-import { findByCategory, renderServicesBtns, updateServicesList } from './services.js';
+import { findByCategory, renderServicesBtns, updateServicesList, getCurrentCategoryName } from './services.js';
 import { signInWithEmailAndPasswordHandler } from './login.js';
 import { createUserAndSetDocument, createChat } from './signin.js';
 import { element } from './create.js';
@@ -15,6 +15,7 @@ const app = {
         findByCategory,
         updateServicesList,
         renderServicesBtns,
+        getCurrentCategoryName
     },
     main: {
         displayBreadcrumb,
