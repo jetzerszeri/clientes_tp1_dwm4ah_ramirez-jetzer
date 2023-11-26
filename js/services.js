@@ -52,14 +52,15 @@ function updateServicesList(category, container){
         container.innerHTML = '';
         servicesData.forEach(data => {
     
-            const {name, category, price} = data.data();
+            const {name, category, price, img} = data.data();
+            // console.log(name, category, price, img)
     
             let item = document.createElement('li');
             let divContainer = document.createElement('div');
             let divImg = document.createElement('div');
-            let img = document.createElement('img');
-            img.src = 'img/servicesimg.jpg';
-            img.alt = name;
+            let imgTag = document.createElement('img');
+            imgTag.src = img;
+            imgTag.alt = name;
             let divInfo = document.createElement('div');
             divInfo.innerHTML = `
             <div>
@@ -68,7 +69,7 @@ function updateServicesList(category, container){
             </div>
             <p>$${price}/sqft</p>
             <a href="#contact" class="btn secundary-green">Contactar</a>`;
-            divImg.append(img);
+            divImg.append(imgTag);
             divContainer.append(divImg);
             divContainer.append(divInfo);
             item.append(divContainer);
