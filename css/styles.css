@@ -478,7 +478,7 @@ footer p{
 /* ul de los servicios */
 .servicescontainer section ul{
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 100%;
     gap: 20px;
     padding: 0 30px 80px 30px;
     width: 100%;
@@ -561,6 +561,9 @@ footer p{
     font-size: 1.1em;
     line-height: 1.1em;
     font-weight: 600;
+    overflow: hidden;
+    /* white-space: nowrap; */
+    text-overflow: ellipsis;
 }
 
 .breadcrumb ol{
@@ -946,6 +949,15 @@ input + p, select + p, textarea + p, .errorForMmsg{
 }
 .chatList{
     border-right: 1px solid var(--color-darkgray);
+    height: 100%;
+    overflow-y: scroll;
+    position: relative;
+}
+.chatList > div:first-child{
+    position: sticky;
+    top: 0;
+    background-color: #24534c;
+    z-index: 1;
 }
 
 .chatList > div > p {
@@ -1071,7 +1083,9 @@ input + p, select + p, textarea + p, .errorForMmsg{
 }
 
 @media (min-width: 650px){
-
+    .servicescontainer section ul{
+        grid-template-columns: 49% 49%;
+    }
     .homeservices > div > div {
         grid-template-columns: 1fr 1fr;
         width: 100%;
@@ -1366,6 +1380,8 @@ input + p, select + p, textarea + p, .errorForMmsg{
         padding: 50px 100px;
     }
 
+
+
     /* servicios cards */
     .servicescontainer section ul li > div{
         display: flex;
@@ -1373,14 +1389,14 @@ input + p, select + p, textarea + p, .errorForMmsg{
     }
 
     .servicescontainer section ul li > div > div:nth-of-type(1){
-        /* width: 50%; */
-        min-width: 160px;
-        width: 190px;
+        width: 40%;
+        /* min-width: 160px; */
+        /* width: 190px; */
         height: 190px;
     }
 
     .servicescontainer section ul li > div > div:nth-of-type(2){
-        min-width: 50%;
+        width: 60%;
         display: flex;
         flex-direction: column;
         /* justify-content: space-around; */
@@ -1392,7 +1408,7 @@ input + p, select + p, textarea + p, .errorForMmsg{
     .servicescontainer section ul li > div > div:nth-of-type(2) div h2{
         font-size: 1.3em;
         line-height: 1.3em;
-        /* margin-bottom: 10px; */
+
     }
 
     .mainofservice{
