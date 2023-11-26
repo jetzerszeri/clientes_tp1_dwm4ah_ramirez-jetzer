@@ -19,13 +19,9 @@ let chatConversation = app.create.element('div', ['chatConversation']);
 chatTitleContainer.appendChild(chatTitle);
 chatListContainer.appendChild(chatTitleContainer);
 chatListContainer.appendChild(chatList);
-
 chatContainer.appendChild(chatListContainer);
 chatContainer.appendChild(chatConversation);
 misChats.appendChild(chatContainer);
-
-
-
 
 
 

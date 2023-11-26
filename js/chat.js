@@ -8,13 +8,7 @@ import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10
 const dbfirestore = getFirestore(app);
 const db = getDatabase(app);
 const auth = getAuth(app);
-// const currentChats = document.querySelector('.chatList ul');
-let currentChatId;
 let currentUserId;
-// let chatConversation = document.querySelector('.chatConversation');
-
-// let user = auth.currentUser;
-// console.log(user);
 
 function loadChats(chatsList, chatConversation){
     onAuthStateChanged(auth, (user) => {
@@ -22,11 +16,6 @@ function loadChats(chatsList, chatConversation){
             const uid = user.uid;
             currentUserId = uid;
             getUserChats(uid, chatsList, chatConversation);
-
-
-
-
-
         }
     });
 
@@ -44,17 +33,12 @@ async function getUserChats(uid, chatsList, chatConversation){
 
         onValue(userChatsQuery, (snapshot) => {
             if (snapshot.hasChildren()){
-                // chatsList.innerHTML = '';
                 snapshot.forEach(childSnapshot => {
                     const chat = childSnapshot.val();
                     const chatId = childSnapshot.key;
                     const participants = Object.keys(chat.participants);
                     const personIdChat = participants.filter((participant) => participant !== uid);
-
-                    // console.log(personIdChat);
-
                     renderChatName(personIdChat[0], chatId, chatsList, chatConversation);
-
                 })
             }
         });
@@ -70,7 +54,6 @@ async function renderChatName(userId, idDelChat, currentChats, chatConversation)
     let li = document.createElement('li');
     li.innerHTML = nombre;
     currentChats.appendChild(li);
-    
     li.addEventListener('click', ( ) => {
         renderChatConversation(chatConversation, nombre, idDelChat);
     })
@@ -81,12 +64,10 @@ async function renderChatName(userId, idDelChat, currentChats, chatConversation)
 async function getTheNameOfTheUser(usuarioId) {
     const docRef = doc(dbfirestore, "roles_by_user", usuarioId);
     const docSnap = await getDoc(docRef);
-
     if (docSnap.exists()) {
         const {nombre, apellido} = docSnap.data();
         return nombre + ' ' + apellido;
-    } 
-
+    }
 }
 
 
@@ -94,39 +75,19 @@ async function getTheNameOfTheUser(usuarioId) {
 
 function renderChatConversation(chatConversationContainer, personName, chatId){
     chatConversationContainer.innerHTML = '';
-    // let chatName = document.createElement('div');
-    // chatName.classList.add('chatName');
-    // chatName.innerHTML = personName;
     let chatName = element('div', ['chatName'], personName);
     chatConversationContainer.appendChild(chatName);
-
     let chatMessages = element('div', ['chatMessages']);
-
-    // let chatMessages = document.createElement('div');
-    // chatMessages.classList.add('chatMessages');
     chatConversationContainer.appendChild(chatMessages);
-
-    // let chatForm = `
-    // <form action="" class="chatForm">
-    //     <textarea name="texto" id="textochat"></textarea>
-    //     <button type="submit" class="btn">Enviar</button>
-    // </form>
-    // `;
-
     let chatForm = element('form', ['chatForm']);
     chatForm.innerHTML = `
         <textarea name="texto" id="textochat"></textarea>
         <button type="submit" class="btn">Enviar</button>
     `;
-
     chatMessages.scrollTop = chatMessages.scrollHeight;
-
     chatConversationContainer.appendChild(chatForm);
-    // currentChatId = chatId;
     getMessagesOfThisChat(chatId, chatMessages);
-
     sendAMsg(chatForm, chatId);
-    // console.log(currentUserId);
 }
 
 
@@ -136,7 +97,7 @@ async function getMessagesOfThisChat(currentChatId, chatMessages) {
 
     onValue(messagesQuery, (snapshot) => {
         if (snapshot.hasChildren()) {
-            // let chatMessages = document.querySelector('.chatMessages');
+
             chatMessages.innerHTML = '';
 
             snapshot.forEach(childSnapshot => {
@@ -151,19 +112,11 @@ async function getMessagesOfThisChat(currentChatId, chatMessages) {
                 } else {
                     divMsg.classList.add('received');
                 }
-                divMsg.innerHTML = `                
-                    <p>${text}</p>
-                    <p>${hora}</p>
-                `;
-
+                divMsg.innerHTML = `<p>${text}</p><p>${hora}</p>`;
                 chatMessages.appendChild(divMsg);
             });
-
             chatMessages.scrollTop = chatMessages.scrollHeight;
-        } 
-        // else {
-        //     console.log('Snapshot no tiene hijos.');
-        // }
+        };
     });
 }
 
@@ -188,36 +141,17 @@ function sendAMsg(form, currentChatId){
 async function sendMessage(chatId, userId, text) {
     const messagesRef = ref(db, `messages/${chatId}`);
     const newMessageRef = push(messagesRef);
-
-    console.log('entré a sendMessage');
     
-    const message = {
-        senderId: userId,
-        text: text,
-        timestamp: Date.now() 
-    };
-
-    console.log(message);
+    const message = { senderId: userId, text: text, timestamp: Date.now()};
 
     try {
         await set(newMessageRef, message);
         const chatRef = ref(db, `chats/${chatId}`);
-
-        console.log(chatId, 'chatId');
-        await update(chatRef, {
-            lastMessage: text,
-            fecha: Date.now()
-        });
-
+        await update(chatRef, { lastMessage: text, fecha: Date.now() });
     } catch (error) {
         console.log(error);
-    }
-
-
-
-
+    };
 }
-
 
 
 
@@ -230,8 +164,6 @@ function timestampToReadableDateAndTime(timestamp) {
 
     let hours = date.getHours();
     let minutes = date.getMinutes();
-
-    // Asegurarse de que día, mes, horas y minutos sean siempre dos dígitos
     day = day < 10 ? '0' + day : day;
     month = month < 10 ? '0' + month : month;
     hours = hours < 10 ? '0' + hours : hours;
@@ -239,17 +171,9 @@ function timestampToReadableDateAndTime(timestamp) {
 
     const formattedDate = month + '/' + day + '/' + year;
     const formattedTime = hours + ':' + minutes;
-
     return formattedDate + ', ' + formattedTime; 
-    // return formattedTime; //por ahora solo quiero el tiempo
 }
 
-
-
-
-function testChatFunctions(){
-    console.log('ChatFunctions work');
-}
 
 
 const chatFuncions = {
