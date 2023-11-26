@@ -38,6 +38,7 @@ async function getUserChats(uid, chatsList, chatConversation){
                     const chatId = childSnapshot.key;
                     const participants = Object.keys(chat.participants);
                     const personIdChat = participants.filter((participant) => participant !== uid);
+                    
                     renderChatName(personIdChat[0], chatId, chatsList, chatConversation);
                 })
             }
@@ -49,12 +50,16 @@ async function getUserChats(uid, chatsList, chatConversation){
 
 async function renderChatName(userId, idDelChat, currentChats, chatConversation) {
     let nombre = await getTheNameOfTheUser(userId);
-    let li = document.createElement('li');
-    li.innerHTML = nombre;
-    currentChats.appendChild(li);
-    li.addEventListener('click', ( ) => {
-        renderChatConversation(chatConversation, nombre, idDelChat);
-    })
+       let li = currentChats.querySelector(`li[data-chat-id="${idDelChat}"]`);
+       if (!li) {
+           li = document.createElement('li');
+           li.setAttribute('data-chat-id', idDelChat);
+           currentChats.appendChild(li);
+           li.addEventListener('click', () => {
+               renderChatConversation(chatConversation, nombre, idDelChat);
+           });
+       }
+       li.innerHTML = nombre;
 }
 
 
