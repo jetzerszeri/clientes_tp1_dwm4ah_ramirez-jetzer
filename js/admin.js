@@ -66,7 +66,6 @@ async function isAdmin(uid) {
         if (role == 'admin') {
             return true;
         } else {
-            console.log('NO es admin');
             return false;
         }
     } 
