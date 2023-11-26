@@ -4,6 +4,22 @@ import { getFirestore, collection, addDoc, getDocs, orderBy, query, where } from
 
 // Initialize Cloud Firestore and get a reference to the service
 const db = getFirestore(app);
+const categoriesSnapshot = await getDocs(collection(db, "categories"))
+console.log(categoriesSnapshot.docs.map(doc => doc.id))
+
+let categoryTag = document.createElement('div');
+async function getCurrentCategoryName(categoryId, element) {
+    categoriesSnapshot.forEach(doc => {
+        if (doc.id === categoryId && doc.data().name) {
+            element.textContent = doc.data().name;
+            return;
+        }
+    })
+}
+
+
+// let currentCategory = getCurrentCategoryName('D8a2Qd3M4Veoj0q2TRNe');
+// console.log(currentCategory)
 
 async function findByCategory(category) {
     if (category === "all") {
@@ -45,12 +61,14 @@ function filterServices(e, servicesUlContainer) {
 }
 
 
-function updateServicesList(category, container){
+async function updateServicesList(category, container){
 
     findByCategory(category)
     .then(servicesData => {
         container.innerHTML = '';
         servicesData.forEach(data => {
+
+            
     
             const {name, category, price, img} = data.data();
             // console.log(name, category, price, img)
@@ -62,13 +80,43 @@ function updateServicesList(category, container){
             imgTag.src = img;
             imgTag.alt = name;
             let divInfo = document.createElement('div');
-            divInfo.innerHTML = `
-            <div>
-                <h2>${name}</h2>
-                <p>${category}</p>
-            </div>
-            <p>$${price}/sqft</p>
-            <a href="#contact" class="btn secundary-green">Contactar</a>`;
+            // divInfo.innerHTML = `
+            // <div>
+            //     <h2>${name}</h2>
+            //     <p>${category}</p>
+            // </div>
+            // <p>$${price}/sqft</p>
+            // <a href="#contact" class="btn secundary-green">Contactar</a>`;
+
+            let divInfoTitle = document.createElement('div');
+            let h2 = document.createElement('h2');
+            h2.textContent = name;
+            divInfoTitle.appendChild(h2);
+            let pCategory = document.createElement('p');
+            // pCategory.textContent = category;
+            divInfoTitle.appendChild(pCategory);
+
+            divInfo.appendChild(divInfoTitle);
+            let pPrice = document.createElement('p');
+            pPrice.textContent = `$${price}/sqft`;
+            divInfo.appendChild(pPrice);
+            let a = document.createElement('a');
+            a.href = '#contact';
+            a.classList.add('btn', 'secundary-green');
+            a.textContent = 'Contactar';
+            divInfo.appendChild(a);
+
+            getCurrentCategoryName(category, pCategory)
+
+            a.addEventListener('click', (e) => {
+                window.location.href = '/app.html#adminChat';
+                location.reload();
+            })
+
+
+
+
+
             divImg.append(imgTag);
             divContainer.append(divImg);
             divContainer.append(divInfo);
