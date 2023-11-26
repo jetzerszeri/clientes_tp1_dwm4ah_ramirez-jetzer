@@ -23,16 +23,20 @@ const dashboardBtn = document.querySelector('.navbar-links ul li:last-child');
 // console.log(dashboardBtn);
 // console.log(navbarBtn);
 
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    navbarBtn.innerHTML = 'Cerrar sesión';
-    navbarBtn.addEventListener('click', () => {
-      auth.signOut();
-    })
-  } else {
-    dashboardBtn.remove();
-    navbarBtn.innerHTML = 'Iniciar sesión';
-  }
-});
+if(navbarBtn){
+
+  
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      navbarBtn.innerHTML = 'Cerrar sesión';
+      navbarBtn.addEventListener('click', () => {
+        auth.signOut();
+      })
+    } else if(dashboardBtn){
+      dashboardBtn.remove();
+      navbarBtn.innerHTML = 'Iniciar sesión';
+    }
+  });
+}
 
 export default app;

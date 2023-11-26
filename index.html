@@ -6,9 +6,17 @@
     <title>GbyG PCS</title>
     <link rel="stylesheet" href="css/styles.css">
     <script src="https://kit.fontawesome.com/26eb2bb81f.js" crossorigin="anonymous"></script>
-    <script src="js/main.js" defer></script>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+
+    <!-- dropzone -->
+    <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+
 </head>
 <body>
+
     <header class="navegacion">
         <nav >
             <div class="navbar">
@@ -25,74 +33,26 @@
     
                 <div class="navbar-links">
                     <ul>
-                        <li><a href="index.html" class="active">Inicio</a></li>
-                        <li><a href="services.html" class="">Servicios</a></li>
-                        <li><a href="/admin.html" class="">Dashboard</a></li>
+                        <li><a href="#home">Inicio</a></li>
+                        <li><a href="#services" class="">Servicios</a></li>
+                        <li><a href="#admin" class=""  id="dashboardLink">Dashboard</a></li>
                     </ul>
                     <div>
-                        <a href="/login.html" class="btn">Iniciar sesión</a>
+                        <a href="#login" class="btn">Iniciar sesión</a>
                     </div>
                 </div>
             </div>
         </nav>
     </header>
 
-    <main class="homecontainer">
-        <section class="heroHome">
-            <div>           
-                <div>
-                    <h1>El mejor servicio de limpieza de la ciudad</h1>
-                    <p>Personalizado a tus necesidades, comprometidos con la excelencia.</p>
-                    <a href="services.html" class="btn primary-yellow">Ver servicios</a>
-                </div>
-                <div>
-                    <img src="img/herohome1.webp" alt="imagen de una mano con guante amarillo de limpieza agarrando un pañuelo que está sobre el lavabo de un baño">
-                </div>
-            </div>
-        </section>
-
-        <section class="homeservices">
-            <div>
-                <h2>Servicos profesionales de limpieza</h2>
-                <p>Especializados en:</p>
-
-                <div>
-                    <div class="card">
-                        <img src="img/postreno1.webp" alt="habitacion en remodelación">
-                        <p>Post remodelación</p>
-                        <a href="services.html">Ver servicios</a>
-                    </div>
-                    <div class="card">
-                        <img src="img/homemove.webp" alt="cajas de mudanza">
-                        <p>Move in/Move out</p>
-                        <a href="services.html">Ver servicios</a>
-                    </div>
-                    <div class="card">
-                        <img src="img/homemantenimiento.webp" alt="Cocina de una casa en venta">
-                        <p>Mantenimiento</p>
-                        <a href="services.html">Ver servicios</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section>
-            <div>
-                <h2>¿Necesitas un servicio personalizado?</h2>
-                <p>Dinos cómo podemos ayudarte</p>
-                <a href="services.html" class="btn primary-green">Contáctanos</a>
-            </div>
-
-        </section>
-
-    </main>
+    <div id="app"></div>
 
     <footer>
         <div>
             <ul>
-                <li><a href="" target="_blank"><i class="fa-brands fa-facebook"></i></a></li>
-                <li><a href="" target="_blank"><i class="fa-brands fa-x-twitter"></i></i></a></li>
-                <li><a href="" target="_blank"><i class="fa-brands fa-instagram"></i></a></li>
+                <li><a href="https://www.facebook.com/" target="_blank"><i class="fa-brands fa-facebook"></i></a></li>
+                <li><a href="https://www.twitter.com/" target="_blank"><i class="fa-brands fa-x-twitter"></i></i></a></li>
+                <li><a href="https://www.instagram.com/" target="_blank"><i class="fa-brands fa-instagram"></i></a></li>
             </ul>
             <div>
                 <p>gbygpcs.com</p>
@@ -102,8 +62,86 @@
     </footer>
 
 
-<script type="module">
-    import app from './js/config.js';
-</script>
+
+
+    
+
+
+    <script type="module">
+        import home from './js/views/home.js';
+        import servicesView from './js/views/services.js';
+        import login from './js/views/login.js';
+        import signin from './js/views/signin.js';
+        import admin from './js/views/admin.js';
+
+        Dropzone.autoDiscover = false;
+        
+        let currentHash = window.location.hash;
+
+        let links = document.querySelectorAll(".navbar-links a");
+        let app = document.getElementById("app");
+        let router = {
+            '#home': home,
+            '#services': servicesView,
+            '#login': login,
+            '#signin': signin,
+            '#admin': admin,
+        }
+
+
+        // // agrego esto para que se muestre el home o la vista que quiero justo cuando se cargue o refresque la página.
+        if (currentHash == "" ) {
+            app.append(router['#home']);
+        } else if (currentHash.startsWith('#admin')) {
+            app.append(router['#admin']);
+        } else {
+            app.append(router[currentHash]);
+        };
+
+
+
+        links.forEach(link => {
+            link.addEventListener("click", (e) => {
+                app.innerHTML = "";
+
+                links.forEach(link => link.classList.remove('active'));
+                
+                if (e.target.hash.startsWith('#admin')) {
+                    app.append(router['#admin']);
+                } else {
+                    app.append(router[e.target.hash]);
+                };
+
+                e.target.classList.add('active');
+
+                // setActiveLink();
+            })
+        })
+
+        function setActiveLink(){
+            links.forEach(link => {
+                if (link.href == currentHash) {
+                    link.classList.add("active");
+                } else {
+                    link.classList.remove("active");
+                }
+            })
+        }
+        getActiveLink(links, currentHash)
+
+        function getActiveLink(links, currentHash){
+            links.forEach(link => {
+                if (link.getAttribute('href') === currentHash) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            })
+        }
+
+
+    </script>
+
+    <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
 </body>
 </html>

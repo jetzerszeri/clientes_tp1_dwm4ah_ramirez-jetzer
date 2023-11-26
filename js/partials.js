@@ -12,14 +12,25 @@ const success = `
 
 const successMsgAdd = (text, btnlink) => {
 
-    let mensaje  = `
-    <div class="confirmation">
-    <p>${text}</p>
-    <div>
-        <a href="${btnlink}" class="btn">Ver listado</a>
-    </div>
-    </div>
-    `
+    let mensaje = document.createElement('div');
+    mensaje.classList.add('confirmation');
+    let p = document.createElement('p');
+    p.innerText = text;
+    let div = document.createElement('div');
+    let a = document.createElement('a');
+    a.href = btnlink;
+    a.classList.add('btn');
+    a.innerText = 'Ver listado';
+    div.appendChild(a);
+    mensaje.appendChild(p);
+    mensaje.appendChild(div);
+
+    a.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.href = btnlink;
+        location.reload();
+    });
+    
     return mensaje;
 }
 
@@ -31,12 +42,7 @@ const chatView = `
     <textarea name="texto" id="textochat"></textarea>
     <button type="submit" class="btn primary-green">Enviar</button>
 </form>
-
-
-
-
 </div>
-
 `
 const db = getDatabase(app);
 
