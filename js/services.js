@@ -9,7 +9,6 @@ async function getCurrentCategoryName(categoryId, element) {
     await categoriesSnapshot.forEach(doc => {
         if (doc.id === categoryId && doc.data().name) {
             element.textContent = doc.data().name;
-            // return;
         }
     })
 }

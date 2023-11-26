@@ -1,6 +1,5 @@
 import app from './config.js';
 import {getDatabase, ref, set, push} from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-database.js';
-// import { renderAdminView } from './views/admin.js';
 
 const success = `
 <div class="confirmation">
@@ -12,15 +11,6 @@ const success = `
 `
 
 const successMsgAdd = (text, btnlink) => {
-
-    // let mensaje  = `
-    // <div class="confirmation">
-    // <p>${text}</p>
-    // <div>
-    //     <a href="${btnlink}" class="btn">Ver listado</a>
-    // </div>
-    // </div>
-    // `
 
     let mensaje = document.createElement('div');
     mensaje.classList.add('confirmation');
@@ -40,8 +30,6 @@ const successMsgAdd = (text, btnlink) => {
         window.location.href = btnlink;
         location.reload();
     });
-
-    // renderAdminView(a, viewHash);
     
     return mensaje;
 }
@@ -54,12 +42,7 @@ const chatView = `
     <textarea name="texto" id="textochat"></textarea>
     <button type="submit" class="btn primary-green">Enviar</button>
 </form>
-
-
-
-
 </div>
-
 `
 const db = getDatabase(app);
 

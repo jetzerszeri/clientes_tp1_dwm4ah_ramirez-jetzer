@@ -1,6 +1,5 @@
 import app from './config.js';
 import { element } from './create.js';
-// import { success, successMsgAdd, createChat } from './js/partials.js';
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
 import {getDatabase, ref, set, push, query, orderByChild, equalTo, onValue, update} from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-database.js';
 import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js';

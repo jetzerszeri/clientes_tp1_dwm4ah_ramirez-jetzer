@@ -1,12 +1,5 @@
 import { element } from './create.js';
 
-// const togglebtn = document.querySelector('.toggle-button');
-// const navbarlinks = document.querySelector('.navbar-links');
-
-// togglebtn.addEventListener('click', () => {
-//     navbarlinks.classList.toggle('active');
-// })
-
 function displayBreadcrumb( breadcrumbItems, renderAdminViewFunction){
     let breadcrumb = element('nav', ['breadcrumb']);
     let ol = element('ol');
@@ -26,7 +19,6 @@ function displayBreadcrumb( breadcrumbItems, renderAdminViewFunction){
             let a = element('a');
             a.href = item.view;
             a.textContent = item.name;
-            // renderView(a, item.view);
             li.appendChild(a);
 
             a.addEventListener('click', () => {

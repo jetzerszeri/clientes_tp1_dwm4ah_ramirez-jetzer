@@ -239,9 +239,7 @@ async function renderData(collectionName, order, tableBodyColumns, tbody, tableI
 }
 
 
-
 // create services page
-
 
 async function addCategoriesList(categoriesSelectInput, categorySelected){
     const querySnapshot = await getDocs(collection(dbfirestore, "categories"));
@@ -400,36 +398,6 @@ function createServiceForm(formContainer, form, typeForm){
     formContainer.appendChild(form);
 }
 
-
-// async function getDataFromFirestore(docId, type, form, container) {
-//     const collectionName = `${type}s`;
-//     const docRef = doc(dbfirestore, collectionName, docId);
-
-//     try {
-//         const docSnap = await getDoc(docRef);
-//         if (docSnap.exists()) {
-//             const data = docSnap.data();
-
-//             if (type === 'service') {
-//                 let { name, category, description, price } = form;
-//                 category.innerHTML = '';
-
-//                 name.value = data.name;
-//                 description.value = data.description;
-//                 price.value = data.price;
-
-//                 addCategoriesList(category, data.category);
-//             } else if (type === 'category') {
-//                 form.name.value = data.name;
-//             }
-//         } else {
-//             displayServerError(container, `Ups, No se encontró ningún ${type} con ese id`, `#admin${type.charAt(0).toUpperCase() + type.slice(1)}s`);
-//         }
-//     } catch (error) {
-//         displayServerError(container, false, `#admin${type.charAt(0).toUpperCase() + type.slice(1)}s`);
-//     }
-// }
-
 async function getCollectionData(docId, form, container, collectionName) {
     const docRef = doc(dbfirestore, collectionName, docId);
 
@@ -438,15 +406,6 @@ async function getCollectionData(docId, form, container, collectionName) {
         if (docSnap.exists()) {
             const data = docSnap.data();
             let { name } = form;
-
-            // // Asumiendo que la estructura de los documentos es conocida y consistente
-            // // con los nombres de los campos en el formulario
-            // Object.keys(form).forEach(key => {
-            //     if (data[key] !== undefined) {
-            //         form[key].value = data[key];
-            //     }
-            // });
-
             if (collectionName === 'services') {
                 let { category, description, price } = form;
                 category.innerHTML = '';
@@ -466,53 +425,6 @@ async function getCollectionData(docId, form, container, collectionName) {
     }
 }
 
-
-
-
-// async function getSeviceData(docId, form, container) {
-//     const docServicesRef = doc(dbfirestore, "services", docId);
-//     let { name, category, description, price } = form;
-//     category.innerHTML = '';
-
-//     try {
-//         const docSnap = await getDoc(docServicesRef);
-
-//         if (docSnap.exists()) {
-//             const data = docSnap.data();
-//             name.value = data.name;
-//             description.value = data.description;
-//             price.value = data.price;
-
-//             addCategoriesList(category,  data.category);
-//         } 
-//         else {
-//             displayServerError(container, 'Ups, No se encontró ningun servicio con ese id', '#adminServices');
-//         }
-//     } catch (error) {
-//         displayServerError(container, false, '#adminServices');
-//     }
-// }
-
-
-// async function updateServiceData(docId, form, container) {
-//     const docServicesRef = doc(dbfirestore, "services", docId);
-//     console.log(docServicesRef);
-//     let { name, category, description, price } = form;
-//     try{
-//         await updateDoc(docServicesRef, {
-//             name: name.value,
-//             category: category.value,
-//             description: description.value,
-//             price: price.value,
-//             updatedAt: serverTimestamp()
-//         });
-//         container.innerHTML = '';
-//         container.append(successMsgAdd('Servicio actualizado exitosamente.', '/app.html#adminServices'));
-//     }catch(error){
-//         displayServerError(container, false, '#adminServices');
-//         // console.log(error);
-//     }
-// }
 
 async function updateFirestoreDocument(collectionName, docId, form, container, redirect) {
     const docRef = doc(dbfirestore, collectionName, docId);
@@ -538,31 +450,6 @@ async function updateFirestoreDocument(collectionName, docId, form, container, r
         displayServerError(container, false, redirect);
     }
 }
-
-
-
-
-
-
-
-// async function getCategoryData(docId, form, container) {
-//     const docServicesRef = doc(dbfirestore, "categories", docId);
-//     try {
-//         const docSnap = await getDoc(docServicesRef);
-//         if (docSnap.exists()) {
-//             form.name.value = docSnap.data().name;
-//         } 
-//         else {
-//             // console.log('No se encontró ninguna categoría con ese id');
-//             displayServerError(container, 'Ups, No se encontró ninguna categoría con ese id', '#adminCategories');
-//         }
-//     } catch (error) {
-//         // console.log(error);
-//         displayServerError(container, false, '#adminCategories');
-//     }
-// }
-
-
 
 
 function displayServerError(container, text, hash){

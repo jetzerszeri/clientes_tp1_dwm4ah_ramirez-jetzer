@@ -10,7 +10,7 @@ let servicesCreateBreadcrumbList = [
 
 let servicesEditBreadcrumbs = app.main.displayBreadcrumb(servicesCreateBreadcrumbList, renderAdminView);
 
-let servicesEdit = app.create.element('div', ['container']); //este es mi container
+let servicesEdit = app.create.element('div', ['container']);
 let form = app.create.element('form');
 
 app.admin.createServiceForm(servicesEdit, form, 'edit');
@@ -18,7 +18,6 @@ let currentServiceId;
 function loadServiceData(serviceId){
     app.admin.getCollectionData(serviceId, form, servicesEdit, 'services');
     currentServiceId = serviceId;
-    // console.log(currentServiceId);
 }
 
 form.addEventListener('submit', (e) => {
@@ -30,14 +29,7 @@ form.addEventListener('submit', (e) => {
     if (!inputsValidated) return;
 
     app.admin.updateFirestoreDocument('services', currentServiceId, form, servicesEdit, '/app.html#adminServices');
-    // console.log(currentServiceId);
-
-
-
 });
-
-
-
 
 
 let adminServicesEditRouterContent = {

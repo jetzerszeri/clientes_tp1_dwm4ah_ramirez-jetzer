@@ -24,8 +24,6 @@ chatContainer.appendChild(chatConversation);
 misChats.appendChild(chatContainer);
 
 
-
-
 app.chat.loadChats(chatList, chatConversation);
 
 function test(){

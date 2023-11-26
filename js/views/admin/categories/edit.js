@@ -8,7 +8,6 @@ let categoriesCreateBreadcrumbList = [
     {name: 'Editar categoría'}
 ];
 
-
 let categoriesEditBreadcrumbs = app.main.displayBreadcrumb(categoriesCreateBreadcrumbList, renderAdminView);
 
 let categoriesEdit = app.create.element('div', ['container']); //este es mi container
@@ -20,8 +19,6 @@ let currentCategoryId;
 function loadCategoryData(categoryId){
 
     app.admin.getCollectionData(categoryId, form, categoriesEdit, 'categories');
-
-    // app.admin.getCategoryData(categoryId, form, categoriesEdit);
     currentCategoryId = categoryId;
     console.log(currentCategoryId);
 }
