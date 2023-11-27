@@ -105,5 +105,5 @@ function parseHash(hash) {
 
 Dropzone.autoDiscover = false;
 
-export default admin;
+// export default admin;
 export { renderAdminView,  admin, loadAdminView};
