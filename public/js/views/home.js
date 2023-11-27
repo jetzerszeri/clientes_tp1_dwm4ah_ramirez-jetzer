@@ -7,7 +7,7 @@ const sectionHeroHomeDivInfo = app.create.element('div');
 const sectionHeroHomeDivInfoh1 = app.create.element('h1', [], 'El mejor servicio de limpieza de la ciudad');
 const sectionHeroHomeDiInfovp = app.create.element('p', [], 'Personalizado a tus necesidades, comprometidos con la excelencia.');
 const sectionHeroHomeDivInfoLink = app.create.element('a', ['btn', 'primary-yellow'], 'Ver servicios');
-sectionHeroHomeDivInfoLink.href = 'index.html#services';
+sectionHeroHomeDivInfoLink.href = '#services';
 sectionHeroHome.appendChild(sectionHeroHomeDiv);
 sectionHeroHomeDivInfo.append(sectionHeroHomeDivInfoh1, sectionHeroHomeDiInfovp, sectionHeroHomeDivInfoLink);
 const sectionHeroHomeDivImg = app.create.element('div');
@@ -37,7 +37,7 @@ cardsData.forEach(card => {
     cardImg.alt = card.imgAlt;
     const cardDivP = app.create.element('p', [], card.description);
     const cardDivA = app.create.element('a', [], 'Ver servicios');
-    cardDivA.href = 'index.html#services';
+    cardDivA.href = '#services';
     cardDiv.append(cardImg, cardDivP, cardDivA);
     sectionHomeServicesDivCards.append(cardDiv);
     displayView('#services', cardDivA);
@@ -52,7 +52,7 @@ const sectionHomeContactDiv = app.create.element('div');
 const sectionHomeContactDivh2 = app.create.element('h2', [], '¿Necesitas un servicio personalizado?');
 const sectionHomeContactDivp = app.create.element('p', [], 'Dinos cómo podemos ayudarte');
 const sectionHomeContactDivA = app.create.element('a', ['btn', 'primary-green'], 'Contáctanos');
-sectionHomeContactDivA.href = 'index.html#adminChat';
+sectionHomeContactDivA.href = '#adminChat';
 displayView('#adminChat', sectionHomeContactDivA);
 sectionHomeContactDiv.append(sectionHomeContactDivh2, sectionHomeContactDivp, sectionHomeContactDivA);
 sectionHomeContact.append(sectionHomeContactDiv);
@@ -60,7 +60,7 @@ home.appendChild(sectionHomeContact);
 
 function displayView(view, element){
     element.addEventListener('click', () => {
-        window.location.href = '/index.html' + view;
+        window.location.href =  view;
         location.reload();
     })
 }

@@ -42,15 +42,15 @@ function verifyUser(adminOptionsContainer, arrayAdmin, chatBtn, container) {
             let errorH1 = document.createElement('h1');
             errorH1.textContent = 'Debes iniciar sesión para ver esta página';
             let errorA = document.createElement('a');
-            errorA.href = '/index.html#login';
+            errorA.href = '#login';
             errorA.classList.add('btn');
             errorA.textContent = 'Iniciar sesión';
             container.appendChild(errorH1);
             container.appendChild(errorA);
 
-            window.location.href = '/index.html#login'
-
+            
             errorA.addEventListener('click', () => {
+                window.location.href = '#login'
                 location.reload();
             });
         }
@@ -275,7 +275,7 @@ function uploadImgToStorageAndAddService(folderName, dropzoneFile, nameInput, ca
                 "services", 
                 { name: nameInput.value, category: categoryInput.value, description:descriptionInput.value, price: priceInput.value, img: url }, 
                 container, 
-                '/index.html#adminServices', 
+                '#adminServices', 
                 '#adminServices'
             );
 

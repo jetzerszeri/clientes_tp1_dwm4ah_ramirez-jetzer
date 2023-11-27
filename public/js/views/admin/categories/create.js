@@ -22,12 +22,7 @@ form.addEventListener('submit', (e) => {
     app.main.clearErrorMessages('form p');
     if (!app.main.validateEmptyFields([name])) return;
 
-    console.log('enviando datos');
-
-    app.admin.addNewDocToMyFirestore('categories', {name: name.value}, categoriesCreate, '/index.html#adminCategories');
-
-
-
+    app.admin.addNewDocToMyFirestore('categories', {name: name.value}, categoriesCreate, '#adminCategories');
 
 })
 
