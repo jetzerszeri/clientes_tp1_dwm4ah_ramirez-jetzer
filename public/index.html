@@ -72,7 +72,7 @@
         import servicesView from './js/views/services.js';
         import login from './js/views/login.js';
         import signin from './js/views/signin.js';
-        import admin from './js/views/admin.js';
+        import {admin, loadAdminView} from './js/views/admin.js';
 
         Dropzone.autoDiscover = false;
         
@@ -108,6 +108,7 @@
                 
                 if (e.target.hash.startsWith('#admin')) {
                     app.append(router['#admin']);
+                    loadAdminView();
                 } else {
                     app.append(router[e.target.hash]);
                 };

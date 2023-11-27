@@ -64,7 +64,7 @@ form.addEventListener('submit', async (e) => {
     .then((userId) => app.signin.createChat(userId))
     .then(() => {
         window.location.href = '/index.html#admin';
-        location.reload();
+        // location.reload();
     })
     .catch((error) => {
         console.log(error);
