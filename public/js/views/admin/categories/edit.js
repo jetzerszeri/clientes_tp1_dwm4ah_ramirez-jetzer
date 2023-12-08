@@ -12,7 +12,7 @@ let categoriesEditBreadcrumbs = app.main.displayBreadcrumb(categoriesCreateBread
 
 let categoriesEdit = app.create.element('div', ['container']); //este es mi container
 let form = app.create.element('form');
-app.admin.renderCategoriesForm(form, categoriesEdit);
+app.admin.renderCategoriesForm(form, categoriesEdit, "Guardar cambios");
 
 
 let currentCategoryId;

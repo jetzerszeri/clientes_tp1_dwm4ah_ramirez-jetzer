@@ -463,7 +463,10 @@ function displayServerError(container, text, hash){
 
 
 
-function renderCategoriesForm(form, container){
+function renderCategoriesForm(form, container, buttonText){
+    if (!buttonText){
+        buttonText = 'Agregar Categoría';
+    }
     form.setAttribute('method', 'post');
     form.innerHTML = `
     <div>
@@ -472,7 +475,7 @@ function renderCategoriesForm(form, container){
     </div>
     
     <div>
-    <button type="submit" class="btn primary-green">Agregar Categoría</button>
+    <button type="submit" class="btn primary-green">${buttonText}</button>
     </div>
     `;
     container.appendChild(form);
