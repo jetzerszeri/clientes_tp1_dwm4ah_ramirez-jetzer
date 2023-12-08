@@ -6,6 +6,7 @@ import { adminCategoriesRouterContent } from './admin/categories/index.js';
 import { adminCategoriesCreateRouterContent } from './admin/categories/create.js';
 import { adminCategoriesEditRouterContent } from './admin/categories/edit.js';
 import { adminChatRouterContent } from './admin/chat/index.js';
+import { adminMyAccountRouterContent } from './admin/account/index.js';
 
 const admin = app.create.element('main', ['adminmain']);
 
@@ -42,6 +43,7 @@ const adminRouter = {
     '#adminServicesEdit': adminServicesEditRouterContent,
     '#adminCategoriesCreate': adminCategoriesCreateRouterContent,
     '#adminCategoriesEdit': adminCategoriesEditRouterContent,
+    '#adminMyAccount': adminMyAccountRouterContent,
 };
 
 let servicesBtn = app.admin.createAdminBtn('#adminServices', 'fa-hand-sparkles', 'Servicios', renderAdminView, adminRouter['#adminServices'].render);
