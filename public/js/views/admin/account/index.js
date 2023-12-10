@@ -9,31 +9,57 @@ let accountIndexBreadcrumbList = [
 
 let accountIndexBreadcrumbs = app.main.displayBreadcrumb(accountIndexBreadcrumbList, renderAdminView);
 
-let servicesList = app.create.element('div');
-let addNewLink = app.create.element('a', ['btn'], 'Editar');
+let myAccountView = app.create.element('div', ['accountInfo']);
+let addNewLink = app.create.element('a', ['btn'], 'Editar nombre');
 addNewLink.href = '#adminMyAccountEdit';
 addNewLink.addEventListener('click', () => { renderAdminView('#adminMyAccountEdit') });
 
 
 let accountDataContainer = app.create.element('div', ['accountDataContainer']);
-let accountImgContainer = app.create.element('div', ['accountImgContainer']);
-let accountImg = app.create.element('img', ['accountImg']);
+let accountImgContainer = app.create.element('form', ['accountImgContainer']);
+// let accountImg = app.create.element('img', ['accountImg']);
+// accountImg.src = 'img/account-icon.svg';
+// accountImg.alt = 'avatar de usuario';
+
+accountImgContainer.innerHTML = `
+<label for="imageInput" class="labelImgInput">                     
+    <p>Cambiar foto</p>
+</label>
+<input type="file" id="imageInput" accept="image/*" name="img">
+`;
+
+
+
+
+
 let accountData = app.create.element('div', ['accountData']);
+let accountDataInfo = app.create.element('div');
+accountDataInfo.innerHTML = `
+    <h3>Jake Ramirez</h3>
+    <p>Administrador</p>
+`;
 
-let h2 = app.create.element('h2', [], 'Jake Ramirez');
-accountData.append(h2);
+accountData.append(accountDataInfo, addNewLink);
 
-accountImgContainer.append(accountImg);
-accountDataContainer.append(accountImgContainer, accountData);
+let accountData2 = app.create.element('div', ['accountData2']);
+let accountDataInfo2 = app.create.element('p', [], 'jake@mail.com');
 
-servicesList.append(addNewLink, accountDataContainer);
+let editEmailLink = app.create.element('a', ['btn'], 'Editar email y contraseña');
+editEmailLink.href = '#adminMyAccountEditEmail';
+editEmailLink.addEventListener('click', () => { renderAdminView('#adminMyAccountEditEmail') });
+
+accountData2.append(accountDataInfo2, editEmailLink);
+
+
+accountDataContainer.append(accountData, accountData2);
+myAccountView.append(accountImgContainer, accountDataContainer);
 
 function test(){
     console.log('test');
 }
 
 let adminMyAccountRouterContent = {
-    content: servicesList,
+    content: myAccountView,
     breadcrumb: accountIndexBreadcrumbs, 
     h2Text: 'Mi cuenta',
     render: test
