@@ -1,5 +1,14 @@
 import app from '../../../app.js';
 import { renderAdminView } from '../../admin.js';
+import appFirebase from '../../../config.js';
+
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, getDocs, orderBy, query, doc, getDoc, deleteDoc,  serverTimestamp, updateDoc} from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js';
+const auth = getAuth(appFirebase);
+const dbfirestore = getFirestore(appFirebase);
+
+
+
 
 let accountIndexBreadcrumbList = [
     {name: 'Inicio', view: '#home'},
@@ -42,7 +51,7 @@ accountDataInfo.innerHTML = `
 accountData.append(accountDataInfo, addNewLink);
 
 let accountData2 = app.create.element('div', ['accountData2']);
-let accountDataInfo2 = app.create.element('p', [], 'jake@mail.com');
+let accountDataInfo2 = app.create.element('p', [], 'prueba@mail.com');
 
 let editEmailLink = app.create.element('a', ['btn'], 'Editar email y contraseña');
 editEmailLink.href = '#adminMyAccountEditEmail';
@@ -54,9 +63,48 @@ accountData2.append(accountDataInfo2, editEmailLink);
 accountDataContainer.append(accountData, accountData2);
 myAccountView.append(accountImgContainer, accountDataContainer);
 
+
+
+onAuthStateChanged(auth, async (user) => {
+    if (user) {
+
+        accountDataInfo2.innerHTML = user.email;
+
+        const docRef = doc(dbfirestore, "roles_by_user", user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            accountDataInfo.innerHTML = `
+                <h3>${docSnap.data().nombre} ${docSnap.data().apellido}</h3>
+                <p>${docSnap.data().role}</p>
+            `;
+            let label = accountImgContainer.querySelector('label');
+            // console.log(label);
+
+            if(docSnap.data().img){
+                label.style.backgroundImage = `url(${docSnap.data().img})`;
+            }
+        } 
+    }
+})
+
+
+
+
+
+
+
+
+
+
+
 function test(){
     console.log('test');
 }
+
+
+
+
+
 
 let adminMyAccountRouterContent = {
     content: myAccountView,
