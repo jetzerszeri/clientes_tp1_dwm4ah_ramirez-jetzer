@@ -4,8 +4,10 @@ import appFirebase from '../../../config.js';
 
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, getDocs, orderBy, query, doc, getDoc, deleteDoc,  serverTimestamp, updateDoc} from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js';
+import {getStorage, ref as storageRef, uploadBytes, getDownloadURL} from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-storage.js';
 const auth = getAuth(appFirebase);
 const dbfirestore = getFirestore(appFirebase);
+const storage = getStorage(appFirebase);
 
 
 
@@ -69,21 +71,53 @@ onAuthStateChanged(auth, async (user) => {
     if (user) {
 
         accountDataInfo2.innerHTML = user.email;
+        let label = accountImgContainer.querySelector('label');
+        let imgInput = accountImgContainer.querySelector('input');
 
-        const docRef = doc(dbfirestore, "roles_by_user", user.uid);
+        const uid = user.uid;
+
+        const docRef = doc(dbfirestore, "roles_by_user",  uid);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
             accountDataInfo.innerHTML = `
                 <h3>${docSnap.data().nombre} ${docSnap.data().apellido}</h3>
                 <p>${docSnap.data().role}</p>
             `;
-            let label = accountImgContainer.querySelector('label');
             // console.log(label);
 
             if(docSnap.data().img){
                 label.style.backgroundImage = `url(${docSnap.data().img})`;
             }
         } 
+
+
+        const profilePictureRef = storageRef(storage, 'avatars/' + uid);
+
+        imgInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            uploadBytes(profilePictureRef, file).then((snapshot) => {
+                // console.log('Uploaded a blob or file!');
+                getDownloadURL(profilePictureRef).then((url) => {
+                    // console.log(url);
+                    updateDoc(doc(dbfirestore, "roles_by_user",  uid), {
+                        img: url
+                    });
+                    // label.style.backgroundImage = `url(${url})`;
+                    location.reload();
+                });
+            });
+        });
+
+
+
+
+
+
+
+
+
+
+
     }
 })
 
