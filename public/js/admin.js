@@ -63,6 +63,10 @@ async function isAdmin(uid) {
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
         const role = docSnap.data().role;
+        
+        if (docSnap.data().img){
+            document.querySelector('.avatarNavbar').style.backgroundImage = `url(${docSnap.data().img})`
+        }
         if (role == 'admin') {
             return true;
         } else {

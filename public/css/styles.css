@@ -1145,6 +1145,7 @@ input + p, select + p, textarea + p, .errorForMmsg{
     background: url(../img/account-icon.svg) no-repeat center center/cover;
     position: relative;
     transition: all 0.3s ease;
+    background-size: cover;
 }
 
 .labelImgInput p {
@@ -1421,13 +1422,14 @@ input + p, select + p, textarea + p, .errorForMmsg{
         width: 35px;
         height: 35px;
         border-radius: 50%;
-        object-fit: cover;
         transition: all 0.1s ease;
         font-size: 0;
         background: url(../img/account-icon.svg) no-repeat center center;
+        background-size: cover;
     }
     .avatarNavbar:hover{
         transform: scale(1.1);
+        border: 1px solid var(--color-neutral);
     }
 
     .navbar-links div{
