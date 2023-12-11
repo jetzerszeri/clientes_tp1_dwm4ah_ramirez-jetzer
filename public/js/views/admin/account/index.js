@@ -21,9 +21,9 @@ let accountIndexBreadcrumbList = [
 let accountIndexBreadcrumbs = app.main.displayBreadcrumb(accountIndexBreadcrumbList, renderAdminView);
 
 let myAccountView = app.create.element('div', ['accountInfo']);
-let addNewLink = app.create.element('a', ['btn'], 'Editar nombre');
-addNewLink.href = '#adminMyAccountEdit';
-addNewLink.addEventListener('click', () => { renderAdminView('#adminMyAccountEdit') });
+let editNameLink = app.create.element('a', ['btn'], 'Editar nombre');
+editNameLink.href = '#adminMyAccountEdit';
+// editNameLink.addEventListener('click', () => { renderAdminView('#adminMyAccountEdit') });
 
 
 let accountDataContainer = app.create.element('div', ['accountDataContainer']);
@@ -50,7 +50,7 @@ accountDataInfo.innerHTML = `
     <p>Administrador</p>
 `;
 
-accountData.append(accountDataInfo, addNewLink);
+accountData.append(accountDataInfo, editNameLink);
 
 let accountData2 = app.create.element('div', ['accountData2']);
 let accountDataInfo2 = app.create.element('p', [], 'prueba@mail.com');
@@ -64,6 +64,33 @@ accountData2.append(accountDataInfo2, editEmailLink);
 
 accountDataContainer.append(accountData, accountData2);
 myAccountView.append(accountImgContainer, accountDataContainer);
+
+
+const formEditName = app.create.element('form', ['formEditName']);
+formEditName.innerHTML = `
+    <h3>Editar nombre y apellido</h3>
+    <div>
+        <label for="name">Nombre</label>
+        <input type="text" id="name" name="name">
+        <p class="error-message"></p>
+    </div>
+    <div>
+        <label for="lastname">Apellido</label>
+        <input type="text" id="lastname" name="lastname">
+        <p class="error-message"></p>
+    </div>
+    <div>
+    <button type="submit" class="btn primary-green">Guardar cambios</button>
+    </div>
+`;
+
+
+editNameLink.addEventListener('click', () => {
+    accountDataContainer.innerHTML = '';
+    accountDataContainer.append(formEditName);
+    formEditName.name.value = accountDataInfo.querySelector('h3').innerText;
+    formEditName.lastname.value = accountDataInfo.querySelector('p').innerText;
+});
 
 
 
