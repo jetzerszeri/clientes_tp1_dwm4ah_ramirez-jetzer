@@ -22,7 +22,7 @@ let accountIndexBreadcrumbs = app.main.displayBreadcrumb(accountIndexBreadcrumbL
 
 let myAccountView = app.create.element('div', ['accountInfo']);
 let editNameLink = app.create.element('a', ['btn'], 'Editar nombre');
-editNameLink.href = '#adminMyAccountEdit';
+editNameLink.href = '#adminMyAccount';
 // editNameLink.addEventListener('click', () => { renderAdminView('#adminMyAccountEdit') });
 
 
@@ -62,7 +62,10 @@ editEmailLink.addEventListener('click', () => { renderAdminView('#adminMyAccount
 accountData2.append(accountDataInfo2, editEmailLink);
 
 
-accountDataContainer.append(accountData, accountData2);
+// function displayAccountInfo(){
+    accountDataContainer.append(accountData, accountData2);
+// }
+// displayAccountInfo();
 myAccountView.append(accountImgContainer, accountDataContainer);
 
 
@@ -84,13 +87,30 @@ formEditName.innerHTML = `
     </div>
 `;
 
+function displayFormToEditNameAndLastName (btn, accountDataContainer, form, name, lastname){
 
-editNameLink.addEventListener('click', () => {
-    accountDataContainer.innerHTML = '';
-    accountDataContainer.append(formEditName);
-    formEditName.name.value = accountDataInfo.querySelector('h3').innerText;
-    formEditName.lastname.value = accountDataInfo.querySelector('p').innerText;
-});
+    btn.addEventListener('click', () => {
+        accountDataContainer.innerHTML = '';
+        accountDataContainer.append(form);
+        form.name.value = name;
+        form.lastname.value = lastname;
+    });
+}
+
+ function updateNameAndLastname(form, uid){
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        app.main.clearErrorMessages('form p');
+        let inputsValidated = app.main.validateEmptyFields([form.name, form.lastname]);
+        if (!inputsValidated) return;
+        await updateDoc(doc(dbfirestore, "roles_by_user",  uid), {
+            nombre: form.name.value,
+            apellido: form.lastname.value
+        });
+        location.reload();
+        // displayAccountInfo();
+    });
+}
 
 
 
@@ -111,6 +131,10 @@ onAuthStateChanged(auth, async (user) => {
                 <p>${docSnap.data().role}</p>
             `;
             // console.log(label);
+
+            displayFormToEditNameAndLastName(editNameLink, accountDataContainer, formEditName, docSnap.data().nombre, docSnap.data().apellido);
+
+            updateNameAndLastname(formEditName, uid);
 
             if(docSnap.data().img){
                 label.style.backgroundImage = `url(${docSnap.data().img})`;
