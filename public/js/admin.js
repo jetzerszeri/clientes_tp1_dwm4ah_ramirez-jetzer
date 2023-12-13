@@ -486,5 +486,78 @@ function renderCategoriesForm(form, container, buttonText){
 }
 
 
+function displayFormToEditNameAndLastName (btn, accountDataContainer, form, name, lastname){
 
-export { verifyUser, loadDataOnTable, createTableBodyColumns, createTableBtns, deleteDocumentFromFirestore, addHeadingTableRow, createListTable, renderData, createAdminBtn, addCategoriesList, uploadImgToStorageAndAddService, myDropzoneHandler, createServiceForm, addNewDocToMyFirestore, renderCategoriesForm, getCollectionData, updateFirestoreDocument };
+    btn.addEventListener('click', () => {
+        accountDataContainer.innerHTML = '';
+        accountDataContainer.append(form);
+        form.name.value = name;
+        form.lastname.value = lastname;
+    });
+}
+
+
+
+async function updateNameAndLastnameOnFirestore(uid, name, lastname){
+    await updateDoc(doc(dbfirestore, "roles_by_user",  uid), {
+        nombre: name,
+        apellido: lastname
+    });
+    location.reload();
+}
+
+function loadUserAccountData(imgContainer, accountDataInfo, updateNameAndLastname, link, accountDataContainer, form){
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+    
+            let label = imgContainer.querySelector('label');
+            let imgInput = imgContainer.querySelector('input');
+    
+            const uid = user.uid;
+    
+            const docRef = doc(dbfirestore, "roles_by_user",  uid);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                accountDataInfo.innerHTML = `
+                    <h3>${docSnap.data().nombre} ${docSnap.data().apellido}</h3>
+                    <p>${docSnap.data().role}</p>
+                    <p>${user.email}</p>
+                `;
+    
+                displayFormToEditNameAndLastName(link, accountDataContainer, form, docSnap.data().nombre, docSnap.data().apellido);
+    
+                updateNameAndLastname(form, uid);
+    
+    
+    
+                if(docSnap.data().img){
+                    label.style.backgroundImage = `url(${docSnap.data().img})`;
+                }
+            } 
+    
+    
+            const profilePictureRef = storageRef(storage, 'avatars/' + uid);
+    
+            imgInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                uploadBytes(profilePictureRef, file).then((snapshot) => {
+                    getDownloadURL(profilePictureRef).then((url) => {
+                        updateDoc(doc(dbfirestore, "roles_by_user",  uid), {
+                            img: url
+                        });
+                        location.reload();
+                    });
+                });
+            });
+        }
+    })
+}
+
+
+
+const adminFunctions = {
+    verifyUser, loadDataOnTable, createTableBodyColumns, createTableBtns, deleteDocumentFromFirestore, addHeadingTableRow, createListTable, renderData, createAdminBtn, addCategoriesList, uploadImgToStorageAndAddService, myDropzoneHandler, createServiceForm, addNewDocToMyFirestore, renderCategoriesForm, getCollectionData, updateFirestoreDocument, displayFormToEditNameAndLastName, updateNameAndLastnameOnFirestore, loadUserAccountData
+};
+
+
+export { adminFunctions };
