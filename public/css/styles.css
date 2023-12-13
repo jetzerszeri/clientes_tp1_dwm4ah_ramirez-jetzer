@@ -192,7 +192,7 @@ ul{
 }
 
 .avatarNavbar{
-    display: none;
+    display: none !important;
 }
 
 main{
@@ -1206,6 +1206,10 @@ input + p, select + p, textarea + p, .errorForMmsg{
 
 }
 
+#myAccountLink{
+    display: none;
+}
+
 @media (min-width: 650px){
     .servicescontainer section ul{
         grid-template-columns: 49% 49%;
@@ -1452,7 +1456,7 @@ input + p, select + p, textarea + p, .errorForMmsg{
     }
 
     .avatarNavbar{
-        display: block;
+        display: block !important;
         width: 35px;
         height: 35px;
         border-radius: 50%;

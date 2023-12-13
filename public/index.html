@@ -164,10 +164,13 @@
 
         adminLinks.forEach(link => {
             const element = document.querySelector(link.query);
-            element.addEventListener('click', () => {
-                renderAdminView(link.link);
-            })
-        })
+            if (element) {
+                element.addEventListener('click', () => {
+                    renderAdminView(link.link);
+                });
+            }
+        });
+
 
 
 
