@@ -1207,7 +1207,7 @@ input + p, select + p, textarea + p, .errorForMmsg{
 }
 
 #myAccountLink{
-    display: none;
+    display: block;
 }
 
 @media (min-width: 650px){
@@ -1613,6 +1613,10 @@ input + p, select + p, textarea + p, .errorForMmsg{
         /* position: relative; */
         right: 0;
         height: fit-content !important;
+    }
+
+    #myAccountLink{
+        display: none;
     }
 }
 
