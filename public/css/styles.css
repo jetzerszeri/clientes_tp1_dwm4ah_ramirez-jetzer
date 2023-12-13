@@ -1200,7 +1200,8 @@ input + p, select + p, textarea + p, .errorForMmsg{
     margin: 0 auto;
 }
 
-.formEditName h3{
+.formEditName h3, .formEditEmail h3{
+    text-align: center;
     color: var(--color-darkgray);
 
 }

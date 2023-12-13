@@ -2,7 +2,7 @@ import app from '../../../app.js';
 import { renderAdminView } from '../../admin.js';
 import appFirebase from '../../../config.js';
 
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, updateEmail, updatePassword, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, getDocs, orderBy, query, doc, getDoc, deleteDoc,  serverTimestamp, updateDoc} from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js';
 import {getStorage, ref as storageRef, uploadBytes, getDownloadURL} from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-storage.js';
 const auth = getAuth(appFirebase);
@@ -21,7 +21,7 @@ let accountIndexBreadcrumbList = [
 let accountIndexBreadcrumbs = app.main.displayBreadcrumb(accountIndexBreadcrumbList, renderAdminView);
 
 let myAccountView = app.create.element('div', ['accountInfo']);
-let editNameLink = app.create.element('a', ['btn'], 'Editar nombre');
+let editNameLink = app.create.element('a', ['btn'], 'Editar nombre y apellido');
 editNameLink.href = '#adminMyAccount';
 // editNameLink.addEventListener('click', () => { renderAdminView('#adminMyAccountEdit') });
 
@@ -52,18 +52,18 @@ accountDataInfo.innerHTML = `
 
 accountData.append(accountDataInfo, editNameLink);
 
-let accountData2 = app.create.element('div', ['accountData2']);
-let accountDataInfo2 = app.create.element('p', [], 'prueba@mail.com');
+// let accountData2 = app.create.element('div', ['accountData2']);
+// let accountDataInfo2 = app.create.element('p', [], 'prueba@mail.com');
 
-let editEmailLink = app.create.element('a', ['btn'], 'Editar email y contraseña');
-editEmailLink.href = '#adminMyAccountEditEmail';
-editEmailLink.addEventListener('click', () => { renderAdminView('#adminMyAccountEditEmail') });
+// let editEmailLink = app.create.element('a', ['btn'], 'Editar email y contraseña');
+// editEmailLink.href = '#adminMyAccount';
+// editEmailLink.addEventListener('click', () => { renderAdminView('#adminMyAccount') });
 
-accountData2.append(accountDataInfo2, editEmailLink);
+// accountData2.append(accountDataInfo2, editEmailLink);
 
 
 // function displayAccountInfo(){
-    accountDataContainer.append(accountData, accountData2);
+    accountDataContainer.append(accountData);
 // }
 // displayAccountInfo();
 myAccountView.append(accountImgContainer, accountDataContainer);
@@ -86,6 +86,24 @@ formEditName.innerHTML = `
     <button type="submit" class="btn primary-green">Guardar cambios</button>
     </div>
 `;
+
+// const formEditEmail = app.create.element('form', ['formEditEmail']);
+// formEditEmail.innerHTML = `
+//     <h3>Editar email y contraseña</h3>
+//     <div>
+//         <label for="email">Email</label>
+//         <input type="email" id="email" name="email">
+//         <p class="error-message"></p>
+//         </div>
+//         <div>
+//         <label for="password">Contraseña</label>
+//         <input type="password" id="password" name="password" placeholder="Ingresa una nueva contraseña">
+//         <p class="error-message"></p>
+//         </div>
+//         <div>
+//         <button type="submit" class="btn primary-green">Guardar cambios</button>
+//         </div>
+//     `;
 
 function displayFormToEditNameAndLastName (btn, accountDataContainer, form, name, lastname){
 
@@ -114,10 +132,50 @@ function displayFormToEditNameAndLastName (btn, accountDataContainer, form, name
 
 
 
+// function displayFormToEditEmailAndPassword (btn, accountDataContainer, form, email){
+
+//     btn.addEventListener('click', () => {
+//         accountDataContainer.innerHTML = '';
+//         accountDataContainer.append(form);
+//         form.email.value = email;
+//     });
+// }
+
+// function updateEmailAndPassword(form){
+//     form.addEventListener('submit', async (e) => {
+//         e.preventDefault();
+//         app.main.clearErrorMessages('form p');
+//         let inputsValidated = app.main.validateEmptyFields([form.email, form.password]);
+//         if (!inputsValidated) return;
+
+//         const user = auth.currentUser;
+        
+//         try{
+//             await sendEmailVerification(user);
+//             // await updateEmail(user, form.email.value);
+//             // await updatePassword(user, form.password.value);
+//             // location.reload();
+
+//         }catch(error){
+//             console.log(error.message)
+//             if (error.message.includes('invalid-email')){
+//                 app.main.displayErrorMessage('El email ingresado no es válido', form.email);
+//             } else if (error.message.includes('email-already-in-use')){
+//                 app.main.displayErrorMessage('Este email ya tiene una cuenta', form.email);
+//             } else if (error.message.includes('missing-password')){
+//                 app.main.displayErrorMessage('La contraseña no puede estar vacía', form.password);
+//             } else if (error.message.includes('weak-password')){
+//                 app.main.displayErrorMessage('La contraseña debe tener al menos 6 caracteres', form.password);
+//             } 
+
+//         }
+//     });
+// }
+
 onAuthStateChanged(auth, async (user) => {
     if (user) {
 
-        accountDataInfo2.innerHTML = user.email;
+        // accountDataInfo2.innerHTML = user.email;
         let label = accountImgContainer.querySelector('label');
         let imgInput = accountImgContainer.querySelector('input');
 
@@ -129,12 +187,14 @@ onAuthStateChanged(auth, async (user) => {
             accountDataInfo.innerHTML = `
                 <h3>${docSnap.data().nombre} ${docSnap.data().apellido}</h3>
                 <p>${docSnap.data().role}</p>
+                <p>${user.email}</p>
             `;
             // console.log(label);
 
             displayFormToEditNameAndLastName(editNameLink, accountDataContainer, formEditName, docSnap.data().nombre, docSnap.data().apellido);
 
             updateNameAndLastname(formEditName, uid);
+
 
             if(docSnap.data().img){
                 label.style.backgroundImage = `url(${docSnap.data().img})`;
