@@ -1,5 +1,11 @@
 import { element } from './create.js';
 
+const togglebtn = document.querySelector('.toggle-button');
+const navbarlinks = document.querySelector('.navbar-links');
+togglebtn.addEventListener('click', () => {
+    navbarlinks.classList.toggle('active');
+})
+
 function displayBreadcrumb( breadcrumbItems, renderAdminViewFunction){
     let breadcrumb = element('nav', ['breadcrumb']);
     let ol = element('ol');
@@ -70,7 +76,7 @@ function validateEmptyFields(array) {
 function renderView(element, view) {
     element.addEventListener("click", (e) => {
         e.preventDefault();
-        window.location.href = '/index.html' + view;
+        window.location.href = view;
         location.reload();
     })
 }

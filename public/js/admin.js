@@ -42,15 +42,15 @@ function verifyUser(adminOptionsContainer, arrayAdmin, chatBtn, container) {
             let errorH1 = document.createElement('h1');
             errorH1.textContent = 'Debes iniciar sesión para ver esta página';
             let errorA = document.createElement('a');
-            errorA.href = '/index.html#login';
+            errorA.href = '#login';
             errorA.classList.add('btn');
             errorA.textContent = 'Iniciar sesión';
             container.appendChild(errorH1);
             container.appendChild(errorA);
 
-            window.location.href = '/index.html#login'
-
+            
             errorA.addEventListener('click', () => {
+                window.location.href = '#login'
                 location.reload();
             });
         }
@@ -63,6 +63,10 @@ async function isAdmin(uid) {
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
         const role = docSnap.data().role;
+        
+        if (docSnap.data().img){
+            document.querySelector('.avatarNavbar').style.backgroundImage = `url(${docSnap.data().img})`
+        }
         if (role == 'admin') {
             return true;
         } else {
@@ -275,7 +279,7 @@ function uploadImgToStorageAndAddService(folderName, dropzoneFile, nameInput, ca
                 "services", 
                 { name: nameInput.value, category: categoryInput.value, description:descriptionInput.value, price: priceInput.value, img: url }, 
                 container, 
-                '/index.html#adminServices', 
+                '#adminServices', 
                 '#adminServices'
             );
 
@@ -463,7 +467,10 @@ function displayServerError(container, text, hash){
 
 
 
-function renderCategoriesForm(form, container){
+function renderCategoriesForm(form, container, buttonText){
+    if (!buttonText){
+        buttonText = 'Agregar Categoría';
+    }
     form.setAttribute('method', 'post');
     form.innerHTML = `
     <div>
@@ -472,12 +479,85 @@ function renderCategoriesForm(form, container){
     </div>
     
     <div>
-    <button type="submit" class="btn primary-green">Agregar Categoría</button>
+    <button type="submit" class="btn primary-green">${buttonText}</button>
     </div>
     `;
     container.appendChild(form);
 }
 
 
+function displayFormToEditNameAndLastName (btn, accountDataContainer, form, name, lastname){
 
-export { verifyUser, loadDataOnTable, createTableBodyColumns, createTableBtns, deleteDocumentFromFirestore, addHeadingTableRow, createListTable, renderData, createAdminBtn, addCategoriesList, uploadImgToStorageAndAddService, myDropzoneHandler, createServiceForm, addNewDocToMyFirestore, renderCategoriesForm, getCollectionData, updateFirestoreDocument };
+    btn.addEventListener('click', () => {
+        accountDataContainer.innerHTML = '';
+        accountDataContainer.append(form);
+        form.name.value = name;
+        form.lastname.value = lastname;
+    });
+}
+
+
+
+async function updateNameAndLastnameOnFirestore(uid, name, lastname){
+    await updateDoc(doc(dbfirestore, "roles_by_user",  uid), {
+        nombre: name,
+        apellido: lastname
+    });
+    location.reload();
+}
+
+function loadUserAccountData(imgContainer, accountDataInfo, updateNameAndLastname, link, accountDataContainer, form){
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+    
+            let label = imgContainer.querySelector('label');
+            let imgInput = imgContainer.querySelector('input');
+    
+            const uid = user.uid;
+    
+            const docRef = doc(dbfirestore, "roles_by_user",  uid);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                accountDataInfo.innerHTML = `
+                    <h3>${docSnap.data().nombre} ${docSnap.data().apellido}</h3>
+                    <p>${docSnap.data().role}</p>
+                    <p>${user.email}</p>
+                `;
+    
+                displayFormToEditNameAndLastName(link, accountDataContainer, form, docSnap.data().nombre, docSnap.data().apellido);
+    
+                updateNameAndLastname(form, uid);
+    
+    
+    
+                if(docSnap.data().img){
+                    label.style.backgroundImage = `url(${docSnap.data().img})`;
+                }
+            } 
+    
+    
+            const profilePictureRef = storageRef(storage, 'avatars/' + uid);
+    
+            imgInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                uploadBytes(profilePictureRef, file).then((snapshot) => {
+                    getDownloadURL(profilePictureRef).then((url) => {
+                        updateDoc(doc(dbfirestore, "roles_by_user",  uid), {
+                            img: url
+                        });
+                        location.reload();
+                    });
+                });
+            });
+        }
+    })
+}
+
+
+
+const adminFunctions = {
+    verifyUser, loadDataOnTable, createTableBodyColumns, createTableBtns, deleteDocumentFromFirestore, addHeadingTableRow, createListTable, renderData, createAdminBtn, addCategoriesList, uploadImgToStorageAndAddService, myDropzoneHandler, createServiceForm, addNewDocToMyFirestore, renderCategoriesForm, getCollectionData, updateFirestoreDocument, displayFormToEditNameAndLastName, updateNameAndLastnameOnFirestore, loadUserAccountData
+};
+
+
+export { adminFunctions };

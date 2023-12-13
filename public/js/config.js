@@ -32,9 +32,11 @@ if(navbarBtn){
       navbarBtn.addEventListener('click', () => {
         auth.signOut();
       })
+      document.querySelector('.avatarNavbar').style.display = 'block';
     } else if(dashboardBtn){
       dashboardBtn.remove();
       navbarBtn.innerHTML = 'Iniciar sesión';
+      document.querySelector('.avatarNavbar').style.display = 'none';
     }
   });
 }

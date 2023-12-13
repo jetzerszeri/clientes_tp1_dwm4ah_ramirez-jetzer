@@ -28,7 +28,7 @@ form.addEventListener('submit', (e) => {
     let inputsValidated = app.main.validateEmptyFields([name, category, description, price]);
     if (!inputsValidated) return;
 
-    app.admin.updateFirestoreDocument('services', currentServiceId, form, servicesEdit, '/index.html#adminServices');
+    app.admin.updateFirestoreDocument('services', currentServiceId, form, servicesEdit, '#adminServices');
 });
 
 

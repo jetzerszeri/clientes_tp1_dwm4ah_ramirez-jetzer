@@ -33,12 +33,18 @@
     
                 <div class="navbar-links">
                     <ul>
-                        <li><a href="#home">Inicio</a></li>
-                        <li><a href="#services" class="">Servicios</a></li>
-                        <li><a href="#admin" class=""  id="dashboardLink">Dashboard</a></li>
+                        <li><a href="#home" >Inicio</a></li>
+                        <li><a href="#services" >Servicios</a></li>
+                        <li><a href="#admin"  id="dashboardLink">Dashboard</a></li>
+                        <li><a href="#adminMyAccount" id="myAccountLink">Mi cuenta</a></li>
+
                     </ul>
                     <div>
-                        <a href="#login" class="btn">Iniciar sesión</a>
+                        <a href="#login" class="btn link">Iniciar sesión</a>
+                        <a href="#adminMyAccount"  class="avatarNavbar">
+                            Cuenta
+                            <!-- <img src="./img/account-icon.svg" alt="avatar"> -->
+                        </a>
                     </div>
                 </div>
             </div>
@@ -72,7 +78,7 @@
         import servicesView from './js/views/services.js';
         import login from './js/views/login.js';
         import signin from './js/views/signin.js';
-        import admin from './js/views/admin.js';
+        import {admin, loadAdminView, renderAdminView} from './js/views/admin.js';
 
         Dropzone.autoDiscover = false;
         
@@ -108,6 +114,7 @@
                 
                 if (e.target.hash.startsWith('#admin')) {
                     app.append(router['#admin']);
+                    loadAdminView();
                 } else {
                     app.append(router[e.target.hash]);
                 };
@@ -138,6 +145,30 @@
                 }
             })
         }
+
+
+        const adminLinks = [
+            {
+                query: '.avatarNavbar',
+                link: '#adminMyAccount',
+            },
+            {
+                query: '#dashboardLink',
+                link: '#admin',
+            },
+            {
+                query: '#myAccountLink',
+                link: '#adminMyAccount',
+            }
+        ];
+
+        adminLinks.forEach(link => {
+            const element = document.querySelector(link.query);
+            element.addEventListener('click', () => {
+                renderAdminView(link.link);
+            })
+        })
+
 
 
     </script>

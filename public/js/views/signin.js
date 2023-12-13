@@ -58,12 +58,12 @@ form.addEventListener('submit', async (e) => {
     app.main.clearErrorMessages('form p');
 
     if (!app.main.validateEmptyFields([name, lastname, email, password])) return;
-    console.log( 'email: ' + email.value + ' password: ' + password.value + ' name: ' + name.value + ' lastname: ' + lastname.value)
+    // console.log( 'email: ' + email.value + ' password: ' + password.value + ' name: ' + name.value + ' lastname: ' + lastname.value)
 
     app.signin.createUserAndSetDocument(email.value, password.value, name.value, lastname.value)
     .then((userId) => app.signin.createChat(userId))
     .then(() => {
-        window.location.href = '/index.html#admin';
+        window.location.href = '#admin';
         location.reload();
     })
     .catch((error) => {

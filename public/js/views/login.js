@@ -30,10 +30,6 @@ form.innerHTML =  `
 const singUpBtn = app.create.element('div', ['signupmsg']);
 const singUpP = app.create.element('p', [], 'No tienes una cuenta?');
 const singUpA = app.create.element('btn', ['btn'], 'Registrate aquí');
-// singUpBtn.innerHTML = `
-//     <p>No tienes una cuenta?</p>
-//     <a href="/index.html#signin" class="btn">Registrate aquí</a>
-// `;
 singUpBtn.appendChild(singUpP);
 singUpBtn.appendChild(singUpA);
 
@@ -51,7 +47,7 @@ form.addEventListener('submit', async (e) => {
     app.main.clearErrorMessages('form p');
     try {
         await app.login.signInWithEmailAndPasswordHandler(email.value, password.value);
-        window.location.href = '/index.html#admin';
+        window.location.href = '#admin';
         location.reload();
     } catch (error) {
         if (error.message.includes('invalid-email')) {

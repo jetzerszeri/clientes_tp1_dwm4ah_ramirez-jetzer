@@ -6,6 +6,7 @@ import { adminCategoriesRouterContent } from './admin/categories/index.js';
 import { adminCategoriesCreateRouterContent } from './admin/categories/create.js';
 import { adminCategoriesEditRouterContent } from './admin/categories/edit.js';
 import { adminChatRouterContent } from './admin/chat/index.js';
+import { adminMyAccountRouterContent } from './admin/account/index.js';
 
 const admin = app.create.element('main', ['adminmain']);
 
@@ -42,25 +43,22 @@ const adminRouter = {
     '#adminServicesEdit': adminServicesEditRouterContent,
     '#adminCategoriesCreate': adminCategoriesCreateRouterContent,
     '#adminCategoriesEdit': adminCategoriesEditRouterContent,
+    '#adminMyAccount': adminMyAccountRouterContent,
 };
-
-
-
-
 
 let servicesBtn = app.admin.createAdminBtn('#adminServices', 'fa-hand-sparkles', 'Servicios', renderAdminView, adminRouter['#adminServices'].render);
 let categoriesBtn = app.admin.createAdminBtn('#adminCategories', 'fa-table-list', 'Categorías', renderAdminView, adminRouter['#adminCategories'].render);
 let chatBtn = app.admin.createAdminBtn('#adminChat', 'fa-comments', 'Chat', renderAdminView, adminRouter['#adminChat'].render);
 
-
-
-app.admin.verifyUser(adminOptions, [servicesBtn, categoriesBtn, chatBtn], chatBtn, admin);
 let currentHash = window.location.hash;
 
-if (currentHash == 'undefined') {
-    currentHash = '#admin';
+if (currentHash.startsWith('#admin')) {
+    loadAdminView();
 }
 
+function loadAdminView(){
+    app.admin.verifyUser(adminOptions, [servicesBtn, categoriesBtn, chatBtn], chatBtn, admin);
+}
 renderAdminView(currentHash);
 
 admin.append(breadcrumbs);
@@ -109,5 +107,5 @@ function parseHash(hash) {
 
 Dropzone.autoDiscover = false;
 
-export default admin;
-export { renderAdminView,  };
+// export default admin;
+export { renderAdminView,  admin, loadAdminView};
